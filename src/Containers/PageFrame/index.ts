@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import Bar from "../../Components/Bar";
+import PageFrame from "../../Components/PageFrame";
 import { StoreState } from "../../Reducers";
 
 const mapStateToProps = ({ basic: { title } }: StoreState) => ({
@@ -12,4 +12,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({});
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Bar);
+)(PageFrame);

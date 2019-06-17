@@ -47,6 +47,7 @@ class Bar extends React.PureComponent<Props> {
     };
 
     renderNavList = () => {
+        const { classes } = this.props;
         const navItemList = [
             {
                 icon: <HomeIcon />,
@@ -79,7 +80,7 @@ class Bar extends React.PureComponent<Props> {
             <>
                 {navItemList.map((item, key) => (
                     <ListItem button key={key}>
-                        <ListItemIcon>{item.icon}</ListItemIcon>
+                        <ListItemIcon className={classes.icon}>{item.icon}</ListItemIcon>
                         <ListItemText primary={item.title} />
                     </ListItem>
                 ))}
@@ -91,7 +92,7 @@ class Bar extends React.PureComponent<Props> {
         const { classes, title } = this.props;
         const { open } = this.state;
         return (
-            <>
+            <div className={classes.root}>
                 <CssBaseline />
                 <AppBar
                     position="fixed"
@@ -138,7 +139,11 @@ class Bar extends React.PureComponent<Props> {
                     <Divider />
                     <List>{this.renderNavList()}</List>
                 </Drawer>
-            </>
+                <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    {this.props.children}
+                </main>
+            </div>
         );
     }
 }

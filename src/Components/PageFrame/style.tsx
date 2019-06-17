@@ -62,6 +62,9 @@ const styles = (theme: Theme) =>
         content: {
             flexGrow: 1,
             padding: theme.spacing(3)
+        },
+        icon: {
+            margin: "0 8px"
         }
     });
 
