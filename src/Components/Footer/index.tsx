@@ -12,22 +12,18 @@ class Footer extends React.PureComponent<Props> {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.paper}>
+            <div className={classes.footer}>
                 <Grid container spacing={3}>
-                    <Grid item xs={6}>
+                    <Grid item xs>
                         Powered By <strong>6Rabbit</strong> {VERSION}
                     </Grid>
-                    <Grid item xs={6} className={classes["footer-right"]}>
-                        <p>
-                            <a href="http://beian.miit.gov.cn/" target="_blank">
-                                {ICP_BEIAN}
-                            </a>
-                        </p>
-                        <p>
-                            <a href="http://www.beian.gov.cn/" target="_blank">
-                                {GONGAN_BEIAN}
-                            </a>
-                        </p>
+                    <Grid item xs className={classes["footer-right"]}>
+                        <a href="http://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
+                            {ICP_BEIAN}
+                        </a>
+                        <a href="http://www.beian.gov.cn/" target="_blank" rel="noopener noreferrer">
+                            {GONGAN_BEIAN}
+                        </a>
                     </Grid>
                 </Grid>
             </div>

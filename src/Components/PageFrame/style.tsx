@@ -1,7 +1,7 @@
 import { createStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
-const drawerWidth = 240;
+const drawerWidth = 160;
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -48,8 +48,8 @@ const styles = (theme: Theme) =>
             }),
             overflowX: "hidden",
             width: theme.spacing(7) + 1,
-            [theme.breakpoints.up("sm")]: {
-                width: theme.spacing(9) + 1
+            [theme.breakpoints.down("sm")]: {
+                width: "1px"
             }
         },
         toolbar: {
@@ -62,9 +62,6 @@ const styles = (theme: Theme) =>
         content: {
             flexGrow: 1,
             padding: theme.spacing(3)
-        },
-        icon: {
-            margin: "0 8px"
         }
     });
 

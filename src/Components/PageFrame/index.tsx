@@ -80,7 +80,7 @@ class Bar extends React.PureComponent<Props> {
             <>
                 {navItemList.map((item, key) => (
                     <ListItem button key={key}>
-                        <ListItemIcon className={classes.icon}>{item.icon}</ListItemIcon>
+                        <ListItemIcon>{item.icon}</ListItemIcon>
                         <ListItemText primary={item.title} />
                     </ListItem>
                 ))}

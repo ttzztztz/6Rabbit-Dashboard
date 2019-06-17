@@ -3,15 +3,22 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
 const styles = (theme: Theme) =>
     createStyles({
-        paper: {
+        footer: {
             margin: theme.spacing(2),
-            userSelect: "none"
+            userSelect: "none",
+            marginTop: "60px"
         },
         "footer-right": {
-            "& p": {
-                margin: "0"
+            "& a": {
+                margin: "0",
+                display: "block"
             },
             textAlign: "right"
+        },
+        "@media screen and (max-width:800px)": {
+            "footer-right": {
+                display: "none"
+            }
         }
     });
 
