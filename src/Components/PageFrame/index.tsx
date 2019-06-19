@@ -1,4 +1,5 @@
 import React from "react";
+import { RouteComponentProps } from "react-router";
 
 import Avatar from "@material-ui/core/Avatar";
 import clsx from "clsx";
@@ -29,7 +30,35 @@ interface Props extends WithStyles {
     title: string;
 }
 
-class Bar extends React.PureComponent<Props> {
+class Bar extends React.PureComponent<Props & RouteComponentProps> {
+    navItemList = [
+        {
+            icon: <HomeIcon />,
+            title: "首页",
+            router: "/"
+        },
+        {
+            icon: <SubjectIcon />,
+            title: "文章",
+            router: "/blog"
+        },
+        {
+            icon: <ShoppingCartIcon />,
+            title: "商城",
+            router: "/shop"
+        },
+        {
+            icon: <MessageIcon />,
+            title: "讨论",
+            router: "/forum"
+        },
+        {
+            icon: <PersonIcon />,
+            title: "用户",
+            router: "/user"
+        }
+    ];
+
     state = {
         open: false
     };
@@ -46,40 +75,15 @@ class Bar extends React.PureComponent<Props> {
         });
     };
 
-    renderNavList = () => {
-        const { classes } = this.props;
-        const navItemList = [
-            {
-                icon: <HomeIcon />,
-                title: "首页",
-                router: "/"
-            },
-            {
-                icon: <SubjectIcon />,
-                title: "文章",
-                router: "/blog"
-            },
-            {
-                icon: <ShoppingCartIcon />,
-                title: "商城",
-                router: "/shop"
-            },
-            {
-                icon: <MessageIcon />,
-                title: "讨论",
-                router: "/discuss"
-            },
-            {
-                icon: <PersonIcon />,
-                title: "用户",
-                router: "/user"
-            }
-        ];
+    handleListItemOnClick = (_event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: number) => {
+        this.props.history.push(this.navItemList[key].router);
+    };
 
+    renderNavList = () => {
         return (
             <>
-                {navItemList.map((item, key) => (
-                    <ListItem button key={key}>
+                {this.navItemList.map((item, key) => (
+                    <ListItem button key={key} onClick={event => this.handleListItemOnClick(event, key)}>
                         <ListItemIcon>{item.icon}</ListItemIcon>
                         <ListItemText primary={item.title} />
                     </ListItem>

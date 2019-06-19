@@ -1,8 +1,8 @@
 import React from "react";
+
 import Grid from "@material-ui/core/Grid";
 
 import { VERSION, ICP_BEIAN, GONGAN_BEIAN } from "../../Consts";
-
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
