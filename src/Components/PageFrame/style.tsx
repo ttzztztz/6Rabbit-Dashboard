@@ -62,6 +62,12 @@ const styles = (theme: Theme) =>
         content: {
             flexGrow: 1,
             padding: theme.spacing(3)
+        },
+        progess: {
+            width: "100%",
+            position: "fixed",
+            top: "64px",
+            zIndex: 9999
         }
     });
 

@@ -11,23 +11,25 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 import HomeIcon from "@material-ui/icons/Home";
 import SubjectIcon from "@material-ui/icons/Subject";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import MessageIcon from "@material-ui/icons/Message";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import PersonIcon from "@material-ui/icons/Person";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
 interface Props extends WithStyles {
     title: string;
+    loading: boolean;
 }
 
 class Bar extends React.PureComponent<Props & RouteComponentProps> {
@@ -93,7 +95,7 @@ class Bar extends React.PureComponent<Props & RouteComponentProps> {
     };
 
     render() {
-        const { classes, title } = this.props;
+        const { classes, title, loading } = this.props;
         const { open } = this.state;
         return (
             <div className={classes.root}>
@@ -147,6 +149,7 @@ class Bar extends React.PureComponent<Props & RouteComponentProps> {
                     <div className={classes.toolbar} />
                     {this.props.children}
                 </main>
+                {loading && <LinearProgress className={classes.progess} color="secondary" />}
             </div>
         );
     }

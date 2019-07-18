@@ -1,7 +1,11 @@
 import React from "react";
 import styles from "./style";
-import { WithStyles, withStyles } from "@material-ui/core";
+import clsx from "clsx";
 
+import Avatar from "../../Components/Avatar";
+import DefaultAvatar from "../../Styles/avatar.png";
+
+import { WithStyles, withStyles } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
@@ -18,13 +22,16 @@ class Thread extends React.Component<Props> {
         const { title, content, time } = this.state;
         return (
             <>
-                <Paper className={classes.paperRoot}>
-                    <Typography variant="h5" component="h3">
-                        {title}
-                    </Typography>
-                </Paper>
-                <Paper className={classes.paperRoot}>
-                    <Typography variant="body1">{time.toLocaleString()}</Typography>
+                <Paper className={clsx(classes.paperRoot, classes["title-bar"])}>
+                    <div className={classes["thread-avatar"]}>
+                        <Avatar src={DefaultAvatar} width={48} />
+                    </div>
+                    <div>
+                        <Typography variant="h5" component="h3">
+                            {title}
+                        </Typography>
+                        <Typography variant="body1">{time.toLocaleString()}</Typography>
+                    </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>
                     <Typography variant="body1">{content}</Typography>
