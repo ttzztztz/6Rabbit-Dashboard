@@ -9,11 +9,10 @@ const styles = (theme: Theme) =>
             marginTop: "60px"
         },
         "footer-right": {
-            "& a": {
-                margin: "0",
-                display: "block"
-            },
-            textAlign: "right"
+            textAlign: "right",
+            display: "flex",
+            flexWrap: "wrap",
+            flexDirection: "column"
         },
         "@media screen and (max-width:800px)": {
             "footer-right": {

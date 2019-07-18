@@ -5,6 +5,10 @@ import { WithStyles, withStyles } from "@material-ui/core";
 import DefaultAvatar from "../../Styles/avatar.png";
 import AvatarBoard from "../../Components/AvatarBoard";
 
+import CreditsComponent from "./Credits";
+import SettingsComponent from "./Settings";
+import NotificationsComponent from "./Notifications";
+
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -37,8 +41,14 @@ class Profile extends React.Component<Props> {
                         <Tab label="积分" />
                         <Tab label="帖子" />
                         <Tab label="回帖" />
+                        <Tab label="通知" />
                         <Tab label="设置" />
                     </Tabs>
+                    {activeTab === 0 && <CreditsComponent />}
+                    {activeTab === 1 && <CreditsComponent />}
+                    {activeTab === 2 && <CreditsComponent />}
+                    {activeTab === 3 && <NotificationsComponent />}
+                    {activeTab === 4 && <SettingsComponent />}
                 </Paper>
             </>
         );
