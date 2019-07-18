@@ -15,11 +15,12 @@ class Thread extends React.Component<Props> {
     state = {
         title: "这是一个标题",
         content: "这是内容",
+        username: "hzytql",
         time: new Date()
     };
     render() {
         const { classes } = this.props;
-        const { title, content, time } = this.state;
+        const { title, content, time, username } = this.state;
         return (
             <>
                 <Paper className={clsx(classes.paperRoot, classes["title-bar"])}>
@@ -30,7 +31,10 @@ class Thread extends React.Component<Props> {
                         <Typography variant="h5" component="h3">
                             {title}
                         </Typography>
-                        <Typography variant="body1">{time.toLocaleString()}</Typography>
+                        <Typography variant="body1" className={classes["second-info"]}>
+                            <span className={classes["author-username"]}>{username}</span>
+                            <span>{time.toLocaleString()}</span>
+                        </Typography>
                     </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>

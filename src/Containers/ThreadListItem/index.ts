@@ -2,21 +2,18 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { RouteComponentProps, withRouter } from "react-router";
 
-import PageFrame from "../../Components/PageFrame";
+import ThreadListItem from "../../Components/ThreadListItem";
 import { StoreState } from "../../Reducers";
 
-const mapStateToProps = ({ basic: { title, loading, isLogin } }: StoreState, ownProps: RouteComponentProps) => ({
-    title,
-    loading,
-    isLogin,
+const mapStateToProps = (_: StoreState, ownProps: RouteComponentProps) => ({
     ...ownProps
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({});
+const mapDispatchToProps = (_: Dispatch) => ({});
 
 export default withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps
-    )(PageFrame)
+    )(ThreadListItem)
 );

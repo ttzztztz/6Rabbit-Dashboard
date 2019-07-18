@@ -14,7 +14,9 @@ import IconButton from "@material-ui/core/IconButton";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Fab from "@material-ui/core/Fab";
 
+import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
 import SubjectIcon from "@material-ui/icons/Subject";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
@@ -30,6 +32,7 @@ import { WithStyles, withStyles } from "@material-ui/core";
 interface Props extends WithStyles {
     title: string;
     loading: boolean;
+    isLogin: boolean;
 }
 
 class Bar extends React.PureComponent<Props & RouteComponentProps> {
@@ -95,7 +98,7 @@ class Bar extends React.PureComponent<Props & RouteComponentProps> {
     };
 
     render() {
-        const { classes, title, loading } = this.props;
+        const { classes, title, loading, isLogin } = this.props;
         const { open } = this.state;
         return (
             <div className={classes.root}>
@@ -150,6 +153,11 @@ class Bar extends React.PureComponent<Props & RouteComponentProps> {
                     {this.props.children}
                 </main>
                 {loading && <LinearProgress className={classes.progess} color="secondary" />}
+                {isLogin && (
+                    <Fab size="large" color="primary" className={classes["post-btn"]}>
+                        <AddIcon />
+                    </Fab>
+                )}
             </div>
         );
     }

@@ -68,6 +68,12 @@ const styles = (theme: Theme) =>
             position: "fixed",
             top: "64px",
             zIndex: 9999
+        },
+        "post-btn": {
+            position: "fixed",
+            right: "5%",
+            bottom: "5%",
+            zIndex: 9999
         }
     });
 

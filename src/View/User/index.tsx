@@ -34,9 +34,9 @@ class Profile extends React.Component<Props> {
                         textColor="primary"
                         centered
                     >
+                        <Tab label="积分" />
                         <Tab label="帖子" />
                         <Tab label="回帖" />
-                        <Tab label="已购" />
                         <Tab label="设置" />
                     </Tabs>
                 </Paper>

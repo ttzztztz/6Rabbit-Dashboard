@@ -3,19 +3,34 @@ import * as actions from "../Actions/basic";
 export interface BasicStore {
     title: string;
     loading: boolean;
+    isLogin: boolean;
 }
 
-type Action = actions.IChangeTitle;
+type Action =
+    | actions.IChangeTitle
+    | actions.ILoginOK
+    | actions.ILogoutOK
+    | actions.IStartLoading
+    | actions.IStopLoading;
 
 const initState: BasicStore = {
     title: "酷兔网",
-    loading: false
+    loading: false,
+    isLogin: false
 };
 
 export const basicReducer = function(state = initState, action: Action): BasicStore {
     switch (action.type) {
         case actions.CHANGE_TITLE:
             return { ...state, title: action.title };
+        case actions.START_LOADING:
+            return { ...state, loading: true };
+        case actions.STOP_LOADING:
+            return { ...state, loading: false };
+        case actions.LOGIN_OK:
+            return { ...state, isLogin: true };
+        case actions.LOGOUT_OK:
+            return { ...state, isLogin: false };
     }
     return state;
 };
