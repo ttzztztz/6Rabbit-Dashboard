@@ -4,14 +4,17 @@ import clsx from "clsx";
 
 import Avatar from "../../Components/Avatar";
 import DefaultAvatar from "../../Styles/avatar.png";
+import { RouteComponentProps } from "react-router";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-interface Props extends WithStyles {}
+interface Props extends WithStyles {
+    changeTitle: (title: string) => void;
+}
 
-class Thread extends React.Component<Props> {
+class Thread extends React.Component<Props & RouteComponentProps> {
     state = {
         title: "这是一个标题",
         content: "这是内容",
@@ -21,6 +24,7 @@ class Thread extends React.Component<Props> {
     render() {
         const { classes } = this.props;
         const { title, content, time, username } = this.state;
+        this.props.changeTitle(title);
         return (
             <>
                 <Paper className={clsx(classes.paperRoot, classes["title-bar"])}>

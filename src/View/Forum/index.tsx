@@ -4,9 +4,12 @@ import { WithStyles, withStyles } from "@material-ui/core";
 
 import ThreadListComponent from "../../Components/ThreadList";
 import { IThreadListItem } from "../../Typings";
+import { RouteComponentProps } from "react-router";
 
 import DefaultAvatar from "../../Styles/avatar.png";
-interface Props extends WithStyles {}
+interface Props extends WithStyles {
+    changeTitle: (title: string) => void;
+}
 
 const fakeData: Array<IThreadListItem> = [
     {
@@ -60,8 +63,9 @@ const fakeData: Array<IThreadListItem> = [
     }
 ];
 
-class Forum extends React.Component<Props> {
+class Forum extends React.Component<Props & RouteComponentProps> {
     render() {
+        this.props.changeTitle("讨论");
         return (
             <>
                 <ThreadListComponent threadList={fakeData} />

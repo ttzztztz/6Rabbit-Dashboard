@@ -6,9 +6,6 @@ const styles = (theme: Theme) =>
         root: {
             width: "100%",
             marginTop: theme.spacing(3)
-        },
-        table: {
-            minWidth: 650
         }
     });
 

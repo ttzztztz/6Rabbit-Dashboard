@@ -2,12 +2,11 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { RouteComponentProps, withRouter } from "react-router";
 
-import LoginView from "../../View/Login";
+import UserView from "../../View/User";
 import { StoreState } from "../../Reducers";
 import { changeTitle } from "../../Actions/basic";
 
-const mapStateToProps = ({ basic: { isLogin } }: StoreState, ownProps: RouteComponentProps) => ({
-    isLogin,
+const mapStateToProps = (_: StoreState, ownProps: RouteComponentProps) => ({
     ...ownProps
 });
 
@@ -19,5 +18,5 @@ export default withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps
-    )(LoginView)
+    )(UserView)
 );

@@ -20,7 +20,7 @@ class ThreadList extends React.Component<Props> {
         const { classes, threadList } = this.props;
         return (
             <Paper className={classes.root}>
-                <Table className={classes.table}>
+                <Table>
                     <TableBody>
                         {threadList.map(item => (
                             <TableRow key={item.tid}>

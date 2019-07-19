@@ -5,13 +5,13 @@ import { Switch, BrowserRouter, Route } from "react-router-dom";
 import PageFrame from "./Containers/PageFrame";
 import Footer from "./Components/Footer";
 
-import BlogView from "./View/Blog";
-import ForumView from "./View/Forum";
-import HomepageView from "./View/Homepage";
-import ShopView from "./View/Shop";
-import ThreadView from "./View/Thread";
-import UserView from "./View/User";
-import ProfileView from "./View/Profile";
+import BlogView from "./Containers/Blog";
+import ForumView from "./Containers/Forum";
+import HomepageView from "./Containers/Homepage";
+import ShopView from "./Containers/Shop";
+import ThreadView from "./Containers/Thread";
+import UserView from "./Containers/User";
+import ProfileView from "./Containers/Profile";
 import LoginView from "./Containers/Login";
 
 import Store from "./Reducers/store";

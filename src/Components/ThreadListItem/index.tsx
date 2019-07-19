@@ -26,8 +26,8 @@ class ThreadListItem extends React.PureComponent<Props & RouteComponentProps> {
                 </div>
                 <div>
                     <Typography
-                        variant="h5"
-                        component="h3"
+                        variant="h6"
+                        component="h6"
                         className={classes["thread-list-item-title"]}
                         onClick={this.handleTitleClick}
                     >

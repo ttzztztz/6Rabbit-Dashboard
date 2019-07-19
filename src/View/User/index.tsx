@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
+import { RouteComponentProps } from "react-router";
 
 import DefaultAvatar from "../../Styles/avatar.png";
 import AvatarBoard from "../../Components/AvatarBoard";
@@ -13,9 +14,11 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
-interface Props extends WithStyles {}
+interface Props extends WithStyles {
+    changeTitle: (title: string) => void;
+}
 
-class Profile extends React.Component<Props> {
+class Profile extends React.Component<Props & RouteComponentProps> {
     state = {
         activeTab: 0
     };
@@ -27,6 +30,7 @@ class Profile extends React.Component<Props> {
     render() {
         const { classes } = this.props;
         const { activeTab } = this.state;
+        this.props.changeTitle("用户");
         return (
             <>
                 <AvatarBoard src={DefaultAvatar} username="hzytql" />

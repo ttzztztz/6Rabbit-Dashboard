@@ -6,7 +6,8 @@ const drawerWidth = 160;
 const styles = (theme: Theme) =>
     createStyles({
         root: {
-            display: "flex"
+            display: "flex",
+            maxWidth: "100%"
         },
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
@@ -61,7 +62,8 @@ const styles = (theme: Theme) =>
         },
         content: {
             flexGrow: 1,
-            padding: theme.spacing(3)
+            padding: theme.spacing(3),
+            maxWidth: "100%"
         },
         progess: {
             width: "100%",
