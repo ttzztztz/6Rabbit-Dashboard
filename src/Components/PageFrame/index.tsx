@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps } from "react-router";
+import { SnackbarProvider } from "notistack";
 
-import Avatar from "@material-ui/core/Avatar";
 import clsx from "clsx";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
@@ -101,64 +101,74 @@ class Bar extends React.PureComponent<Props & RouteComponentProps> {
         const { classes, title, loading, isLogin } = this.props;
         const { open } = this.state;
         return (
-            <div className={classes.root}>
-                <CssBaseline />
-                <AppBar
-                    position="fixed"
-                    className={clsx(classes.appBar, {
-                        [classes.appBarShift]: open
-                    })}
-                >
-                    <Toolbar>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={this.handleDrawerOpen}
-                            edge="start"
-                            className={clsx(classes.menuButton, {
-                                [classes.hide]: open
-                            })}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" noWrap>
-                            {title}
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    variant="permanent"
-                    className={clsx(classes.drawer, {
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open
-                    })}
-                    classes={{
-                        paper: clsx({
+            <SnackbarProvider
+                maxSnack={5}
+                classes={{
+                    variantSuccess: classes.success,
+                    variantError: classes.error,
+                    variantWarning: classes.warning,
+                    variantInfo: classes.info
+                }}
+            >
+                <div className={classes.root}>
+                    <CssBaseline />
+                    <AppBar
+                        position="fixed"
+                        className={clsx(classes.appBar, {
+                            [classes.appBarShift]: open
+                        })}
+                    >
+                        <Toolbar>
+                            <IconButton
+                                color="inherit"
+                                aria-label="Open drawer"
+                                onClick={this.handleDrawerOpen}
+                                edge="start"
+                                className={clsx(classes.menuButton, {
+                                    [classes.hide]: open
+                                })}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Typography variant="h6" noWrap>
+                                {title}
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                    <Drawer
+                        variant="permanent"
+                        className={clsx(classes.drawer, {
                             [classes.drawerOpen]: open,
                             [classes.drawerClose]: !open
-                        })
-                    }}
-                    open={open}
-                >
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={this.handleDrawerClose}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List>{this.renderNavList()}</List>
-                </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.toolbar} />
-                    {this.props.children}
-                </main>
-                {loading && <LinearProgress className={classes.progess} color="secondary" />}
-                {isLogin && (
-                    <Fab size="large" color="primary" className={classes["post-btn"]}>
-                        <AddIcon />
-                    </Fab>
-                )}
-            </div>
+                        })}
+                        classes={{
+                            paper: clsx({
+                                [classes.drawerOpen]: open,
+                                [classes.drawerClose]: !open
+                            })
+                        }}
+                        open={open}
+                    >
+                        <div className={classes.toolbar}>
+                            <IconButton onClick={this.handleDrawerClose}>
+                                <ChevronLeftIcon />
+                            </IconButton>
+                        </div>
+                        <Divider />
+                        <List>{this.renderNavList()}</List>
+                    </Drawer>
+                    <main className={classes.content}>
+                        <div className={classes.toolbar} />
+                        {this.props.children}
+                    </main>
+                    {loading && <LinearProgress className={classes.progess} color="secondary" />}
+                    {isLogin && (
+                        <Fab size="large" color="primary" className={classes["post-btn"]}>
+                            <AddIcon />
+                        </Fab>
+                    )}
+                </div>
+            </SnackbarProvider>
         );
     }
 }

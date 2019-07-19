@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 
 import ForumView from "../../View/Forum";
 import { StoreState } from "../../Reducers";
-import { changeTitle } from "../../Actions/basic";
+import { changeTitle } from "../../Actions";
 
 const mapStateToProps = (_: StoreState, ownProps: RouteComponentProps) => ({
     ...ownProps

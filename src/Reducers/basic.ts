@@ -1,10 +1,11 @@
-import * as actions from "../Actions/basic";
+import * as actions from "../Actions";
 import { TITLE_PREFIX } from "../Consts";
 
 export interface BasicStore {
     title: string;
     loading: boolean;
     isLogin: boolean;
+    snackbars: actions.IEnqueueSnackbar["notification"][];
 }
 
 type Action =
@@ -12,12 +13,15 @@ type Action =
     | actions.ILoginOK
     | actions.ILogoutOK
     | actions.IStartLoading
-    | actions.IStopLoading;
+    | actions.IStopLoading
+    | actions.IEnqueueSnackbar
+    | actions.IRemoveSnackbar;
 
 const initState: BasicStore = {
     title: "酷兔网",
     loading: false,
-    isLogin: false
+    isLogin: false,
+    snackbars: []
 };
 
 export const basicReducer = function(state = initState, action: Action): BasicStore {
@@ -33,6 +37,10 @@ export const basicReducer = function(state = initState, action: Action): BasicSt
             return { ...state, isLogin: true };
         case actions.LOGOUT_OK:
             return { ...state, isLogin: false };
+        case actions.ENQUEUE_SNACKBAR:
+            return { ...state, snackbars: [...state.snackbars, { ...action.notification }] };
+        case actions.REMOVE_SNACKBAR:
+            return { ...state, snackbars: state.snackbars.filter(snackbar => snackbar.key !== action.key) };
     }
     return state;
 };

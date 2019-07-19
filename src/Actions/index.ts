@@ -1,3 +1,5 @@
+import { OptionsObject } from "notistack";
+
 export const CHANGE_TITLE = "CHANGE_TITLE";
 export type CHANGE_TITLE = typeof CHANGE_TITLE;
 export interface IChangeTitle {
@@ -71,3 +73,37 @@ export const changeUserInfo = (username: string, avatar: string, isAdmin: boolea
         isAdmin
     };
 };
+
+export const ENQUEUE_SNACKBAR = "ENQUEUE_SNACKBAR";
+export type ENQUEUE_SNACKBAR = typeof ENQUEUE_SNACKBAR;
+export interface IEnqueueSnackbar {
+    type: ENQUEUE_SNACKBAR;
+    notification: {
+        key: number;
+        message: string;
+        options?: OptionsObject;
+    };
+}
+export function enqueueSnackbar(message: string, options?: OptionsObject): IEnqueueSnackbar {
+    return {
+        type: ENQUEUE_SNACKBAR,
+        notification: {
+            key: new Date().getTime() + Math.random(),
+            message,
+            options
+        }
+    };
+}
+
+export const REMOVE_SNACKBAR = "REMOVE_SNACKBAR";
+export type REMOVE_SNACKBAR = typeof REMOVE_SNACKBAR;
+export interface IRemoveSnackbar {
+    type: REMOVE_SNACKBAR;
+    key: number;
+}
+export function removeSnackbar(key: number): IRemoveSnackbar {
+    return {
+        type: REMOVE_SNACKBAR,
+        key
+    };
+}

@@ -1,4 +1,4 @@
-import * as actions from "../Actions/basic";
+import * as actions from "../Actions";
 
 export interface UserStore {
     username: string;

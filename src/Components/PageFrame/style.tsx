@@ -1,5 +1,6 @@
 import { createStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
+import { dangerColor, infoColor, successColor, warningColor } from "../../Styles/Color";
 
 const drawerWidth = 160;
 
@@ -76,7 +77,11 @@ const styles = (theme: Theme) =>
             right: "5%",
             bottom: "5%",
             zIndex: 9999
-        }
+        },
+        success: { backgroundColor: successColor },
+        error: { backgroundColor: dangerColor },
+        warning: { backgroundColor: warningColor },
+        info: { backgroundColor: infoColor }
     });
 
 export default styles;

@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 
 import LoginView from "../../View/Login";
 import { StoreState } from "../../Reducers";
-import { changeTitle } from "../../Actions/basic";
+import { changeTitle } from "../../Actions";
 
 const mapStateToProps = ({ basic: { isLogin } }: StoreState, ownProps: RouteComponentProps) => ({
     isLogin,
