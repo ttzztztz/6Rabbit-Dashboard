@@ -4,17 +4,12 @@ import { WithStyles, withStyles } from "@material-ui/core";
 
 import Avatar from "../../Components/Avatar";
 import { THREAD_INFO } from "../../Consts/routers";
+import { IThreadListItem } from "../../Typings";
 
 import Typography from "@material-ui/core/Typography";
 import { RouteComponentProps } from "react-router";
 
-interface Props extends WithStyles {
-    tid: string;
-    title: string;
-    username: string;
-    time: Date;
-    userAvatar: string;
-}
+interface Props extends WithStyles, IThreadListItem {}
 
 class ThreadListItem extends React.PureComponent<Props & RouteComponentProps> {
     handleTitleClick = () => {

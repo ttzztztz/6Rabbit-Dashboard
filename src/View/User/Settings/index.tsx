@@ -4,6 +4,7 @@ import { WithStyles, withStyles } from "@material-ui/core";
 
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 
 interface Props extends WithStyles {}
@@ -54,6 +55,21 @@ class Settings extends React.Component<Props> {
                         onChange={this.handleChange("name")}
                         margin="normal"
                     />
+                    <TextField
+                        id="gender"
+                        select
+                        label="性别"
+                        className={classes.textField}
+                        value={gender}
+                        onChange={this.handleChange("gender")}
+                        margin="normal"
+                    >
+                        {["男", "女", "其他"].map((option, index) => (
+                            <MenuItem key={index} value={option}>
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                     <TextField
                         id="email"
                         label="邮箱"

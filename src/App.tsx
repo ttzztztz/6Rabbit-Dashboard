@@ -12,6 +12,7 @@ import ShopView from "./View/Shop";
 import ThreadView from "./View/Thread";
 import UserView from "./View/User";
 import ProfileView from "./View/Profile";
+import LoginView from "./Containers/Login";
 
 import Store from "./Reducers/store";
 import withRoot from "./Styles/WithRoot";
@@ -30,6 +31,7 @@ class App extends React.Component {
                             <Route path="/blog" component={BlogView} />
                             <Route path="/shop" component={ShopView} />
                             <Route path="/user" component={UserView} />
+                            <Route path="/login" component={LoginView} />
                             <Route path="/profile/:id" component={ProfileView} />
                         </Switch>
                         <Footer />

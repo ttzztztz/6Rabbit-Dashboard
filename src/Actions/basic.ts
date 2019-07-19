@@ -61,11 +61,13 @@ export interface IChangeUserInfo {
     type: CHANGE_USER_INFO;
     username: string;
     avatar: string;
+    isAdmin: boolean;
 }
-export const changeUserInfo = (username: string, avatar: string): IChangeUserInfo => {
+export const changeUserInfo = (username: string, avatar: string, isAdmin: boolean): IChangeUserInfo => {
     return {
         type: CHANGE_USER_INFO,
         username,
-        avatar
+        avatar,
+        isAdmin
     };
 };

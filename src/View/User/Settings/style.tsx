@@ -19,8 +19,9 @@ const styles = (theme: Theme) =>
             }
         },
         "setting-title": {
-            margin: theme.spacing(2, 0, 0, 0),
-            textAlign: "center"
+            margin: theme.spacing(4, 0, 0, 0),
+            textAlign: "center",
+            userSelect: "none"
         },
         "input-container": {
             margin: theme.spacing(-1, 0, 0, 2),
