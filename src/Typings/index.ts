@@ -13,3 +13,12 @@ export interface IPostListItem {
     userAvatar: string;
     content: string;
 }
+
+export interface INotificationItem {
+    nid: string;
+    username: string;
+    userAvatar: string;
+    content: string;
+    isRead: boolean;
+    time: Date;
+}
