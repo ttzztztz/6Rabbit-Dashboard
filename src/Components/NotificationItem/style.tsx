@@ -15,7 +15,8 @@ const styles = (_: Theme) =>
         },
         "notification-item-info": {
             color: "rgba(134, 142, 150, 0.8)",
-            fontSize: "12px"
+            fontSize: "12px",
+            position: "relative"
         },
         "content-unread": {
             fontWeight: 700
@@ -27,6 +28,19 @@ const styles = (_: Theme) =>
             borderRadius: "6px",
             background: "linear-gradient(45deg, red, #ff3c3c63)",
             margin: "0 3px"
+        },
+        "notification-clear": {
+            position: "absolute",
+            right: "42px",
+            color: "rgba(134, 142, 150, 0.8)",
+            fontSize: "12px",
+            cursor: "pointer"
+        },
+        "clear-icon": {
+            width: "12px",
+            height: "12px",
+            color: "rgba(134, 142, 150, 0.8)",
+            fontSize: "12px"
         }
     });
 

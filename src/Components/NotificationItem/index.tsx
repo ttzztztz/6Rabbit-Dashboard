@@ -4,6 +4,8 @@ import { WithStyles, withStyles } from "@material-ui/core";
 import { RouteComponentProps } from "react-router";
 import clsx from "clsx";
 
+import ClearIcon from "@material-ui/icons/Clear";
+
 import Avatar from "../../Components/Avatar";
 import { INotificationItem } from "../../Typings";
 
@@ -17,6 +19,10 @@ class NotificationItem extends React.PureComponent<Props & RouteComponentProps> 
             <div className={classes["notification-item-container"]} data-nid={nid}>
                 <div className={classes["author-avatar"]}>
                     <Avatar src={userAvatar} width={32} />
+                </div>
+                <div className={classes["notification-clear"]}>
+                    <ClearIcon className={classes["clear-icon"]} />
+                    删除
                 </div>
                 <div>
                     <div className={classes["notification-item-info"]}>

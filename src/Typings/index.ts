@@ -5,7 +5,6 @@ export interface IThreadListItem {
     time: Date;
     userAvatar: string;
 }
-
 export interface IPostListItem {
     pid: string;
     username: string;
@@ -13,7 +12,6 @@ export interface IPostListItem {
     userAvatar: string;
     content: string;
 }
-
 export interface INotificationItem {
     nid: string;
     username: string;
@@ -21,4 +19,10 @@ export interface INotificationItem {
     content: string;
     isRead: boolean;
     time: Date;
+}
+export enum PostPageType {
+    CREATE_THREAD,
+    CREATE_POST,
+    EDIT_THREAD,
+    EDIT_POST
 }
