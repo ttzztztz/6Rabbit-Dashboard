@@ -5,3 +5,11 @@ export interface IThreadListItem {
     time: Date;
     userAvatar: string;
 }
+
+export interface IPostListItem {
+    pid: string;
+    username: string;
+    time: Date;
+    userAvatar: string;
+    content: string;
+}

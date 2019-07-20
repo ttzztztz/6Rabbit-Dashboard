@@ -20,6 +20,19 @@ const styles = (theme: Theme) =>
         "second-info": {
             color: "rgba(134, 142, 150, 0.8)",
             fontSize: "12px"
+        },
+        strong: {
+            fontWeight: 600
+        },
+        button: {
+            margin: theme.spacing(1)
+        },
+        "reply-container": {
+            display: "flex",
+            justifyContent: "flex-end"
+        },
+        "post-list-container": {
+            margin: theme.spacing(1)
         }
     });
 

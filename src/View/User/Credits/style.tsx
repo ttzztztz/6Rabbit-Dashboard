@@ -13,6 +13,21 @@ const styles = (theme: Theme) =>
                     width: "25% !important"
                 }
             }
+        },
+        "credits-title": {
+            margin: theme.spacing(4, 0, 0, 0),
+            textAlign: "center",
+            userSelect: "none"
+        },
+        "credits-container": {
+            padding: theme.spacing(3, 0)
+        },
+        "credits-log-container": {
+            width: "100%",
+            overflowX: "auto"
+        },
+        "credits-log-table": {
+            minWidth: "600px"
         }
     });
 
