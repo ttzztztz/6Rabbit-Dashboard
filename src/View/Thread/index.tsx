@@ -12,9 +12,13 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import TableFooter from "@material-ui/core/TableFooter";
+
+import MessageIcon from "@material-ui/icons/Message";
 
 import Avatar from "../../Components/Avatar";
 import PostListItem from "../../Containers/PostListItem";
+import PaginationComponent from "../../Components/Pagination";
 import DefaultAvatar from "../../Styles/avatar.png";
 
 interface Props extends WithStyles {
@@ -52,41 +56,21 @@ class Thread extends React.Component<Props & RouteComponentProps> {
         username: "hzytql",
         time: new Date(),
         postList: fakePostList,
-        reply: ""
+        reply: "",
+
+        total: 30,
+        page: 1
     };
     handleChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setState({
             reply: e.target.value
         });
     };
-
-    renderReplyComponent = () => {
-        const { reply } = this.state;
-        const { classes } = this.props;
-        return (
-            <Paper className={classes.paperRoot}>
-                <TextField
-                    id="reply-content"
-                    label="发表回复"
-                    multiline
-                    fullWidth
-                    value={reply}
-                    onChange={this.handleChangeReply}
-                    margin="dense"
-                    variant="outlined"
-                />
-                <div className={classes["reply-container"]}>
-                    <Button variant="contained" color="primary" className={classes.button}>
-                        发表回复
-                    </Button>
-                </div>
-            </Paper>
-        );
-    };
+    onPageChange = (page: number) => {};
 
     render() {
         const { classes } = this.props;
-        const { title, content, time, username, postList } = this.state;
+        const { title, content, time, username, postList, reply, total, page } = this.state;
         this.props.changeTitle(title);
         return (
             <>
@@ -122,10 +106,32 @@ class Thread extends React.Component<Props & RouteComponentProps> {
                                     </TableRow>
                                 ))}
                             </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <PaginationComponent total={total} page={page} onPageChange={this.onPageChange} />
+                                </TableRow>
+                            </TableFooter>
                         </Table>
                     </div>
                 </Paper>
-                {this.renderReplyComponent()}
+                <Paper className={classes.paperRoot}>
+                    <TextField
+                        id="reply-content"
+                        label="发表回复"
+                        multiline
+                        fullWidth
+                        value={reply}
+                        onChange={this.handleChangeReply}
+                        margin="dense"
+                        variant="outlined"
+                    />
+                    <div className={classes["reply-container"]}>
+                        <Button variant="contained" color="primary" className={classes.button}>
+                            <MessageIcon className={classes["reply-icon"]} />
+                            回复
+                        </Button>
+                    </div>
+                </Paper>
             </>
         );
     }

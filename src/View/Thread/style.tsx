@@ -33,6 +33,10 @@ const styles = (theme: Theme) =>
         },
         "post-list-container": {
             margin: theme.spacing(1)
+        },
+        "reply-icon": {
+            fontSize: "16px",
+            marginRight: theme.spacing(0.5)
         }
     });
 

@@ -10,8 +10,8 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import Paper from "@material-ui/core/Paper";
 import TableFooter from "@material-ui/core/TableFooter";
+import Paper from "@material-ui/core/Paper";
 
 interface Props extends WithStyles {
     threadList: Array<IThreadListItem>;
