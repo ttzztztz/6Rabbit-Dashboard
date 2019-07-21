@@ -64,11 +64,24 @@ const fakeData: Array<IThreadListItem> = [
 ];
 
 class Forum extends React.Component<Props & RouteComponentProps> {
+    state = {
+        total: 25,
+        page: 1
+    };
+
+    handlePageChange = (page: number) => {};
+
     render() {
+        const { total, page } = this.state;
         this.props.changeTitle("讨论");
         return (
             <>
-                <ThreadListComponent threadList={fakeData} />
+                <ThreadListComponent
+                    threadList={fakeData}
+                    total={total}
+                    page={page}
+                    onPageChange={this.handlePageChange}
+                />
             </>
         );
     }

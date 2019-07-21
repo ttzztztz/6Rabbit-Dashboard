@@ -19,7 +19,7 @@ const styles = (theme: Theme) =>
             }
         },
         "setting-title": {
-            margin: theme.spacing(4, 0, 0, 0),
+            margin: theme.spacing(4, 0, 3, 0),
             textAlign: "center",
             userSelect: "none"
         },

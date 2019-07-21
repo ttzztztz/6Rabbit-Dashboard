@@ -19,7 +19,7 @@ class Settings extends React.Component<Props> {
         signature: "",
         qq: "",
         wechat: "",
-        gender: "",
+        gender: "男",
         email: "",
         mobile: ""
     };
@@ -53,7 +53,8 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={name}
                         onChange={this.handleChange("name")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     />
                     <TextField
                         id="gender"
@@ -62,7 +63,8 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={gender}
                         onChange={this.handleChange("gender")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     >
                         {["男", "女", "其他"].map((option, index) => (
                             <MenuItem key={index} value={option}>
@@ -76,7 +78,8 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={email}
                         onChange={this.handleChange("email")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     />
                     <TextField
                         id="qq"
@@ -84,7 +87,8 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={qq}
                         onChange={this.handleChange("qq")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     />
                     <TextField
                         id="mobile"
@@ -92,7 +96,8 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={mobile}
                         onChange={this.handleChange("mobile")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     />
                     <TextField
                         id="wechat"
@@ -100,7 +105,8 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={wechat}
                         onChange={this.handleChange("wechat")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     />
                     <TextField
                         id="signature"
@@ -108,7 +114,8 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={signature}
                         onChange={this.handleChange("signature")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     />
                     <div className={classes["setting-submit-btn-container"]}>
                         <Button
@@ -132,8 +139,9 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={pwd_old}
                         onChange={this.handleChange("pwd_old")}
-                        margin="normal"
+                        margin="dense"
                         type="password"
+                        variant="outlined"
                     />
                     <TextField
                         id="pwd_new"
@@ -141,8 +149,9 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={pwd_new}
                         onChange={this.handleChange("pwd_new")}
-                        margin="normal"
+                        margin="dense"
                         type="password"
+                        variant="outlined"
                     />
                     <TextField
                         id="pwd_new_repeat"
@@ -150,8 +159,9 @@ class Settings extends React.Component<Props> {
                         className={classes.textField}
                         value={pwd_new_repeat}
                         onChange={this.handleChange("pwd_new_repeat")}
-                        margin="normal"
+                        margin="dense"
                         type="password"
+                        variant="outlined"
                     />
                     <div className={classes["setting-submit-btn-container"]}>
                         <Button

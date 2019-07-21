@@ -7,8 +7,10 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import TableFooter from "@material-ui/core/TableFooter";
 
 import NotificationItem from "../../../Containers/NotificationItem";
+import PaginationComponent from "../../../Components/Pagination";
 import DefaultAvatar from "../../../Styles/avatar.png";
 
 import { INotificationItem } from "../../../Typings";
@@ -36,11 +38,16 @@ const fakeData: Array<INotificationItem> = [
 
 class Notifications extends React.Component<Props> {
     state = {
-        notificationList: fakeData
+        notificationList: fakeData,
+        total: 35,
+        page: 1
     };
+
+    handlePageChange = (page: number) => {};
+
     render() {
         const { classes } = this.props;
-        const { notificationList } = this.state;
+        const { notificationList, total, page } = this.state;
 
         return (
             <div className={classes["notification-center-container"]}>
@@ -63,6 +70,11 @@ class Notifications extends React.Component<Props> {
                                 </TableRow>
                             ))}
                         </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <PaginationComponent total={total} page={page} onPageChange={this.handlePageChange} />
+                            </TableRow>
+                        </TableFooter>
                     </Table>
                 </div>
             </div>

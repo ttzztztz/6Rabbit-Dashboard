@@ -3,6 +3,7 @@ import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
 import ThreadListItem from "../../Containers/ThreadListItem";
+import PaginationComponent from "../../Components/Pagination";
 import { IThreadListItem } from "../../Typings";
 
 import Table from "@material-ui/core/Table";
@@ -10,14 +11,19 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import Paper from "@material-ui/core/Paper";
+import TableFooter from "@material-ui/core/TableFooter";
 
 interface Props extends WithStyles {
     threadList: Array<IThreadListItem>;
+
+    total: number;
+    page: number;
+    onPageChange: (page: number) => void;
 }
 
 class ThreadList extends React.Component<Props> {
     render() {
-        const { classes, threadList } = this.props;
+        const { classes, threadList, total, page, onPageChange } = this.props;
         return (
             <Paper className={classes.root}>
                 <Table>
@@ -30,6 +36,11 @@ class ThreadList extends React.Component<Props> {
                             </TableRow>
                         ))}
                     </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <PaginationComponent total={total} page={page} onPageChange={onPageChange} />
+                        </TableRow>
+                    </TableFooter>
                 </Table>
             </Paper>
         );

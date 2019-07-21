@@ -2,6 +2,8 @@ import React from "react";
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
+import PaginationComponent from "../../../Components/Pagination";
+
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -47,11 +49,15 @@ class Credits extends React.Component<Props> {
         group: "Lv1",
         credits: 12,
         golds: 24,
-        rmbs: 12
+        rmbs: 12,
+
+        page: 1,
+        total: 36
     };
+    handlePageChange = (page: number) => {};
     render() {
         const { classes } = this.props;
-        const { group, credits, golds, rmbs } = this.state;
+        const { group, credits, golds, rmbs, page, total } = this.state;
         return (
             <div className={classes["credits-container"]}>
                 <section id="basic-statics">
@@ -116,6 +122,7 @@ class Credits extends React.Component<Props> {
                             </TableBody>
                         </Table>
                     </div>
+                    <PaginationComponent total={total} page={page} onPageChange={this.handlePageChange} />
                 </section>
             </div>
         );
