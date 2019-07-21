@@ -20,6 +20,7 @@ import Avatar from "../../Components/Avatar";
 import PostListItem from "../../Containers/PostListItem";
 import PaginationComponent from "../../Components/Pagination";
 import DefaultAvatar from "../../Styles/avatar.png";
+import { THREAD_INFO } from "../../Consts/routers";
 
 interface Props extends WithStyles {
     changeTitle: (title: string) => void;
@@ -66,7 +67,19 @@ class Thread extends React.Component<Props & RouteComponentProps> {
             reply: e.target.value
         });
     };
-    onPageChange = (page: number) => {};
+    onPageChange = (page: number) => {
+        const tid = (this.props.match.params as { tid: string; page: string }).tid;
+        this.props.history.push(THREAD_INFO(tid, page.toString()));
+        this.setState({
+            page: page
+        });
+    };
+
+    componentDidMount() {
+        this.setState({
+            page: (this.props.match.params as { tid: string; page: string }).page
+        });
+    }
 
     render() {
         const { classes } = this.props;
@@ -106,12 +119,8 @@ class Thread extends React.Component<Props & RouteComponentProps> {
                                     </TableRow>
                                 ))}
                             </TableBody>
-                            <TableFooter>
-                                <TableRow>
-                                    <PaginationComponent total={total} page={page} onPageChange={this.onPageChange} />
-                                </TableRow>
-                            </TableFooter>
                         </Table>
+                        <PaginationComponent total={total} page={page} onPageChange={this.onPageChange} />
                     </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>

@@ -72,7 +72,13 @@ class Notifications extends React.Component<Props> {
                         </TableBody>
                         <TableFooter>
                             <TableRow>
-                                <PaginationComponent total={total} page={page} onPageChange={this.handlePageChange} />
+                                <TableCell scope="row">
+                                    <PaginationComponent
+                                        total={total}
+                                        page={page}
+                                        onPageChange={this.handlePageChange}
+                                    />
+                                </TableCell>
                             </TableRow>
                         </TableFooter>
                     </Table>
