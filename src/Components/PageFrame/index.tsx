@@ -45,17 +45,17 @@ class Bar extends React.PureComponent<Props & RouteComponentProps> {
         {
             icon: <SubjectIcon />,
             title: "博客",
-            router: "/blog"
+            router: "/blog/1"
         },
         {
             icon: <ShoppingCartIcon />,
             title: "商城",
-            router: "/shop"
+            router: "/shop/1"
         },
         {
             icon: <MessageIcon />,
             title: "讨论",
-            router: "/forum"
+            router: "/forum/1"
         },
         {
             icon: <PersonIcon />,

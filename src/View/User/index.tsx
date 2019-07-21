@@ -4,8 +4,8 @@ import { WithStyles, withStyles } from "@material-ui/core";
 import { RouteComponentProps } from "react-router";
 
 import DefaultAvatar from "../../Styles/avatar.png";
-import AvatarBoard from "../../Components/AvatarBoard";
 
+import AvatarBoard from "../../Components/AvatarBoard";
 import CreditsComponent from "./Credits";
 import SettingsComponent from "./Settings";
 import NotificationsComponent from "./Notifications";

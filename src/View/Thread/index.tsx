@@ -77,7 +77,7 @@ class Thread extends React.Component<Props & RouteComponentProps> {
 
     componentDidMount() {
         this.setState({
-            page: (this.props.match.params as { tid: string; page: string }).page
+            page: Number.parseInt((this.props.match.params as { tid: string; page: string }).page)
         });
     }
 

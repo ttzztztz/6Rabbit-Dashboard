@@ -69,6 +69,12 @@ class BlogList extends React.PureComponent<Props & RouteComponentProps> {
         page: 1
     };
 
+    componentDidMount() {
+        this.setState({
+            page: Number.parseInt((this.props.match.params as { tid: string; page: string }).page)
+        });
+    }
+
     handlePageChange = (page: number) => {};
 
     render() {
