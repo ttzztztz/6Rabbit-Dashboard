@@ -15,6 +15,7 @@ import Paper from "@material-ui/core/Paper";
 
 interface Props extends WithStyles {
     threadList: Array<IThreadListItem>;
+    showAvatar?: boolean;
 
     total: number;
     page: number;
@@ -24,6 +25,8 @@ interface Props extends WithStyles {
 class ThreadList extends React.Component<Props> {
     render() {
         const { classes, threadList, total, page, onPageChange } = this.props;
+        const showAvatar = this.props.showAvatar === undefined ? true : this.props.showAvatar;
+
         return (
             <Paper className={classes.root}>
                 <Table>
@@ -31,7 +34,7 @@ class ThreadList extends React.Component<Props> {
                         {threadList.map(item => (
                             <TableRow key={item.tid}>
                                 <TableCell component="th" scope="row">
-                                    <ThreadListItem {...item} />
+                                    <ThreadListItem {...item} showAvatar={showAvatar} />
                                 </TableCell>
                             </TableRow>
                         ))}

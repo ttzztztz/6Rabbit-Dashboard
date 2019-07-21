@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
+import { RouteComponentProps } from "react-router";
 
 import ThreadListComponent from "../../Components/ThreadList";
 import { IThreadListItem } from "../../Typings";
-import { RouteComponentProps } from "react-router";
 
 import DefaultAvatar from "../../Styles/avatar.png";
 interface Props extends WithStyles {
@@ -63,7 +63,7 @@ const fakeData: Array<IThreadListItem> = [
     }
 ];
 
-class Forum extends React.Component<Props & RouteComponentProps> {
+class Forum extends React.PureComponent<Props & RouteComponentProps> {
     state = {
         total: 25,
         page: 1

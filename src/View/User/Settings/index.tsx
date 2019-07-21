@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 
 interface Props extends WithStyles {}
 
-class Settings extends React.Component<Props> {
+class Settings extends React.PureComponent<Props> {
     state = {
         pwd_old: "",
         pwd_new: "",

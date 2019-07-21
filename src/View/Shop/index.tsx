@@ -7,7 +7,7 @@ interface Props extends WithStyles {
     changeTitle: (title: string) => void;
 }
 
-class ShopList extends React.Component<Props & RouteComponentProps> {
+class ShopList extends React.PureComponent<Props & RouteComponentProps> {
     render() {
         this.props.changeTitle("商城");
         return <></>;

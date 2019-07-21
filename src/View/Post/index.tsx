@@ -38,7 +38,7 @@ interface Props extends WithStyles {
 
 const forumList = ["博客", "讨论"];
 
-class Post extends React.Component<Props & RouteComponentProps> {
+class Post extends React.PureComponent<Props & RouteComponentProps> {
     state = {
         forum: "讨论",
         title: "",

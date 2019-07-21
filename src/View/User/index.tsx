@@ -9,6 +9,7 @@ import AvatarBoard from "../../Components/AvatarBoard";
 import CreditsComponent from "./Credits";
 import SettingsComponent from "./Settings";
 import NotificationsComponent from "./Notifications";
+import ProfileThreadListComponent from "../../Containers/ProfileThreadList";
 
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
@@ -18,7 +19,7 @@ interface Props extends WithStyles {
     changeTitle: (title: string) => void;
 }
 
-class Profile extends React.Component<Props & RouteComponentProps> {
+class Profile extends React.PureComponent<Props & RouteComponentProps> {
     state = {
         activeTab: 0
     };
@@ -44,15 +45,13 @@ class Profile extends React.Component<Props & RouteComponentProps> {
                     >
                         <Tab label="积分" />
                         <Tab label="帖子" />
-                        <Tab label="回帖" />
                         <Tab label="通知" />
                         <Tab label="设置" />
                     </Tabs>
                     {activeTab === 0 && <CreditsComponent />}
-                    {activeTab === 1 && <CreditsComponent />}
-                    {activeTab === 2 && <CreditsComponent />}
-                    {activeTab === 3 && <NotificationsComponent />}
-                    {activeTab === 4 && <SettingsComponent />}
+                    {activeTab === 1 && <ProfileThreadListComponent prefix="我的" showPurchased={true} />}
+                    {activeTab === 2 && <NotificationsComponent />}
+                    {activeTab === 3 && <SettingsComponent />}
                 </Paper>
             </>
         );

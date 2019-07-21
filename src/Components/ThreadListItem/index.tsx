@@ -9,7 +9,9 @@ import { IThreadListItem } from "../../Typings";
 import Typography from "@material-ui/core/Typography";
 import { RouteComponentProps } from "react-router";
 
-interface Props extends WithStyles, IThreadListItem {}
+interface Props extends WithStyles, IThreadListItem {
+    showAvatar: boolean;
+}
 
 class ThreadListItem extends React.PureComponent<Props & RouteComponentProps> {
     handleTitleClick = () => {
@@ -17,13 +19,15 @@ class ThreadListItem extends React.PureComponent<Props & RouteComponentProps> {
         this.props.history.push(THREAD_INFO(tid));
     };
     render() {
-        const { classes, title, username, time, userAvatar } = this.props;
+        const { classes, title, username, time, userAvatar, showAvatar } = this.props;
 
         return (
             <div className={classes["thread-list-item-container"]}>
-                <div className={classes["thread-avatar"]}>
-                    <Avatar src={userAvatar} width={48} />
-                </div>
+                {showAvatar && (
+                    <div className={classes["thread-avatar"]}>
+                        <Avatar src={userAvatar} width={48} />
+                    </div>
+                )}
                 <div>
                     <Typography
                         variant="h6"
@@ -34,7 +38,7 @@ class ThreadListItem extends React.PureComponent<Props & RouteComponentProps> {
                         {title}
                     </Typography>
                     <Typography variant="body1" className={classes["second-info"]}>
-                        <span className={classes["author-username"]}>{username}</span>
+                        {showAvatar && <span className={classes["author-username"]}>{username}</span>}
                         <span>{time.toLocaleString()}</span>
                     </Typography>
                 </div>

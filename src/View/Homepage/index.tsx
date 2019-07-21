@@ -7,7 +7,7 @@ interface Props extends WithStyles {
     changeTitle: (title: string) => void;
 }
 
-class Homepage extends React.Component<Props & RouteComponentProps> {
+class Homepage extends React.PureComponent<Props & RouteComponentProps> {
     render() {
         this.props.changeTitle("首页");
         return <></>;

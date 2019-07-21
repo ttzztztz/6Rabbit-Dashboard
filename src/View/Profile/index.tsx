@@ -7,7 +7,7 @@ interface Props extends WithStyles {
     changeTitle: (title: string) => void;
 }
 
-class User extends React.Component<Props & RouteComponentProps> {
+class User extends React.PureComponent<Props & RouteComponentProps> {
     render() {
         this.props.changeTitle("资料");
         return <></>;

@@ -4,8 +4,7 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 const styles = (theme: Theme) =>
     createStyles({
         textField: {
-            marginLeft: theme.spacing(1),
-            marginRight: theme.spacing(1),
+            margin: theme.spacing(1.5),
             width: "80%"
         },
         button: {

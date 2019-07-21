@@ -44,7 +44,7 @@ const fakeData = [
     }
 ];
 
-class Credits extends React.Component<Props> {
+class Credits extends React.PureComponent<Props> {
     state = {
         group: "Lv1",
         credits: 12,

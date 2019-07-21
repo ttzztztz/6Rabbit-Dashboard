@@ -36,7 +36,7 @@ const fakeData: Array<INotificationItem> = [
     }
 ];
 
-class Notifications extends React.Component<Props> {
+class Notifications extends React.PureComponent<Props> {
     state = {
         notificationList: fakeData,
         total: 35,
