@@ -102,7 +102,9 @@ class Thread extends React.Component<Props & RouteComponentProps> {
                     </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>
-                    <Typography variant="body1">{content}</Typography>
+                    <Typography variant="body1">
+                        <div id="content-container" dangerouslySetInnerHTML={{ __html: content }} />
+                    </Typography>
                 </Paper>
                 <Paper className={classes.paperRoot}>
                     <Typography variant="body2" className={classes.strong}>

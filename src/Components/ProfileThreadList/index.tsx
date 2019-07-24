@@ -45,6 +45,7 @@ class ProfileThreadList extends React.PureComponent<Props> {
                     total={total}
                     onPageChange={handlePageChange}
                     threadList={threadList}
+                    showOutline={false}
                 />
             </>
         );

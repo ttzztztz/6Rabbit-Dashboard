@@ -22,7 +22,7 @@ class PostListItem extends React.PureComponent<Props & RouteComponentProps> {
                         <span className={classes["author-username"]}>{username}</span>
                         <span>{time.toLocaleString()}</span>
                     </div>
-                    <div className={classes["content-container"]}>{content}</div>
+                    <div className={classes["content-container"]} dangerouslySetInnerHTML={{ __html: content }} />
                 </div>
             </div>
         );

@@ -12,10 +12,12 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
 import Paper from "@material-ui/core/Paper";
+import clsx from "clsx";
 
 interface Props extends WithStyles {
     threadList: Array<IThreadListItem>;
     showAvatar?: boolean;
+    showOutline?: boolean;
 
     total: number;
     page: number;
@@ -26,9 +28,10 @@ class ThreadList extends React.Component<Props> {
     render() {
         const { classes, threadList, total, page, onPageChange } = this.props;
         const showAvatar = this.props.showAvatar === undefined ? true : this.props.showAvatar;
+        const showOutline = this.props.showOutline === undefined ? true : this.props.showOutline;
 
         return (
-            <Paper className={classes.root}>
+            <Paper className={showOutline ? classes.root : clsx(classes.root, classes["not-show-outline"])}>
                 <Table>
                     <TableBody>
                         {threadList.map(item => (

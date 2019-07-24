@@ -6,6 +6,9 @@ const styles = (theme: Theme) =>
         root: {
             width: "100%",
             marginTop: theme.spacing(3)
+        },
+        "not-show-outline": {
+            boxShadow: "0 0 0"
         }
     });
 
