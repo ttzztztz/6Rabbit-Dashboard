@@ -11,7 +11,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 
 import theme from "../styles/Theme";
 import initStore from "../reducers/store";
-
+import { VERSION, BUILD_DATE } from "../consts";
 import PageFrame from "../containers/PageFrame";
 
 interface AppProps {
@@ -25,6 +25,7 @@ class RabbitApp extends App<AppProps> {
         if (jssStyles) {
             jssStyles.parentNode!.removeChild(jssStyles);
         }
+        console.log(`Welcome to 6Rabbit !\n${VERSION}_${BUILD_DATE}`);
     }
 
     render() {

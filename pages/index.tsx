@@ -1,3 +1,3 @@
-import Homepage from "../containers/Homepage";
+import HomepageView from "../containers/Homepage";
 
-export default Homepage;
+export default HomepageView;

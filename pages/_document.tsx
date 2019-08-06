@@ -16,6 +16,8 @@ class MyDocument extends Document {
                         name="viewport"
                         content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
                     />
+                    <link rel="shortcut icon" href="/static/favicon.ico" />
+                    <link rel="manifest" href="/static/manifest.json" />
                     <meta name="theme-color" content={theme.palette.primary.main} />
                     <link
                         rel="stylesheet"

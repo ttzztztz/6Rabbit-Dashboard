@@ -58,68 +58,70 @@ class Post extends React.PureComponent<Props> {
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
         return (
-            <Paper className={classes.root}>
+            <>
                 <Head>
                     <title>
                         {TITLE_PREFIX}
                         {showTitle}
                     </title>
                 </Head>
-                <Typography variant="h5" component="h3" className={classes["title"]}>
-                    {showTitle}
-                </Typography>
-                <div className={classes["title-container"]}>
-                    <TextField
-                        id="forum"
-                        select
-                        label="板块"
-                        className={clsx(classes.textField, classes["post-forum"])}
-                        value={forum}
-                        onChange={this.handleChange("forum")}
-                        SelectProps={{
-                            MenuProps: {
-                                className: classes.menu
-                            }
-                        }}
-                        margin="dense"
-                        variant="outlined"
-                    >
-                        {forumList.map(item => (
-                            <MenuItem key={item} value={item}>
-                                {item}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <TextField
-                        id="title"
-                        label="帖子标题"
-                        className={clsx(classes.textField, classes["post-title"])}
-                        value={title}
-                        onChange={this.handleChange("title")}
-                        margin="dense"
-                        variant="outlined"
-                    />
-                </div>
-                <div className={classes["content-container"]}>
-                    <TextField
-                        id="content"
-                        label="帖子内容"
-                        multiline
-                        rows="25"
-                        value={content}
-                        onChange={this.handleChange("content")}
-                        className={clsx(classes.textField, classes["post-content"])}
-                        margin="dense"
-                        variant="outlined"
-                    />
-                </div>
-                <div className={classes["attach-container"]} />
-                <div className={classes["btn-container"]}>
-                    <Button variant="contained" color="primary" className={classes.button}>
+                <Paper className={classes.root}>
+                    <Typography variant="h5" component="h3" className={classes["title"]}>
                         {showTitle}
-                    </Button>
-                </div>
-            </Paper>
+                    </Typography>
+                    <div className={classes["title-container"]}>
+                        <TextField
+                            id="forum"
+                            select
+                            label="板块"
+                            className={clsx(classes.textField, classes["post-forum"])}
+                            value={forum}
+                            onChange={this.handleChange("forum")}
+                            SelectProps={{
+                                MenuProps: {
+                                    className: classes.menu
+                                }
+                            }}
+                            margin="dense"
+                            variant="outlined"
+                        >
+                            {forumList.map(item => (
+                                <MenuItem key={item} value={item}>
+                                    {item}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        <TextField
+                            id="title"
+                            label="帖子标题"
+                            className={clsx(classes.textField, classes["post-title"])}
+                            value={title}
+                            onChange={this.handleChange("title")}
+                            margin="dense"
+                            variant="outlined"
+                        />
+                    </div>
+                    <div className={classes["content-container"]}>
+                        <TextField
+                            id="content"
+                            label="帖子内容"
+                            multiline
+                            rows="25"
+                            value={content}
+                            onChange={this.handleChange("content")}
+                            className={clsx(classes.textField, classes["post-content"])}
+                            margin="dense"
+                            variant="outlined"
+                        />
+                    </div>
+                    <div className={classes["attach-container"]} />
+                    <div className={classes["btn-container"]}>
+                        <Button variant="contained" color="primary" className={classes.button}>
+                            {showTitle}
+                        </Button>
+                    </div>
+                </Paper>
+            </>
         );
     }
 }
