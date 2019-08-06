@@ -1,15 +1,22 @@
 import React from "react";
 import styles from "./style";
+
 import { WithStyles, withStyles } from "@material-ui/core";
 
-interface Props extends WithStyles {
-    changeTitle: (title: string) => void;
-}
+import { TITLE_PREFIX } from "../../consts";
+import Head from "next/head";
+
+interface Props extends WithStyles {}
 
 class ShopList extends React.PureComponent<Props> {
     render() {
-        this.props.changeTitle("商城");
-        return <></>;
+        return (
+            <>
+                <Head>
+                    <title>{TITLE_PREFIX}商城</title>
+                </Head>
+            </>
+        );
     }
 }
 

@@ -1,17 +1,21 @@
 import React from "react";
 import styles from "./style";
-import { WithStyles, withStyles } from "@material-ui/core";
 
 import ProfileThreadListComponent from "../../components/ProfileThreadList";
 import ProfileDetailComponent from "./ProfileDetail";
-import AvatarBoard from "../../Components/AvatarBoard";
+import AvatarBoard from "../../components/AvatarBoard";
+import { TITLE_PREFIX } from "../../consts";
 
+import { WithStyles, withStyles } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
+import Head from "next/head";
+import { withRouter, NextRouter } from "next/dist/client/router";
+
 interface Props extends WithStyles {
-    changeTitle: (title: string) => void;
+    router: NextRouter;
 }
 
 class User extends React.PureComponent<Props> {
@@ -26,13 +30,14 @@ class User extends React.PureComponent<Props> {
         });
     };
     render() {
-        this.props.changeTitle("资料");
-
         const { classes } = this.props;
         const { activeTab } = this.state;
 
         return (
             <>
+                <Head>
+                    <title>{TITLE_PREFIX}资料</title>
+                </Head>
                 <AvatarBoard src={"/static/avatar.png"} username="hzytql" />
                 <Paper className={classes["user-infos-container"]}>
                     <Tabs
@@ -52,10 +57,11 @@ class User extends React.PureComponent<Props> {
         );
     }
     componentDidMount() {
+        const { router } = this.props;
         this.setState({
-            uid: (this.props.match.params as { uid: string }).uid
+            uid: router.query["uid"] as string
         });
     }
 }
 
-export default withStyles(styles)(User);
+export default withRouter(withStyles(styles)(User));

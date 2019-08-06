@@ -1,5 +1,4 @@
 import * as actions from "../actions";
-import { TITLE_PREFIX } from "../consts";
 
 export interface BasicStore {
     title: string;
@@ -9,7 +8,6 @@ export interface BasicStore {
 }
 
 type Action =
-    | actions.IChangeTitle
     | actions.ILoginOK
     | actions.ILogoutOK
     | actions.IStartLoading
@@ -26,9 +24,6 @@ const initState: BasicStore = {
 
 export const basicReducer = function(state = initState, action: Action): BasicStore {
     switch (action.type) {
-        case actions.CHANGE_TITLE:
-            document.title = TITLE_PREFIX + action.title;
-            return { ...state, title: TITLE_PREFIX + action.title };
         case actions.START_LOADING:
             return { ...state, loading: true };
         case actions.STOP_LOADING:

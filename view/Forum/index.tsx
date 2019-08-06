@@ -4,10 +4,12 @@ import { WithStyles, withStyles } from "@material-ui/core";
 
 import ThreadListComponent from "../../components/ThreadList";
 import { IThreadListItem } from "../../typings";
+import { TITLE_PREFIX } from "../../consts";
+
 import { withRouter, NextRouter } from "next/dist/client/router";
+import Head from "next/head";
 
 interface Props extends WithStyles {
-    changeTitle: (title: string) => void;
     router: NextRouter;
 }
 
@@ -70,17 +72,20 @@ class Forum extends React.PureComponent<Props> {
     };
 
     componentDidMount() {
+        const { router } = this.props;
         this.setState({
-            page: Number.parseInt((this.props.match.params as { tid: string; page: string }).page)
+            page: Number.parseInt(router.query["page"] as string)
         });
     }
     handlePageChange = (page: number) => {};
 
     render() {
         const { total, page } = this.state;
-        this.props.changeTitle("讨论");
         return (
             <>
+                <Head>
+                    <title>{TITLE_PREFIX}讨论</title>
+                </Head>
                 <ThreadListComponent
                     threadList={fakeData}
                     total={total}

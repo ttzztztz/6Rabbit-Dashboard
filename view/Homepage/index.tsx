@@ -1,15 +1,21 @@
 import React from "react";
 import styles from "./style";
-import { WithStyles, withStyles } from "@material-ui/core";
+import { TITLE_PREFIX } from "../../consts";
 
-interface Props extends WithStyles {
-    changeTitle: (title: string) => void;
-}
+import { WithStyles, withStyles } from "@material-ui/core";
+import Head from "next/head";
+
+interface Props extends WithStyles {}
 
 class Homepage extends React.PureComponent<Props> {
     render() {
-        this.props.changeTitle("首页");
-        return <></>;
+        return (
+            <>
+                <Head>
+                    <title>{TITLE_PREFIX}首页</title>
+                </Head>
+            </>
+        );
     }
 }
 

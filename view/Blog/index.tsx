@@ -4,9 +4,13 @@ import { WithStyles, withStyles } from "@material-ui/core";
 
 import ThreadListComponent from "../../components/ThreadList";
 import { IThreadListItem } from "../../typings";
+import { TITLE_PREFIX } from "../../consts";
+
+import { NextRouter, withRouter } from "next/dist/client/router";
+import Head from "next/head";
 
 interface Props extends WithStyles {
-    changeTitle: (title: string) => void;
+    router: NextRouter;
 }
 
 const fakeData: Array<IThreadListItem> = [
@@ -68,8 +72,9 @@ class BlogList extends React.PureComponent<Props> {
     };
 
     componentDidMount() {
+        const { router } = this.props;
         this.setState({
-            page: Number.parseInt((this.props.match.params as { tid: string; page: string }).page)
+            page: Number.parseInt(router.query["page"] as string)
         });
     }
 
@@ -77,10 +82,12 @@ class BlogList extends React.PureComponent<Props> {
 
     render() {
         const { total, page } = this.state;
-        this.props.changeTitle("博客");
 
         return (
             <>
+                <Head>
+                    <title>{TITLE_PREFIX}博客</title>
+                </Head>
                 <ThreadListComponent
                     threadList={fakeData}
                     total={total}
@@ -93,4 +100,4 @@ class BlogList extends React.PureComponent<Props> {
     }
 }
 
-export default withStyles(styles)(BlogList);
+export default withRouter(withStyles(styles)(BlogList));

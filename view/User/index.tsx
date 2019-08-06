@@ -2,19 +2,20 @@ import React from "react";
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
-import AvatarBoard from "../../Components/AvatarBoard";
+import AvatarBoard from "../../components/AvatarBoard";
 import CreditsComponent from "./Credits";
 import SettingsComponent from "./Settings";
 import NotificationsComponent from "./Notifications";
 import ProfileThreadListComponent from "../../components/ProfileThreadList";
+import { TITLE_PREFIX } from "../../consts";
 
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
-interface Props extends WithStyles {
-    changeTitle: (title: string) => void;
-}
+import Head from "next/head";
+
+interface Props extends WithStyles {}
 
 class Profile extends React.PureComponent<Props> {
     state = {
@@ -28,9 +29,11 @@ class Profile extends React.PureComponent<Props> {
     render() {
         const { classes } = this.props;
         const { activeTab } = this.state;
-        this.props.changeTitle("用户");
         return (
             <>
+                <Head>
+                    <title>{TITLE_PREFIX}用户</title>
+                </Head>
                 <AvatarBoard src={"/static/avatar.png"} username="hzytql" />
                 <Paper className={classes["user-infos-container"]}>
                     <Tabs

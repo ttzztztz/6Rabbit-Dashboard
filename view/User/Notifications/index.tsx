@@ -11,7 +11,6 @@ import TableFooter from "@material-ui/core/TableFooter";
 
 import NotificationItem from "../../../components/NotificationItem";
 import PaginationComponent from "../../../components/Pagination";
-
 import { INotificationItem } from "../../../typings";
 
 interface Props extends WithStyles {}

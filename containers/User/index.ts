@@ -1,15 +1,12 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-import UserView from "../../View/User";
+import UserView from "../../view/User";
 import { StoreState } from "../../reducers";
-import { changeTitle } from "../../actions";
 
 const mapStateToProps = (_: StoreState) => ({});
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    changeTitle: (title: string) => dispatch(changeTitle(title))
-});
+const mapDispatchToProps = (dispatch: Dispatch) => ({});
 
 export default connect(
     mapStateToProps,

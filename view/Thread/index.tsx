@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./style";
 import clsx from "clsx";
-import { WithStyles, withStyles } from "@material-ui/core";
 
+import { WithStyles, withStyles } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -11,16 +11,19 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-
 import MessageIcon from "@material-ui/icons/Message";
 
 import Avatar from "../../components/Avatar";
 import PostListItem from "../../components/PostListItem";
 import PaginationComponent from "../../components/Pagination";
 import { THREAD_INFO } from "../../consts/routers";
+import { TITLE_PREFIX } from "../../consts";
+
+import { NextRouter, withRouter } from "next/dist/client/router";
+import Head from "next/head";
 
 interface Props extends WithStyles {
-    changeTitle: (title: string) => void;
+    router: NextRouter;
 }
 
 const fakePostList = [
@@ -65,25 +68,35 @@ class Thread extends React.Component<Props> {
         });
     };
     onPageChange = (page: number) => {
-        const tid = (this.props.match.params as { tid: string; page: string }).tid;
-        this.props.history.push(THREAD_INFO(tid, page.toString()));
+        const { router } = this.props;
+
+        const tid = router.query["tid"] as string;
+        const url = THREAD_INFO(tid, page.toString());
+        router.push(url, url);
         this.setState({
             page: page
         });
     };
 
     componentDidMount() {
+        const { router } = this.props;
+
         this.setState({
-            page: Number.parseInt((this.props.match.params as { tid: string; page: string }).page)
+            page: Number.parseInt(router.query["page"] as string)
         });
     }
 
     render() {
         const { classes } = this.props;
         const { title, content, time, username, postList, reply, total, page } = this.state;
-        this.props.changeTitle(title);
         return (
             <>
+                <Head>
+                    <title>
+                        {TITLE_PREFIX}
+                        {title}
+                    </title>
+                </Head>
                 <Paper className={clsx(classes.paperRoot, classes["title-bar"])}>
                     <div className={classes["thread-avatar"]}>
                         <Avatar src={"/static/avatar.png"} width={48} />
@@ -145,4 +158,4 @@ class Thread extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles)(Thread);
+export default withRouter(withStyles(styles)(Thread));

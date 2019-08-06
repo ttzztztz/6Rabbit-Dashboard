@@ -4,9 +4,13 @@ import { epics } from "../epics";
 
 import { reducer, StoreState } from "./index";
 
-const epicMiddleware = createEpicMiddleware();
+const initStore = () => {
+    const epicMiddleware = createEpicMiddleware();
+    const reduxMiddleware = applyMiddleware(epicMiddleware);
 
-const store: Store<StoreState> = createStore(reducer, applyMiddleware(epicMiddleware));
-epicMiddleware.run(epics);
+    const store: Store<StoreState> = createStore(reducer, reduxMiddleware);
+    epicMiddleware.run(epics);
 
-export default store;
+    return store;
+};
+export default initStore;

@@ -10,6 +10,10 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import { PostPageType } from "../../typings";
+import { TITLE_PREFIX } from "../../consts";
+
+import Head from "next/head";
+import { NextRouter, withRouter } from "next/dist/client/router";
 
 interface IMapRouteToPageType {
     [key: string]: number;
@@ -26,13 +30,13 @@ const mapPageTypeToTitle: IMapPageTypeToTitle = {
 };
 const mapRouteToPageType: IMapRouteToPageType = {
     "/thread/create": PostPageType.CREATE_THREAD,
-    "/post/create/:tid": PostPageType.CREATE_POST,
-    "/thread/update/:pid": PostPageType.EDIT_THREAD,
-    "/post/update/:pid": PostPageType.EDIT_POST
+    "/post/create": PostPageType.CREATE_POST,
+    "/thread/update": PostPageType.EDIT_THREAD,
+    "/post/update": PostPageType.EDIT_POST
 };
 
 interface Props extends WithStyles {
-    changeTitle: (title: string) => void;
+    router: NextRouter;
 }
 
 const forumList = ["博客", "讨论"];
@@ -49,12 +53,18 @@ class Post extends React.PureComponent<Props> {
         });
     };
     render() {
-        const { changeTitle, classes } = this.props;
+        const { classes, router } = this.props;
         const { forum, title, content } = this.state;
-        const showTitle = mapPageTypeToTitle[mapRouteToPageType[match.path]];
-        changeTitle(showTitle);
+        const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
+
         return (
             <Paper className={classes.root}>
+                <Head>
+                    <title>
+                        {TITLE_PREFIX}
+                        {showTitle}
+                    </title>
+                </Head>
                 <Typography variant="h5" component="h3" className={classes["title"]}>
                     {showTitle}
                 </Typography>
@@ -114,4 +124,4 @@ class Post extends React.PureComponent<Props> {
     }
 }
 
-export default withStyles(styles)(Post);
+export default withRouter(withStyles(styles)(Post));

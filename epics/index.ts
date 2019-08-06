@@ -9,7 +9,7 @@ import { Action, AnyAction } from "redux";
 import { Observable } from "rxjs";
 import { StoreState } from "../reducers";
 
-const dependencies = { localStorage };
+const dependencies = {};
 export type Dependencies = typeof dependencies;
 
 export type Epic<T extends Action = Action> = (

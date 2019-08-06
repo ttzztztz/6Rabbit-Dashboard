@@ -1,18 +1,5 @@
 import { OptionsObject } from "notistack";
 
-export const CHANGE_TITLE = "CHANGE_TITLE";
-export type CHANGE_TITLE = typeof CHANGE_TITLE;
-export interface IChangeTitle {
-    type: CHANGE_TITLE;
-    title: string;
-}
-export const changeTitle = (title: string): IChangeTitle => {
-    return {
-        type: CHANGE_TITLE,
-        title: title
-    };
-};
-
 export const START_LOADING = "START_LOADING";
 export type START_LOADING = typeof START_LOADING;
 export interface IStartLoading {

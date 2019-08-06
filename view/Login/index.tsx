@@ -1,16 +1,19 @@
 import React from "react";
 import styles from "./style";
 import clsx from "clsx";
-import { WithStyles, withStyles } from "@material-ui/core";
 
+import { WithStyles, withStyles } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
+import Head from "next/head";
+
+import { TITLE_PREFIX } from "../../consts";
+
 interface Props extends WithStyles {
     isLogin: boolean;
-    changeTitle: (title: string) => void;
 }
 enum ActivePage {
     Login,
@@ -61,9 +64,11 @@ class Login extends React.Component<Props> {
     renderLogin = () => {
         const { classes } = this.props;
         const { username, password } = this.state.login;
-        this.props.changeTitle("登录");
         return (
             <>
+                <Head>
+                    <title>{TITLE_PREFIX}登录</title>
+                </Head>
                 <Typography variant="h5" className={classes["title-container"]}>
                     登录
                 </Typography>
@@ -112,9 +117,11 @@ class Login extends React.Component<Props> {
     renderRegister = () => {
         const { classes } = this.props;
         const { username, password, password_repeat, email } = this.state.register;
-        this.props.changeTitle("注册");
         return (
             <>
+                <Head>
+                    <title>{TITLE_PREFIX}注册</title>
+                </Head>
                 <Typography variant="h5" className={classes["title-container"]}>
                     注册
                 </Typography>
