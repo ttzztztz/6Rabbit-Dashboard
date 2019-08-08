@@ -4,12 +4,20 @@ import { WithStyles, withStyles } from "@material-ui/core";
 
 import Avatar from "../Avatar";
 import { IPostListItem } from "../../typings";
+import { FETCH_AVATAR } from "../../consts/backend";
 
 interface Props extends WithStyles, IPostListItem {}
 
 class PostListItem extends React.PureComponent<Props> {
     render() {
-        const { classes, pid, username, time, userAvatar, content } = this.props;
+        const {
+            classes,
+            pid,
+            createDate,
+            message,
+            user: { username, uid }
+        } = this.props;
+        const userAvatar = FETCH_AVATAR(uid);
 
         return (
             <div className={classes["post-list-item-container"]} data-pid={pid}>
@@ -19,9 +27,9 @@ class PostListItem extends React.PureComponent<Props> {
                 <div>
                     <div className={classes["post-list-item-info"]}>
                         <span className={classes["author-username"]}>{username}</span>
-                        <span>{time.toLocaleString()}</span>
+                        <span>{createDate.toLocaleString()}</span>
                     </div>
-                    <div className={classes["content-container"]} dangerouslySetInnerHTML={{ __html: content }} />
+                    <div className={classes["content-container"]} dangerouslySetInnerHTML={{ __html: message }} />
                 </div>
             </div>
         );

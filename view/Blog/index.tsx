@@ -13,58 +13,6 @@ interface Props extends WithStyles {
     router: NextRouter;
 }
 
-const fakeData: Array<IThreadListItem> = [
-    {
-        tid: "1",
-        time: new Date(),
-        title: "hzytql",
-        username: "hzy",
-        userAvatar: "/static/avatar.png"
-    },
-    {
-        tid: "2",
-        time: new Date(),
-        title: "hzytql",
-        username: "hzy",
-        userAvatar: "/static/avatar.png"
-    },
-    {
-        tid: "3",
-        time: new Date(),
-        title: "hzytql",
-        username: "hzy",
-        userAvatar: "/static/avatar.png"
-    },
-    {
-        tid: "4",
-        time: new Date(),
-        title: "hzytql",
-        username: "hzy",
-        userAvatar: "/static/avatar.png"
-    },
-    {
-        tid: "5",
-        time: new Date(),
-        title: "hzytql",
-        username: "hzy",
-        userAvatar: "/static/avatar.png"
-    },
-    {
-        tid: "6",
-        time: new Date(),
-        title: "hzytql",
-        username: "hzy",
-        userAvatar: "/static/avatar.png"
-    },
-    {
-        tid: "7",
-        time: new Date(),
-        title: "hzytql",
-        username: "hzy",
-        userAvatar: "/static/avatar.png"
-    }
-];
-
 class BlogList extends React.PureComponent<Props> {
     state = {
         total: 25,
@@ -89,7 +37,7 @@ class BlogList extends React.PureComponent<Props> {
                     <title>{TITLE_PREFIX}博客</title>
                 </Head>
                 <ThreadListComponent
-                    threadList={fakeData}
+                    threadList={[]}
                     total={total}
                     page={page}
                     onPageChange={this.handlePageChange}

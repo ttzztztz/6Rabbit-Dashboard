@@ -1,27 +1,5 @@
 import { OptionsObject } from "notistack";
 
-export const START_LOADING = "START_LOADING";
-export type START_LOADING = typeof START_LOADING;
-export interface IStartLoading {
-    type: START_LOADING;
-}
-export const startLoading = (): IStartLoading => {
-    return {
-        type: START_LOADING
-    };
-};
-
-export const STOP_LOADING = "STOP_LOADING";
-export type STOP_LOADING = typeof STOP_LOADING;
-export interface IStopLoading {
-    type: STOP_LOADING;
-}
-export const stopLoading = (): IStopLoading => {
-    return {
-        type: STOP_LOADING
-    };
-};
-
 export const LOGIN_OK = "LOGIN_OK";
 export type LOGIN_OK = typeof LOGIN_OK;
 export interface ILoginOK {
@@ -92,5 +70,20 @@ export function removeSnackbar(key: number): IRemoveSnackbar {
     return {
         type: REMOVE_SNACKBAR,
         key
+    };
+}
+
+export const TOGGLE_PROGRESS = "TOGGLE_PROGRESS";
+export type TOGGLE_PROGRESS = typeof TOGGLE_PROGRESS;
+
+export interface IToggleProgress {
+    type: TOGGLE_PROGRESS;
+    on: boolean;
+}
+
+export function toggleProgress(on: boolean = false): IToggleProgress {
+    return {
+        type: TOGGLE_PROGRESS,
+        on
     };
 }

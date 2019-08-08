@@ -8,14 +8,23 @@ import { IThreadListItem } from "../../typings";
 
 import Typography from "@material-ui/core/Typography";
 import Link from "next/link";
+import { FETCH_AVATAR } from "../../consts/backend";
 
 interface Props extends WithStyles, IThreadListItem {
     showAvatar: boolean;
 }
 
-class ThreadListItem extends React.PureComponent<Props> {
+class ThreadListItem extends React.Component<Props> {
     render() {
-        const { classes, title, username, time, userAvatar, showAvatar, tid } = this.props;
+        const {
+            classes,
+            subject,
+            createDate,
+            showAvatar,
+            tid,
+            user: { username, uid }
+        } = this.props;
+        const userAvatar = FETCH_AVATAR(uid);
 
         return (
             <div className={classes["thread-list-item-container"]}>
@@ -27,13 +36,13 @@ class ThreadListItem extends React.PureComponent<Props> {
                 <div>
                     <Link href={THREAD_INFO_RAW} as={THREAD_INFO(tid)} passHref>
                         <Typography variant="h6" component="h6" className={classes["thread-list-item-title"]}>
-                            {title}
+                            {subject}
                         </Typography>
                     </Link>
 
                     <Typography variant="body1" className={classes["second-info"]}>
                         {showAvatar && <span className={classes["author-username"]}>{username}</span>}
-                        <span>{time.toLocaleString()}</span>
+                        <span>{createDate.toLocaleString()}</span>
                     </Typography>
                 </div>
             </div>

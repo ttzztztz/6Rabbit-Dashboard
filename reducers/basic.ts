@@ -10,8 +10,7 @@ export interface BasicStore {
 type Action =
     | actions.ILoginOK
     | actions.ILogoutOK
-    | actions.IStartLoading
-    | actions.IStopLoading
+    | actions.IToggleProgress
     | actions.IEnqueueSnackbar
     | actions.IRemoveSnackbar;
 
@@ -24,10 +23,8 @@ const initState: BasicStore = {
 
 export const basicReducer = function(state = initState, action: Action): BasicStore {
     switch (action.type) {
-        case actions.START_LOADING:
-            return { ...state, loading: true };
-        case actions.STOP_LOADING:
-            return { ...state, loading: false };
+        case actions.TOGGLE_PROGRESS:
+            return { ...state, loading: action.on };
         case actions.LOGIN_OK:
             return { ...state, isLogin: true };
         case actions.LOGOUT_OK:

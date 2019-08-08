@@ -17,86 +17,96 @@ import Avatar from "../../components/Avatar";
 import PostListItem from "../../components/PostListItem";
 import PaginationComponent from "../../components/Pagination";
 import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
-import { TITLE_PREFIX } from "../../consts";
+import { TITLE_PREFIX, TITLE_SUFFIX } from "../../consts";
+import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
+import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
+import { Epics } from "../../epics";
+
+import { of, Subject } from "rxjs";
+import { StateObservable, ActionsObservable } from "redux-observable";
 
 import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
+import { request } from "universal-rxjs-ajax";
+import { FETCH_THREAD } from "../../consts/backend";
 
 interface Props extends WithStyles {
     router: NextRouter;
+
+    thread: IThreadListItem;
+    firstPost: IPostListItem;
+    needBuy: boolean;
+    attachList: Array<IThreadAttach>;
+
+    defaultPage: number;
+    defaultRes: Array<IPostListItem>;
 }
 
-const fakePostList = [
-    {
-        pid: "1",
-        username: "hzytql",
-        time: new Date(),
-        userAvatar: "/static/avatar.png",
-        content: "hzytql!!!!!"
-    },
-    {
-        pid: "2",
-        username: "hzytql",
-        time: new Date(),
-        userAvatar: "/static/avatar.png",
-        content: "hzytql!!!!!"
-    },
-    {
-        pid: "3",
-        username: "hzytql",
-        time: new Date(),
-        userAvatar: "/static/avatar.png",
-        content: "hzytql!!!!!"
-    }
-];
-
 class Thread extends React.Component<Props> {
+    static async getInitialProps({ store, query }: IExtendedNextPageContext) {
+        const tid = query["tid"] as string;
+        const page = query["page"] as string;
+
+        const state$ = new StateObservable(new Subject(), store.getState());
+        const { payload } = await Epics(
+            of(getThreadInfoStart(tid, page)) as ActionsObservable<IGetThreadInfoStart>,
+            state$,
+            {}
+        ).toPromise();
+
+        return { defaultPage: page, tid, ...payload.message, defaultRes: payload.message.postList };
+    }
+
     state = {
-        title: "这是一个标题",
-        content: "这是内容",
-        username: "hzytql",
-        time: new Date(),
-        postList: fakePostList,
         reply: "",
 
-        total: 30,
-        page: 1
+        postList: [] as Array<IPostListItem>,
+        page: this.props.defaultPage
     };
+
     handleChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setState({
             reply: e.target.value
         });
     };
-    onPageChange = (page: number) => {
+
+    onPageChange = async (page: number) => {
         const { router } = this.props;
 
         const tid = router.query["tid"] as string;
-
         const url = THREAD_INFO_RAW;
         const as = THREAD_INFO(tid, page.toString());
-        router.push(url, as);
+        router.push(url, as, {
+            shallow: true
+        });
         this.setState({
             page: page
+        });
+
+        const res = await request({ url: FETCH_THREAD(tid, page.toString()) }).toPromise();
+        this.patchPostList(res.response.message.postList);
+    };
+
+    patchPostList = (postList: Array<IPostListItem>) => {
+        this.setState({
+            postList: postList
         });
     };
 
     componentDidMount() {
-        const { router } = this.props;
-
-        this.setState({
-            page: Number.parseInt(router.query["page"] as string)
-        });
+        const { defaultRes } = this.props;
+        this.patchPostList(defaultRes);
     }
 
     render() {
-        const { classes } = this.props;
-        const { title, content, time, username, postList, reply, total, page } = this.state;
+        const { classes, thread, firstPost } = this.props;
+        const { postList, reply, page } = this.state;
         return (
             <>
                 <Head>
                     <title>
-                        {TITLE_PREFIX}
-                        {title}
+                        {thread.subject}
+                        {TITLE_SUFFIX}
                     </title>
                 </Head>
                 <Paper className={clsx(classes.paperRoot, classes["title-bar"])}>
@@ -105,36 +115,38 @@ class Thread extends React.Component<Props> {
                     </div>
                     <div>
                         <Typography variant="h5" component="h3">
-                            {title}
+                            {thread.subject}
                         </Typography>
                         <Typography variant="body1" className={classes["second-info"]}>
-                            <span className={classes["author-username"]}>{username}</span>
-                            <span>{time.toLocaleString()}</span>
+                            <span className={classes["author-username"]}>{thread.user.username}</span>
+                            <span>{thread.createDate.toLocaleString()}</span>
                         </Typography>
                     </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>
-                    <div id="content-container" dangerouslySetInnerHTML={{ __html: content }} />
+                    <div id="content-container" dangerouslySetInnerHTML={{ __html: firstPost.message }} />
                 </Paper>
-                <Paper className={classes.paperRoot}>
-                    <Typography variant="body2" className={classes.strong}>
-                        回复列表
-                    </Typography>
-                    <div className={classes["post-list-container"]}>
-                        <Table>
-                            <TableBody>
-                                {postList.map(item => (
-                                    <TableRow key={item.pid}>
-                                        <TableCell component="th" scope="row">
-                                            <PostListItem {...item} />
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                        <PaginationComponent total={total} page={page} onPageChange={this.onPageChange} />
-                    </div>
-                </Paper>
+                {postList.length > 0 && (
+                    <Paper className={classes.paperRoot}>
+                        <Typography variant="body2" className={classes.strong}>
+                            回复列表
+                        </Typography>
+                        <div className={classes["post-list-container"]}>
+                            <Table>
+                                <TableBody>
+                                    {postList.map(item => (
+                                        <TableRow key={item.pid}>
+                                            <TableCell component="th" scope="row">
+                                                <PostListItem {...item} />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                            <PaginationComponent total={thread.posts} page={page} onPageChange={this.onPageChange} />
+                        </div>
+                    </Paper>
+                )}
                 <Paper className={classes.paperRoot}>
                     <TextField
                         id="reply-content"
