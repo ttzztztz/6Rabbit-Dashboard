@@ -40,27 +40,32 @@ class Bar extends React.PureComponent<Props> {
         {
             icon: <HomeIcon />,
             title: "首页",
-            router: "/"
+            router: "/",
+            as: "/"
         },
         {
             icon: <SubjectIcon />,
             title: "博客",
-            router: "/blog?page=1"
+            router: "/blog/[page]",
+            as: "/blog/1"
         },
         {
             icon: <ShoppingCartIcon />,
             title: "商城",
-            router: "/shop?page=1"
+            router: "/shop/[page]",
+            as: "/shop/1"
         },
         {
             icon: <MessageIcon />,
             title: "讨论",
-            router: "/forum?page=1"
+            router: "/forum/[page]",
+            as: "/forum/1"
         },
         {
             icon: <PersonIcon />,
             title: "用户",
-            router: "/user"
+            router: "/user",
+            as: "/user"
         }
     ];
 
@@ -84,7 +89,7 @@ class Bar extends React.PureComponent<Props> {
         return (
             <>
                 {this.navItemList.map((item, key) => (
-                    <Link key={key} href={item.router}>
+                    <Link key={key} href={item.router} as={item.as}>
                         <ListItem button>
                             <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.title} />

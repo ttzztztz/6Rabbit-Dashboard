@@ -1,4 +1,6 @@
 import { OptionsObject } from "notistack";
+import { NextPageContext } from "next";
+import { Store } from "redux";
 
 export interface IThreadListItem {
     tid: string;
@@ -32,4 +34,8 @@ export interface ISnackbarItem {
     key: number;
     message: string;
     options?: OptionsObject;
+}
+export interface IExtendedNextPageContext extends NextPageContext {
+    isServer: boolean;
+    store: Store;
 }

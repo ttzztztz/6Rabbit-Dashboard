@@ -4756,6 +4756,13 @@ unique-slug@^2.0.0:
   dependencies:
     imurmurhash "^0.1.4"
 
+universal-rxjs-ajax@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/universal-rxjs-ajax/-/universal-rxjs-ajax-2.0.1.tgz#248c074dff8b9c35ad55d2612522bc6651ef2441"
+  integrity sha512-zIgc33vsSapIw5m16GG7zVOWmjiDdFxyl1M+Sn5OWLRGOuuHQDgIasYW7BLtHYpL+OA9boYj3llq/2xaTp7Uyw==
+  dependencies:
+    xhr2 "^0.1.4"
+
 unpipe@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -4971,6 +4978,11 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
+
+xhr2@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.4.tgz#7f87658847716db5026323812f818cadab387a5f"
+  integrity sha1-f4dliEdxbbUCYyOBL4GMras4el8=
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"

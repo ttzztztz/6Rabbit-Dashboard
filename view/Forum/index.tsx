@@ -3,7 +3,7 @@ import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
 import ThreadListComponent from "../../components/ThreadList";
-import { IThreadListItem } from "../../typings";
+import { IThreadListItem, IExtendedNextPageContext } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 
 import { withRouter, NextRouter } from "next/dist/client/router";
@@ -66,9 +66,12 @@ const fakeData: Array<IThreadListItem> = [
 ];
 
 class Forum extends React.PureComponent<Props> {
+    static async getInitialProps({ store }: IExtendedNextPageContext) {}
+
     state = {
         total: 25,
-        page: 1
+        page: 1,
+        threadList: fakeData
     };
 
     componentDidMount() {
@@ -80,14 +83,14 @@ class Forum extends React.PureComponent<Props> {
     handlePageChange = (page: number) => {};
 
     render() {
-        const { total, page } = this.state;
+        const { total, page, threadList } = this.state;
         return (
             <>
                 <Head>
                     <title>{TITLE_PREFIX}讨论</title>
                 </Head>
                 <ThreadListComponent
-                    threadList={fakeData}
+                    threadList={threadList}
                     total={total}
                     page={page}
                     onPageChange={this.handlePageChange}

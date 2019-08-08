@@ -16,7 +16,7 @@ import MessageIcon from "@material-ui/icons/Message";
 import Avatar from "../../components/Avatar";
 import PostListItem from "../../components/PostListItem";
 import PaginationComponent from "../../components/Pagination";
-import { THREAD_INFO } from "../../consts/routers";
+import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
 import { TITLE_PREFIX } from "../../consts";
 
 import { NextRouter, withRouter } from "next/dist/client/router";
@@ -71,8 +71,10 @@ class Thread extends React.Component<Props> {
         const { router } = this.props;
 
         const tid = router.query["tid"] as string;
-        const url = THREAD_INFO(tid, page.toString());
-        router.push(url, url);
+
+        const url = THREAD_INFO_RAW;
+        const as = THREAD_INFO(tid, page.toString());
+        router.push(url, as);
         this.setState({
             page: page
         });
@@ -112,9 +114,7 @@ class Thread extends React.Component<Props> {
                     </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>
-                    <Typography variant="body1">
-                        <div id="content-container" dangerouslySetInnerHTML={{ __html: content }} />
-                    </Typography>
+                    <div id="content-container" dangerouslySetInnerHTML={{ __html: content }} />
                 </Paper>
                 <Paper className={classes.paperRoot}>
                     <Typography variant="body2" className={classes.strong}>

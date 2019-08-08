@@ -3,7 +3,7 @@ import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
 import Avatar from "../Avatar";
-import { THREAD_INFO } from "../../consts/routers";
+import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
 import { IThreadListItem } from "../../typings";
 
 import Typography from "@material-ui/core/Typography";
@@ -25,7 +25,7 @@ class ThreadListItem extends React.PureComponent<Props> {
                     </div>
                 )}
                 <div>
-                    <Link href={THREAD_INFO(tid)} passHref>
+                    <Link href={THREAD_INFO_RAW} as={THREAD_INFO(tid)} passHref>
                         <Typography variant="h6" component="h6" className={classes["thread-list-item-title"]}>
                             {title}
                         </Typography>

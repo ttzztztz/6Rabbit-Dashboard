@@ -2,7 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import { Store, AnyAction } from "redux";
 
-import App, { Container } from "next/app";
+import App, { Container, AppContext } from "next/app";
 import Head from "next/head";
 import withRedux from "next-redux-wrapper";
 
@@ -19,6 +19,12 @@ interface AppProps {
 }
 
 class RabbitApp extends App<AppProps> {
+    static async getInitialProps({ Component, ctx }: AppContext) {
+        const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+
+        return { pageProps };
+    }
+
     componentDidMount() {
         // Remove the server-side injected CSS.
         const jssStyles = document.querySelector("#jss-server-side");
