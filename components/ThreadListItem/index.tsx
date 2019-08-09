@@ -42,7 +42,7 @@ class ThreadListItem extends React.Component<Props> {
 
                     <Typography variant="body1" className={classes["second-info"]}>
                         {showAvatar && <span className={classes["author-username"]}>{username}</span>}
-                        <span>{createDate.toLocaleString()}</span>
+                        <span>{new Date(createDate).toLocaleString()}</span>
                     </Typography>
                 </div>
             </div>

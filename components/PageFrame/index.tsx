@@ -34,6 +34,8 @@ interface Props extends WithStyles {
     title: string;
     loading: boolean;
     isLogin: boolean;
+
+    init: () => void;
 }
 
 class Bar extends React.PureComponent<Props> {
@@ -100,6 +102,11 @@ class Bar extends React.PureComponent<Props> {
             </>
         );
     };
+
+    componentDidMount() {
+        const { init } = this.props;
+        init();
+    }
 
     render() {
         const { classes, title, loading, isLogin } = this.props;
@@ -168,9 +175,11 @@ class Bar extends React.PureComponent<Props> {
                     </main>
                     {loading && <LinearProgress className={classes.progess} color="secondary" />}
                     {isLogin && (
-                        <Fab size="large" color="primary" className={classes["post-btn"]}>
-                            <AddIcon />
-                        </Fab>
+                        <Link href="/thread/create">
+                            <Fab size="large" color="primary" className={classes["post-btn"]}>
+                                <AddIcon />
+                            </Fab>
+                        </Link>
                     )}
                 </div>
             </SnackbarProvider>

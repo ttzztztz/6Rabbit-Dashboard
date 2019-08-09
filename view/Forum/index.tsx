@@ -18,6 +18,7 @@ import Head from "next/head";
 
 interface Props extends WithStyles {
     router: NextRouter;
+
     threadList: Array<IThreadListItem>;
     page: number;
     total: number;
@@ -49,12 +50,7 @@ class Forum extends React.PureComponent<Props> {
                 <Head>
                     <title>{TITLE_PREFIX}讨论</title>
                 </Head>
-                <ThreadListComponent
-                    threadList={threadList}
-                    total={total}
-                    page={page}
-                    onPageChange={this.handlePageChange}
-                />
+                <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} />
             </>
         );
     }

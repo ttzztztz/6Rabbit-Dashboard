@@ -100,3 +100,16 @@ export interface IRegisterForm {
     password: string;
     email: string;
 }
+
+export interface IReplyForm {
+    quotepid: string;
+    message: string;
+}
+
+export interface IForumItem {
+    fid: string;
+    name: string;
+    description: string;
+    threads: number;
+    type: "blog" | "shop" | "normal";
+}

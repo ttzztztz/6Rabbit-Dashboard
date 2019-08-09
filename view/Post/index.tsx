@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import { PostPageType } from "../../typings";
+import { PostPageType, IForumItem } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 
 import Head from "next/head";
@@ -37,24 +37,26 @@ const mapRouteToPageType: IMapRouteToPageType = {
 
 interface Props extends WithStyles {
     router: NextRouter;
-}
 
-const forumList = ["博客", "讨论"];
+    forum: Array<IForumItem>;
+}
 
 class Post extends React.PureComponent<Props> {
     state = {
-        forum: "讨论",
+        fid: "2",
         title: "",
         content: ""
     };
+
     handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         this.setState({
             [key]: e.target.value
         });
     };
+
     render() {
-        const { classes, router } = this.props;
-        const { forum, title, content } = this.state;
+        const { classes, router, forum } = this.props;
+        const { fid, title, content } = this.state;
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
         return (
@@ -75,8 +77,8 @@ class Post extends React.PureComponent<Props> {
                             select
                             label="板块"
                             className={clsx(classes.textField, classes["post-forum"])}
-                            value={forum}
-                            onChange={this.handleChange("forum")}
+                            value={fid}
+                            onChange={this.handleChange("fid")}
                             SelectProps={{
                                 MenuProps: {
                                     className: classes.menu
@@ -85,9 +87,9 @@ class Post extends React.PureComponent<Props> {
                             margin="dense"
                             variant="outlined"
                         >
-                            {forumList.map(item => (
-                                <MenuItem key={item} value={item}>
-                                    {item}
+                            {forum.map(item => (
+                                <MenuItem key={item.fid} value={item.fid}>
+                                    {item.name}
                                 </MenuItem>
                             ))}
                         </TextField>

@@ -26,7 +26,7 @@ class NotificationItem extends React.PureComponent<Props> {
                 <div>
                     <div className={classes["notification-item-info"]}>
                         <span className={classes["author-username"]}>{username}</span>
-                        <span>{time.toLocaleString()}</span>
+                        <span>{new Date(time).toLocaleString()}</span>
                     </div>
                     {isRead && <div className={classes["content-container"]}>{content}</div>}
                     {!isRead && (

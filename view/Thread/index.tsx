@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./style";
 import clsx from "clsx";
+import { OptionsObject } from "notistack";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
@@ -13,6 +14,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import MessageIcon from "@material-ui/icons/Message";
 
+import FrontendRequest from "../../model/FrontendRequest";
 import Avatar from "../../components/Avatar";
 import PostListItem from "../../components/PostListItem";
 import PaginationComponent from "../../components/Pagination";
@@ -21,7 +23,7 @@ import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
-import { FETCH_THREAD } from "../../consts/backend";
+import { FETCH_THREAD, POST_REPLY_THREAD } from "../../consts/backend";
 
 import { of, Subject } from "rxjs";
 import { StateObservable, ActionsObservable } from "redux-observable";
@@ -32,6 +34,7 @@ import Head from "next/head";
 
 interface Props extends WithStyles {
     router: NextRouter;
+    tid: string;
 
     thread: IThreadListItem;
     firstPost: IPostListItem;
@@ -40,6 +43,8 @@ interface Props extends WithStyles {
 
     defaultPage: number;
     defaultRes: Array<IPostListItem>;
+
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
 }
 
 class Thread extends React.Component<Props> {
@@ -55,6 +60,7 @@ class Thread extends React.Component<Props> {
 
     state = {
         reply: "",
+        quotepid: "0",
 
         postList: [] as Array<IPostListItem>,
         page: this.props.defaultPage
@@ -91,6 +97,22 @@ class Thread extends React.Component<Props> {
         });
     };
 
+    handleReply = async () => {
+        const { tid, enqueueSnackbar } = this.props;
+        const { reply, quotepid, page } = this.state;
+
+        const {
+            data: { code, message }
+        } = await FrontendRequest({ url: POST_REPLY_THREAD(tid), data: { message: reply, quotepid }, method: "POST" }).toPromise();
+
+        if (code == 200) {
+            enqueueSnackbar("回帖成功！", { variant: "success" });
+            this.onPageChange(page);
+        } else {
+            enqueueSnackbar(message, { variant: "error" });
+        }
+    };
+
     componentDidMount() {
         const { defaultRes } = this.props;
         this.patchPostList(defaultRes);
@@ -117,7 +139,7 @@ class Thread extends React.Component<Props> {
                         </Typography>
                         <Typography variant="body1" className={classes["second-info"]}>
                             <span className={classes["author-username"]}>{thread.user.username}</span>
-                            <span>{thread.createDate.toLocaleString()}</span>
+                            <span>{new Date(thread.createDate).toLocaleString()}</span>
                         </Typography>
                     </div>
                 </Paper>
@@ -157,7 +179,7 @@ class Thread extends React.Component<Props> {
                         variant="outlined"
                     />
                     <div className={classes["reply-container"]}>
-                        <Button variant="contained" color="primary" className={classes.button}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleReply}>
                             <MessageIcon className={classes["reply-icon"]} />
                             回复
                         </Button>

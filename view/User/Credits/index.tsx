@@ -114,7 +114,7 @@ class Credits extends React.PureComponent<Props> {
                                         <TableCell component="th" scope="row" align="center">
                                             {item.title}
                                         </TableCell>
-                                        <TableCell align="center">{item.time.toLocaleString()}</TableCell>
+                                        <TableCell align="center">{new Date(item.time).toLocaleString()}</TableCell>
                                         <TableCell align="center">{item.credits}</TableCell>
                                     </TableRow>
                                 ))}

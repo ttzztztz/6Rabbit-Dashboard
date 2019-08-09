@@ -27,7 +27,7 @@ class PostListItem extends React.PureComponent<Props> {
                 <div>
                     <div className={classes["post-list-item-info"]}>
                         <span className={classes["author-username"]}>{username}</span>
-                        <span>{createDate.toLocaleString()}</span>
+                        <span>{new Date(createDate).toLocaleString()}</span>
                     </div>
                     <div className={classes["content-container"]} dangerouslySetInnerHTML={{ __html: message }} />
                 </div>

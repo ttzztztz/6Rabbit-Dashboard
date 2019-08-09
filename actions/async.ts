@@ -1,4 +1,4 @@
-import { IThreadListItem, ILoginResponse, IRegisterForm } from "../typings";
+import { IThreadListItem, ILoginResponse, IRegisterForm, IReplyForm } from "../typings";
 
 export const GET_FORUM_LIST_START = "GET_FORUM_LIST_START";
 export type GET_FORUM_LIST_START = typeof GET_FORUM_LIST_START;
@@ -113,4 +113,40 @@ export interface IRegisterOK {
 export const registerOK = (uid: string): IRegisterOK => ({
     type: REGISTER_OK,
     uid
+});
+
+export const CHECK_TOKEN_START = "CHECK_TOKEN_START";
+export type CHECK_TOKEN_START = typeof CHECK_TOKEN_START;
+export interface ICheckTokenStart {
+    type: CHECK_TOKEN_START;
+}
+export const checkTokenStart = (): ICheckTokenStart => ({
+    type: CHECK_TOKEN_START
+});
+
+export const CHECK_TOKEN_OK = "CHECK_TOKEN_OK";
+export type CHECK_TOKEN_OK = typeof CHECK_TOKEN_OK;
+export interface ICheckTokenOK {
+    type: CHECK_TOKEN_OK;
+}
+export const checkTokenOK = (): ICheckTokenOK => ({
+    type: CHECK_TOKEN_OK
+});
+
+export const GET_FORUM_START = "GET_FORUM_START";
+export type GET_FORUM_START = typeof GET_FORUM_START;
+export interface IGetForumStart {
+    type: GET_FORUM_START;
+}
+export const getForumStart = (): IGetForumStart => ({
+    type: GET_FORUM_START
+});
+
+export const INIT_START = "INIT_START";
+export type INIT_START = typeof INIT_START;
+export interface IInitStart {
+    type: INIT_START;
+}
+export const initStart = (): IInitStart => ({
+    type: INIT_START
 });

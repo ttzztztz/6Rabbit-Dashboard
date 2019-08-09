@@ -1,5 +1,5 @@
 import { OptionsObject } from "notistack";
-import { ILoginResponse } from "../typings";
+import { ILoginResponse, IForumItem } from "../typings";
 import { FETCH_AVATAR } from "../consts/backend";
 
 export const LOGIN_OK = "LOGIN_OK";
@@ -81,15 +81,26 @@ export function removeSnackbar(key: number): IRemoveSnackbar {
 
 export const TOGGLE_PROGRESS = "TOGGLE_PROGRESS";
 export type TOGGLE_PROGRESS = typeof TOGGLE_PROGRESS;
-
 export interface IToggleProgress {
     type: TOGGLE_PROGRESS;
     on: boolean;
 }
-
 export function toggleProgress(on: boolean = false): IToggleProgress {
     return {
         type: TOGGLE_PROGRESS,
         on
+    };
+}
+
+export const CHANGE_FORUM = "CHANGE_FORUM";
+export type CHANGE_FORUM = typeof CHANGE_FORUM;
+export interface IChangeForum {
+    type: CHANGE_FORUM;
+    payload: Array<IForumItem>;
+}
+export function changeForum(newForum: Array<IForumItem>): IChangeForum {
+    return {
+        type: CHANGE_FORUM,
+        payload: newForum
     };
 }

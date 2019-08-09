@@ -1,10 +1,4 @@
-import {
-    ActionsObservable,
-    StateObservable,
-    createEpicMiddleware,
-    EpicMiddleware,
-    combineEpics
-} from "redux-observable";
+import { ActionsObservable, StateObservable, createEpicMiddleware, EpicMiddleware, combineEpics } from "redux-observable";
 import { Action, AnyAction } from "redux";
 import { Observable, of } from "rxjs";
 import { StoreState } from "../reducers";
@@ -15,6 +9,7 @@ import ForumEpics from "./Forum";
 import ShopEpics from "./Shop";
 import ThreadEpics from "./Thread";
 import UserEpics from "./User";
+import BasicEpics from "./Basic";
 
 const dependencies = {};
 export type Dependencies = typeof dependencies;
@@ -39,4 +34,4 @@ export const errHandler = ({ message, type }: CustomError, customAction?: AnyAct
         ? of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || "error" }), toggleProgress(), customAction)
         : of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || "error" }), toggleProgress());
 
-export const Epics = combineEpics(...ForumEpics, ...ShopEpics, ...ThreadEpics, ...UserEpics);
+export const Epics = combineEpics(...BasicEpics, ...ForumEpics, ...ShopEpics, ...ThreadEpics, ...UserEpics);

@@ -18,6 +18,7 @@ interface Props extends WithStyles {
     login: (username: string, password: string) => void;
     register: (payload: IRegisterStartPayload) => void;
 }
+
 enum ActivePage {
     Login,
     Register
@@ -103,22 +104,12 @@ class Login extends React.Component<Props> {
                     />
                 </div>
                 <div className={classes["btn-container"]}>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        className={clsx(classes.button, classes.activeButton)}
-                        onClick={this.handleLoginBtnClick}
-                    >
+                    <Button color="primary" variant="contained" className={clsx(classes.button, classes.activeButton)} onClick={this.handleLoginBtnClick}>
                         登录
                     </Button>
                 </div>
                 <div className={classes["btn-container"]}>
-                    <Button
-                        color="secondary"
-                        variant="contained"
-                        className={classes.button}
-                        onClick={this.handleRegisterBtnClick}
-                    >
+                    <Button color="secondary" variant="contained" className={classes.button} onClick={this.handleRegisterBtnClick}>
                         注册
                     </Button>
                 </div>
@@ -178,22 +169,12 @@ class Login extends React.Component<Props> {
                     />
                 </div>
                 <div className={classes["btn-container"]}>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        className={clsx(classes.button, classes.activeButton)}
-                        onClick={this.handleRegisterBtnClick}
-                    >
+                    <Button color="primary" variant="contained" className={clsx(classes.button, classes.activeButton)} onClick={this.handleRegisterBtnClick}>
                         注册
                     </Button>
                 </div>
                 <div className={classes["btn-container"]}>
-                    <Button
-                        color="secondary"
-                        variant="contained"
-                        className={classes.button}
-                        onClick={this.handleLoginBtnClick}
-                    >
+                    <Button color="secondary" variant="contained" className={classes.button} onClick={this.handleLoginBtnClick}>
                         登录
                     </Button>
                 </div>

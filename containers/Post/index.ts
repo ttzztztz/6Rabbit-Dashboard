@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 import PostView from "../../view/Post";
 import { StoreState } from "../../reducers";
 
-const mapStateToProps = (_: StoreState) => ({});
+const mapStateToProps = ({ basic: { forum } }: StoreState) => ({ forum });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({});
 
