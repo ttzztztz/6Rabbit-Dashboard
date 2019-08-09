@@ -1,4 +1,4 @@
-import { IThreadListItem } from "../typings";
+import { IThreadListItem, ILoginResponse, IRegisterForm } from "../typings";
 
 export const GET_FORUM_LIST_START = "GET_FORUM_LIST_START";
 export type GET_FORUM_LIST_START = typeof GET_FORUM_LIST_START;
@@ -66,4 +66,51 @@ export interface IGetThreadInfoOK {
 export const getThreadInfoOK = (list: Array<IThreadListItem>, total: number): IGetThreadInfoOK => ({
     type: GET_THREAD_INFO_OK,
     payload: { list, total }
+});
+
+export const LOGIN_START = "LOGIN_START";
+export type LOGIN_START = typeof LOGIN_START;
+export interface ILoginStart {
+    type: LOGIN_START;
+    username: string;
+    password: string;
+}
+export const loginStart = (username: string, password: string): ILoginStart => ({
+    type: LOGIN_START,
+    username,
+    password
+});
+
+export const LOGIN_OK = "LOGIN_OK";
+export type LOGIN_OK = typeof LOGIN_OK;
+export interface ILoginOK {
+    type: LOGIN_OK;
+    payload: ILoginResponse;
+}
+export const loginOK = (payload: ILoginResponse): ILoginOK => ({
+    type: LOGIN_OK,
+    payload
+});
+
+export type IRegisterStartPayload = IRegisterForm & { password_repeat: string };
+export const REGISTER_START = "REGISTER_START";
+export type REGISTER_START = typeof REGISTER_START;
+export interface IRegisterStart {
+    type: REGISTER_START;
+    payload: IRegisterStartPayload;
+}
+export const registerStart = (payload: IRegisterStartPayload): IRegisterStart => ({
+    type: REGISTER_START,
+    payload
+});
+
+export const REGISTER_OK = "REGISTER_OK";
+export type REGISTER_OK = typeof REGISTER_OK;
+export interface IRegisterOK {
+    type: REGISTER_OK;
+    uid: string;
+}
+export const registerOK = (uid: string): IRegisterOK => ({
+    type: REGISTER_OK,
+    uid
 });

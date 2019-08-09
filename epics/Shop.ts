@@ -2,14 +2,21 @@ import { Epic } from ".";
 import { ofType } from "redux-observable";
 import { mergeMap, map } from "rxjs/operators";
 import { GET_SHOP_LIST_START, GET_SHOP_LIST_OK, IGetShopListStart } from "../actions/async";
-import { request } from "universal-rxjs-ajax";
+import { from } from "rxjs";
+import axios from "axios";
+import { IThreadListItem } from "../typings";
+import { FETCH_SHOP_LIST } from "../consts/backend";
 
+// todo: now finished yet
 const fetchShopList: Epic<IGetShopListStart> = action$ =>
     action$.pipe(
         ofType(GET_SHOP_LIST_START),
-        mergeMap(() =>
-            request({ url: "xxx" }).pipe(
-                map(response => {
+        mergeMap(action =>
+            from(axios({ url: FETCH_SHOP_LIST(action.page), method: "GET" })).pipe(
+                map(({ data: { message } }) => {
+                    const list: Array<IThreadListItem> = message.list as Array<IThreadListItem>;
+                    const total = message.forum.threads;
+
                     return {
                         type: GET_SHOP_LIST_OK,
                         payload: []

@@ -8,12 +8,15 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-import Head from "next/head";
-
 import { TITLE_PREFIX } from "../../consts";
+import { IRegisterStartPayload } from "../../actions/async";
+
+import Head from "next/head";
 
 interface Props extends WithStyles {
     isLogin: boolean;
+    login: (username: string, password: string) => void;
+    register: (payload: IRegisterStartPayload) => void;
 }
 enum ActivePage {
     Login,
@@ -50,6 +53,9 @@ class Login extends React.Component<Props> {
                 activePage: ActivePage.Register
             });
         } else {
+            const { register: form } = this.state;
+            const { register } = this.props;
+            register(form);
         }
     };
     handleLoginBtnClick = () => {
@@ -58,6 +64,9 @@ class Login extends React.Component<Props> {
                 activePage: ActivePage.Login
             });
         } else {
+            const { login: form } = this.state;
+            const { login } = this.props;
+            login(form.username, form.password);
         }
     };
 
@@ -79,7 +88,8 @@ class Login extends React.Component<Props> {
                         className={classes.textField}
                         value={username}
                         onChange={this.handleChange("username", "login")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     />
                     <TextField
                         id="password"
@@ -87,7 +97,8 @@ class Login extends React.Component<Props> {
                         className={classes.textField}
                         value={password}
                         onChange={this.handleChange("password", "login")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                         type="password"
                     />
                 </div>
@@ -132,7 +143,8 @@ class Login extends React.Component<Props> {
                         className={classes.textField}
                         value={username}
                         onChange={this.handleChange("username", "register")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                     />
                     <TextField
                         id="email"
@@ -140,7 +152,8 @@ class Login extends React.Component<Props> {
                         className={classes.textField}
                         value={email}
                         onChange={this.handleChange("email", "register")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                         type="email"
                     />
                     <TextField
@@ -149,7 +162,8 @@ class Login extends React.Component<Props> {
                         className={classes.textField}
                         value={password}
                         onChange={this.handleChange("password", "register")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                         type="password"
                     />
                     <TextField
@@ -158,7 +172,8 @@ class Login extends React.Component<Props> {
                         className={classes.textField}
                         value={password_repeat}
                         onChange={this.handleChange("password_repeat", "register")}
-                        margin="normal"
+                        margin="dense"
+                        variant="outlined"
                         type="password"
                     />
                 </div>

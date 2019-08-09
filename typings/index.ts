@@ -87,3 +87,16 @@ export interface IExtendedNextPageContext extends NextPageContext {
     isServer: boolean;
     store: Store;
 }
+
+export interface ILoginResponse {
+    token: string;
+    username: string;
+    uid: string;
+    isAdmin: boolean;
+}
+
+export interface IRegisterForm {
+    username: string;
+    password: string;
+    email: string;
+}

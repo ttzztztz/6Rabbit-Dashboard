@@ -17,18 +17,18 @@ import Avatar from "../../components/Avatar";
 import PostListItem from "../../components/PostListItem";
 import PaginationComponent from "../../components/Pagination";
 import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
-import { TITLE_PREFIX, TITLE_SUFFIX } from "../../consts";
+import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
+import { FETCH_THREAD } from "../../consts/backend";
 
 import { of, Subject } from "rxjs";
 import { StateObservable, ActionsObservable } from "redux-observable";
+import axios from "axios";
 
 import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
-import { request } from "universal-rxjs-ajax";
-import { FETCH_THREAD } from "../../consts/backend";
 
 interface Props extends WithStyles {
     router: NextRouter;
@@ -48,11 +48,7 @@ class Thread extends React.Component<Props> {
         const page = query["page"] as string;
 
         const state$ = new StateObservable(new Subject(), store.getState());
-        const { payload } = await Epics(
-            of(getThreadInfoStart(tid, page)) as ActionsObservable<IGetThreadInfoStart>,
-            state$,
-            {}
-        ).toPromise();
+        const { payload } = await Epics(of(getThreadInfoStart(tid, page)) as ActionsObservable<IGetThreadInfoStart>, state$, {}).toPromise();
 
         return { defaultPage: page, tid, ...payload.message, defaultRes: payload.message.postList };
     }
@@ -83,8 +79,10 @@ class Thread extends React.Component<Props> {
             page: page
         });
 
-        const res = await request({ url: FETCH_THREAD(tid, page.toString()) }).toPromise();
-        this.patchPostList(res.response.message.postList);
+        const {
+            data: { message }
+        } = await axios({ url: FETCH_THREAD(tid, page.toString()) });
+        this.patchPostList(message.postList);
     };
 
     patchPostList = (postList: Array<IPostListItem>) => {

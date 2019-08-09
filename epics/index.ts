@@ -14,6 +14,7 @@ import { enqueueSnackbar, toggleProgress } from "../actions";
 import ForumEpics from "./Forum";
 import ShopEpics from "./Shop";
 import ThreadEpics from "./Thread";
+import UserEpics from "./User";
 
 const dependencies = {};
 export type Dependencies = typeof dependencies;
@@ -38,4 +39,4 @@ export const errHandler = ({ message, type }: CustomError, customAction?: AnyAct
         ? of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || "error" }), toggleProgress(), customAction)
         : of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || "error" }), toggleProgress());
 
-export const Epics = combineEpics(...ForumEpics, ...ShopEpics, ...ThreadEpics);
+export const Epics = combineEpics(...ForumEpics, ...ShopEpics, ...ThreadEpics, ...UserEpics);

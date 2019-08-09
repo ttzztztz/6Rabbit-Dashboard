@@ -1,13 +1,17 @@
 import { OptionsObject } from "notistack";
+import { ILoginResponse } from "../typings";
+import { FETCH_AVATAR } from "../consts/backend";
 
 export const LOGIN_OK = "LOGIN_OK";
 export type LOGIN_OK = typeof LOGIN_OK;
 export interface ILoginOK {
     type: LOGIN_OK;
+    uid: string;
 }
-export const loginOK = (): ILoginOK => {
+export const loginOK = (uid: string): ILoginOK => {
     return {
-        type: LOGIN_OK
+        type: LOGIN_OK,
+        uid
     };
 };
 
@@ -29,13 +33,15 @@ export interface IChangeUserInfo {
     username: string;
     avatar: string;
     isAdmin: boolean;
+    uid: string;
 }
-export const changeUserInfo = (username: string, avatar: string, isAdmin: boolean): IChangeUserInfo => {
+export const changeUserInfo = ({ username, isAdmin, uid }: ILoginResponse): IChangeUserInfo => {
     return {
         type: CHANGE_USER_INFO,
         username,
-        avatar,
-        isAdmin
+        avatar: FETCH_AVATAR(uid),
+        isAdmin,
+        uid
     };
 };
 

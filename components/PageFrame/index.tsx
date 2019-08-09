@@ -28,6 +28,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 import Link from "next/link";
+import Notifier from "../../containers/Notifier";
 
 interface Props extends WithStyles {
     title: string;
@@ -113,6 +114,7 @@ class Bar extends React.PureComponent<Props> {
                     variantInfo: classes.info
                 }}
             >
+                <Notifier />
                 <div className={classes.root}>
                     <CssBaseline />
                     <AppBar

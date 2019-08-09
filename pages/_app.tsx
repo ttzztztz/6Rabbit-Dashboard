@@ -39,10 +39,10 @@ class RabbitApp extends App<AppProps> {
 
         return (
             <Container>
+                <Head>
+                    <title>酷兔网</title>
+                </Head>
                 <Provider store={store}>
-                    <Head>
-                        <title>酷兔网</title>
-                    </Head>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
                         <PageFrame>

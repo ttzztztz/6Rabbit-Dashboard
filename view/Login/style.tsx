@@ -12,12 +12,11 @@ const styles = (theme: Theme) =>
             margin: theme.spacing(3)
         },
         textField: {
-            marginLeft: theme.spacing(1),
-            marginRight: theme.spacing(1),
-            [theme.breakpoints.up("md")]: {
+            margin: theme.spacing(2, 1),
+            [theme.breakpoints.up("sm")]: {
                 width: "50%"
             },
-            [theme.breakpoints.down("md")]: {
+            [theme.breakpoints.down("sm")]: {
                 width: "85%"
             }
         },
