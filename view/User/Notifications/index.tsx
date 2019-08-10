@@ -11,71 +11,71 @@ import TableFooter from "@material-ui/core/TableFooter";
 
 import NotificationItem from "../../../components/NotificationItem";
 import PaginationComponent from "../../../components/Pagination";
-import { INotificationItem } from "../../../typings";
+import { NotificationStore } from "../../../reducers/notification";
 
-interface Props extends WithStyles {}
-
-const fakeData: Array<INotificationItem> = [
-    {
-        nid: "1",
-        username: "hzytql",
-        userAvatar: "/static/avatar.png",
-        content: "洪志远太强啦",
-        isRead: true,
-        time: new Date()
-    },
-    {
-        nid: "2",
-        username: "hzytql",
-        userAvatar: "/static/avatar.png",
-        content: "洪志远太强啦",
-        isRead: false,
-        time: new Date()
-    }
-];
+interface Props extends WithStyles, NotificationStore {
+    notificationReadAllStart: () => void;
+    notificationDeleteAllStart: () => void;
+    notificationDeleteOneStart: (nid: string) => void;
+    notificationReadOneStart: (nid: string) => void;
+    notificationChangePageStart: (page: string) => void;
+}
 
 class Notifications extends React.PureComponent<Props> {
-    state = {
-        notificationList: fakeData,
-        total: 35,
-        page: 1
+    handlePageChange = (page: number) => {
+        const { notificationChangePageStart } = this.props;
+        notificationChangePageStart(page.toString());
     };
-
-    handlePageChange = (page: number) => {};
-
+    componentDidMount() {
+        const { notificationChangePageStart } = this.props;
+        notificationChangePageStart("1");
+    }
+    handleReadAll = () => {
+        const { notificationReadAllStart } = this.props;
+        notificationReadAllStart();
+    };
+    handleDeleteAll = () => {
+        const { notificationDeleteAllStart } = this.props;
+        notificationDeleteAllStart();
+    };
+    handleDeleteOne = (nid: string) => {
+        const { notificationDeleteOneStart } = this.props;
+        notificationDeleteOneStart(nid);
+    };
+    handleReadOne = (nid: string) => {
+        const { notificationReadOneStart } = this.props;
+        notificationReadOneStart(nid);
+    };
     render() {
-        const { classes } = this.props;
-        const { notificationList, total, page } = this.state;
+        const { classes, list, total, page } = this.props;
 
         return (
             <div className={classes["notification-center-container"]}>
-                <div className={classes["control-container"]}>
-                    <Button variant="contained" color="primary" className={classes.button}>
-                        全部已读
-                    </Button>
-                    <Button variant="contained" color="secondary" className={classes.button}>
-                        删除全部
-                    </Button>
-                </div>
+                {total > 0 && (
+                    <div className={classes["control-container"]}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleReadAll}>
+                            全部已读
+                        </Button>
+                        <Button variant="contained" color="secondary" className={classes.button} onClick={this.handleDeleteAll}>
+                            删除全部
+                        </Button>
+                    </div>
+                )}
                 <div className={classes["notification-container"]}>
                     <Table>
                         <TableBody>
-                            {notificationList.map(item => (
+                            {list.map(item => (
                                 <TableRow key={item.nid}>
                                     <TableCell scope="row">
-                                        <NotificationItem {...item} />
+                                        <NotificationItem {...item} handleDelete={this.handleDeleteOne} handleRead={this.handleReadOne} />
                                     </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                         <TableFooter>
                             <TableRow>
-                                <TableCell scope="row">
-                                    <PaginationComponent
-                                        total={total}
-                                        page={page}
-                                        onPageChange={this.handlePageChange}
-                                    />
+                                <TableCell scope="row" className={classes["no-border-cell"]}>
+                                    <PaginationComponent total={total} page={page} onPageChange={this.handlePageChange} />
                                 </TableCell>
                             </TableRow>
                         </TableFooter>

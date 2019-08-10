@@ -20,10 +20,7 @@ class AvatarBoard extends React.PureComponent<Props> {
             <Paper
                 className={classes["board-container"]}
                 style={{
-                    background: `url(${src})`,
-                    backgroundRepeat: "none",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center"
+                    backgroundImage: `url(${src})`
                 }}
             >
                 <div className={classes["board-blur-container"]}>

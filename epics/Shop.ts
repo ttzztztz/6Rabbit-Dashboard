@@ -1,9 +1,10 @@
-import { Epic } from ".";
+import { Epic } from "./index";
 import { ofType } from "redux-observable";
-import { mergeMap, map } from "rxjs/operators";
-import { GET_SHOP_LIST_START, GET_SHOP_LIST_OK, IGetShopListStart } from "../actions/async";
 import { from } from "rxjs";
+import { mergeMap, map } from "rxjs/operators";
 import axios from "axios";
+
+import { GET_SHOP_LIST_START, GET_SHOP_LIST_OK, IGetShopListStart } from "../actions/async";
 import { IThreadListItem } from "../typings";
 import { FETCH_SHOP_LIST } from "../consts/backend";
 

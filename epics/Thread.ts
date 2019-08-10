@@ -1,10 +1,13 @@
-import { Epic } from ".";
+import axios from "axios";
+
+import { from } from "rxjs";
 import { ofType } from "redux-observable";
 import { mergeMap, map } from "rxjs/operators";
+
+import { Epic } from "./index";
+
 import { GET_THREAD_INFO_START, GET_THREAD_INFO_OK, IGetThreadInfoStart } from "../actions/async";
 import { FETCH_THREAD } from "../consts/backend";
-import axios from "axios";
-import { from } from "rxjs";
 
 const fetchThreadInfo: Epic<IGetThreadInfoStart> = action$ =>
     action$.pipe(

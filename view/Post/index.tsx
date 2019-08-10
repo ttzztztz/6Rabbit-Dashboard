@@ -62,7 +62,7 @@ class Post extends React.PureComponent<Props> {
         const { enqueueSnackbar, router } = this.props;
         const optTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
-        if (code == 200) {
+        if (code === 200) {
             enqueueSnackbar(optTitle + "成功！", { variant: "success" });
         } else {
             enqueueSnackbar(message, { variant: "error" });

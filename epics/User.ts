@@ -1,10 +1,23 @@
 import { Epic } from ".";
 import { ofType } from "redux-observable";
 import { mergeMap } from "rxjs/operators";
-import { ILoginStart, LOGIN_START, IRegisterStart, REGISTER_START, ICheckTokenStart, CHECK_TOKEN_START, checkTokenOK } from "../actions/async";
-import { POST_LOGIN, POST_REGISTER, FETCH_TOKEN } from "../consts/backend";
 import { of } from "rxjs";
-import { enqueueSnackbar, loginOK, changeUserInfo } from "../actions";
+
+import { POST_LOGIN, POST_REGISTER, FETCH_TOKEN, FETCH_MY_INFO, PUT_UPDATE_PASSWORD } from "../consts/backend";
+import {
+    ILoginStart,
+    LOGIN_START,
+    IRegisterStart,
+    REGISTER_START,
+    ICheckTokenStart,
+    CHECK_TOKEN_START,
+    checkTokenOK,
+    IUserUpdateProfileStart,
+    USER_UPDATE_PROFILE_START,
+    IUserUpdatePasswordStart,
+    USER_UPDATE_PASSWORD_START
+} from "../actions/async";
+import { enqueueSnackbar, loginOK, changeUserInfo, changeNotificationPage } from "../actions";
 import FrontendRequest from "../model/FrontendRequest";
 import passwordMD5 from "../model/PasswordMD5";
 
@@ -21,9 +34,14 @@ const login: Epic<ILoginStart> = action$ =>
                 }
             }).pipe(
                 mergeMap(({ data: { code, message } }) => {
-                    if (code == 200) {
+                    if (code === 200) {
                         localStorage.setItem("token", message.token);
-                        return of(enqueueSnackbar("登陆成功！", { variant: "success" }), loginOK(message.uid), changeUserInfo({ ...message }));
+                        return of(
+                            enqueueSnackbar("登陆成功！", { variant: "success" }),
+                            loginOK(message.uid),
+                            changeUserInfo({ ...message }),
+                            changeNotificationPage(1)
+                        );
                     } else {
                         return of(enqueueSnackbar(message, { variant: "error" }));
                     }
@@ -45,7 +63,7 @@ const register: Epic<IRegisterStart> = action$ =>
                     data: { ...payload, password: passwordMD5(password), password_repeat: passwordMD5(password_repeat) }
                 }).pipe(
                     mergeMap(({ data: { code, message } }) => {
-                        if (code == 200) {
+                        if (code === 200) {
                             return of(enqueueSnackbar("注册成功！", { variant: "success" }));
                         } else {
                             return of(enqueueSnackbar(message, { variant: "error" }));
@@ -64,9 +82,14 @@ const checkToken: Epic<ICheckTokenStart> = action$ =>
             if (token) {
                 return FrontendRequest({ url: FETCH_TOKEN, method: "GET" }).pipe(
                     mergeMap(({ data: { code, message } }) => {
-                        if (code == 200) {
+                        if (code === 200) {
                             localStorage.setItem("token", message.token);
-                            return of(enqueueSnackbar("登陆成功！", { variant: "success" }), loginOK(message.uid), changeUserInfo({ ...message }));
+                            return of(
+                                enqueueSnackbar("登陆成功！", { variant: "success" }),
+                                loginOK(message.uid),
+                                changeUserInfo({ ...message }),
+                                changeNotificationPage(1)
+                            );
                         } else {
                             localStorage.removeItem("token");
                             return of(enqueueSnackbar(message, { variant: "error" }));
@@ -80,4 +103,48 @@ const checkToken: Epic<ICheckTokenStart> = action$ =>
         })
     );
 
-export default [login, register, checkToken];
+const updateProfile: Epic<IUserUpdateProfileStart> = action$ =>
+    action$.pipe(
+        ofType(USER_UPDATE_PROFILE_START),
+        mergeMap(({ payload }) =>
+            FrontendRequest({ url: FETCH_MY_INFO, method: "PUT", data: payload }).pipe(
+                mergeMap(({ data: { code, message } }) => {
+                    if (code === 200) {
+                        return of(enqueueSnackbar("修改资料成功！", { variant: "success" }));
+                    } else {
+                        return of(enqueueSnackbar(message, { variant: "error" }));
+                    }
+                })
+            )
+        )
+    );
+
+const updatePassword: Epic<IUserUpdatePasswordStart> = action$ =>
+    action$.pipe(
+        ofType(USER_UPDATE_PASSWORD_START),
+        mergeMap(({ payload }) => {
+            const { oldPassword, newPassword, newPasswordRepeat } = payload;
+            if (newPasswordRepeat !== newPassword) {
+                return of(enqueueSnackbar("两次新密码输入的不一致！", { variant: "error" }));
+            } else {
+                return FrontendRequest({
+                    url: PUT_UPDATE_PASSWORD,
+                    method: "PUT",
+                    data: {
+                        oldPassword: passwordMD5(oldPassword),
+                        newPassword: passwordMD5(newPassword)
+                    }
+                }).pipe(
+                    mergeMap(({ data: { code, message } }) => {
+                        if (code === 200) {
+                            return of(enqueueSnackbar("修改密码成功！", { variant: "success" }));
+                        } else {
+                            return of(enqueueSnackbar(message, { variant: "error" }));
+                        }
+                    })
+                );
+            }
+        })
+    );
+
+export default [login, register, checkToken, updateProfile, updatePassword];

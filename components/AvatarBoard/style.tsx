@@ -5,7 +5,10 @@ const styles = (theme: Theme) =>
     createStyles({
         "board-container": {
             height: "144px",
-            userSelect: "none"
+            userSelect: "none",
+            backgroundRepeat: "no-repeat !important",
+            backgroundPosition: "center !important",
+            backgroundSize: "cover !important"
         },
         "board-info-container": {
             textAlign: "center"

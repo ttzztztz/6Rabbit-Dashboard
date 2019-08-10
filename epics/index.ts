@@ -10,6 +10,7 @@ import ShopEpics from "./Shop";
 import ThreadEpics from "./Thread";
 import UserEpics from "./User";
 import BasicEpics from "./Basic";
+import NotificationEpics from "./Notification";
 
 const dependencies = {};
 export type Dependencies = typeof dependencies;
@@ -34,4 +35,4 @@ export const errHandler = ({ message, type }: CustomError, customAction?: AnyAct
         ? of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || "error" }), toggleProgress(), customAction)
         : of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || "error" }), toggleProgress());
 
-export const Epics = combineEpics(...BasicEpics, ...ForumEpics, ...ShopEpics, ...ThreadEpics, ...UserEpics);
+export const Epics = combineEpics(...BasicEpics, ...ForumEpics, ...ShopEpics, ...ThreadEpics, ...UserEpics, ...NotificationEpics);

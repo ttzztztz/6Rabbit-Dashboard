@@ -103,7 +103,7 @@ class Thread extends React.Component<Props> {
         const { reply, quotepid, page } = this.state;
 
         const { code, message } = await requestReply(tid, reply, quotepid);
-        if (code == 200) {
+        if (code === 200) {
             enqueueSnackbar("回帖成功！", { variant: "success" });
             this.onPageChange(page);
         } else {

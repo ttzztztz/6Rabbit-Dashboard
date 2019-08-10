@@ -1,11 +1,13 @@
-import { Epic } from ".";
+import { Epic } from "./index";
+
 import { ofType } from "redux-observable";
+import { from, of } from "rxjs";
 import { mergeMap, map } from "rxjs/operators";
+import axios from "axios";
+
 import { GET_FORUM_LIST_START, GET_FORUM_LIST_OK, IGetForumListStart, GET_FORUM_START, IGetForumStart } from "../actions/async";
 import { FETCH_FORUM_LIST, FETCH_FORUM } from "../consts/backend";
 import { IThreadListItem } from "../typings";
-import axios from "axios";
-import { from, of } from "rxjs";
 import FrontendRequest from "../model/FrontendRequest";
 import { enqueueSnackbar, changeForum } from "../actions";
 

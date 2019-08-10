@@ -4,7 +4,10 @@ import { Dispatch } from "redux";
 import UserView from "../../view/User";
 import { StoreState } from "../../reducers";
 
-const mapStateToProps = (_: StoreState) => ({});
+const mapStateToProps = ({ user: { username, avatar } }: StoreState) => ({
+    username,
+    avatar
+});
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({});
 

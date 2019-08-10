@@ -31,6 +31,31 @@ const styles = (theme: Theme) =>
         "setting-submit-btn-container": {
             textAlign: "center",
             width: "100%"
+        },
+        "list-root": {
+            width: "100%",
+            display: "flex",
+            "& li": {
+                flexGrow: 1,
+                [theme.breakpoints.up("md")]: {
+                    width: "25% !important"
+                }
+            },
+            [theme.breakpoints.down("md")]: {
+                flexWrap: "wrap"
+            }
+        },
+        "credits-title": {
+            margin: theme.spacing(4, 0, 0, 0),
+            textAlign: "center",
+            userSelect: "none"
+        },
+        "credits-log-container": {
+            width: "100%",
+            overflowX: "auto"
+        },
+        "credits-log-table": {
+            minWidth: "600px"
         }
     });
 

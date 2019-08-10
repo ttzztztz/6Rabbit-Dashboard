@@ -13,6 +13,9 @@ const styles = (theme: Theme) =>
             margin: theme.spacing(3, 0, 0, 0),
             display: "flex",
             justifyContent: "center"
+        },
+        "no-border-cell": {
+            border: "0"
         }
     });
 

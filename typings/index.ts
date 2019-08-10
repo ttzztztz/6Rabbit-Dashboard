@@ -61,15 +61,6 @@ export interface IPostListItem {
     createDate: Date;
 }
 
-export interface INotificationItem {
-    nid: string;
-    username: string;
-    userAvatar: string;
-    content: string;
-    isRead: boolean;
-    time: Date;
-}
-
 export enum IPostPageType {
     CREATE_THREAD,
     CREATE_REPLY,
@@ -124,4 +115,34 @@ export interface IThreadAttachForm {
 
     credits: number;
     creditsType: number;
+}
+
+export interface IUpdatePasswordForm {
+    oldPassword: string;
+    newPassword: string;
+    newPasswordRepeat: string;
+}
+
+export interface IUpdateProfileForm {
+    realname: string;
+    gender: number;
+    email: string;
+    qq: string;
+    mobile: string;
+    wechat: string;
+    signature: string;
+}
+
+export interface INotificationItem {
+    nid: string;
+    fromUser: IOtherUser;
+    toUser: IOtherUser;
+    content: string;
+    isRead: boolean;
+    createDate: Date;
+}
+
+export interface INotificationListResponse {
+    count: { total: number; unread: number };
+    list: Array<INotificationItem>;
 }

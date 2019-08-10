@@ -1,4 +1,4 @@
-import { IThreadListItem, ILoginResponse, IRegisterForm, IReplyForm } from "../typings";
+import { IThreadListItem, ILoginResponse, IRegisterForm, IReplyForm, IUpdatePasswordForm, IUpdateProfileForm } from "../typings";
 
 export const GET_FORUM_LIST_START = "GET_FORUM_LIST_START";
 export type GET_FORUM_LIST_START = typeof GET_FORUM_LIST_START;
@@ -149,4 +149,77 @@ export interface IInitStart {
 }
 export const initStart = (): IInitStart => ({
     type: INIT_START
+});
+
+export const USER_UPDATE_PROFILE_START = "USER_UPDATE_PROFILE_START";
+export type USER_UPDATE_PROFILE_START = typeof USER_UPDATE_PROFILE_START;
+export interface IUserUpdateProfileStart {
+    type: USER_UPDATE_PROFILE_START;
+    payload: IUpdateProfileForm;
+}
+export const userUpdateProfileStart = (payload: IUpdateProfileForm): IUserUpdateProfileStart => ({
+    type: USER_UPDATE_PROFILE_START,
+    payload
+});
+
+export const USER_UPDATE_PASSWORD_START = "USER_UPDATE_PASSWORD_START";
+export type USER_UPDATE_PASSWORD_START = typeof USER_UPDATE_PASSWORD_START;
+export interface IUserUpdatePasswordStart {
+    type: USER_UPDATE_PASSWORD_START;
+    payload: IUpdatePasswordForm;
+}
+export const userUpdatePasswordStart = (payload: IUpdatePasswordForm): IUserUpdatePasswordStart => ({
+    type: USER_UPDATE_PASSWORD_START,
+    payload
+});
+
+export const NOTIFICATION_READ_ALL_START = "NOTIFICATION_READ_ALL_START";
+export type NOTIFICATION_READ_ALL_START = typeof NOTIFICATION_READ_ALL_START;
+export interface INotificationReadAllStart {
+    type: NOTIFICATION_READ_ALL_START;
+}
+export const notificationReadAllStart = (): INotificationReadAllStart => ({
+    type: NOTIFICATION_READ_ALL_START
+});
+
+export const NOTIFICATION_DELETE_ALL_START = "NOTIFICATION_DELETE_ALL_START";
+export type NOTIFICATION_DELETE_ALL_START = typeof NOTIFICATION_DELETE_ALL_START;
+export interface INotificationDeleteAllStart {
+    type: NOTIFICATION_DELETE_ALL_START;
+}
+export const notificationDeleteAllStart = (): INotificationDeleteAllStart => ({
+    type: NOTIFICATION_DELETE_ALL_START
+});
+
+export const NOTIFICATION_DELETE_ONE_START = "NOTIFICATION_DELETE_ONE_START";
+export type NOTIFICATION_DELETE_ONE_START = typeof NOTIFICATION_DELETE_ONE_START;
+export interface INotificationDeleteOneStart {
+    type: NOTIFICATION_DELETE_ONE_START;
+    nid: string;
+}
+export const notificationDeleteOneStart = (nid: string): INotificationDeleteOneStart => ({
+    type: NOTIFICATION_DELETE_ONE_START,
+    nid
+});
+
+export const NOTIFICATION_READ_ONE_START = "NOTIFICATION_READ_ONE_START";
+export type NOTIFICATION_READ_ONE_START = typeof NOTIFICATION_READ_ONE_START;
+export interface INotificationReadOneStart {
+    type: NOTIFICATION_READ_ONE_START;
+    nid: string;
+}
+export const notificationReadOneStart = (nid: string): INotificationReadOneStart => ({
+    type: NOTIFICATION_READ_ONE_START,
+    nid
+});
+
+export const NOTIFICATION_CHANGE_PAGE_START = "NOTIFICATION_CHANGE_PAGE_START";
+export type NOTIFICATION_CHANGE_PAGE_START = typeof NOTIFICATION_CHANGE_PAGE_START;
+export interface INotificationChangePageStart {
+    type: NOTIFICATION_CHANGE_PAGE_START;
+    page: string;
+}
+export const notificationChangePageStart = (page: string): INotificationChangePageStart => ({
+    type: NOTIFICATION_CHANGE_PAGE_START,
+    page
 });

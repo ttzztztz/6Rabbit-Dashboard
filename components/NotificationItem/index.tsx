@@ -7,26 +7,30 @@ import ClearIcon from "@material-ui/icons/Clear";
 
 import Avatar from "../Avatar";
 import { INotificationItem } from "../../typings";
+import { FETCH_AVATAR } from "../../consts/backend";
 
-interface Props extends WithStyles, INotificationItem {}
+interface Props extends WithStyles, INotificationItem {
+    handleDelete: (nid: string) => void;
+    handleRead: (nid: string) => void;
+}
 
 class NotificationItem extends React.PureComponent<Props> {
     render() {
-        const { classes, nid, username, time, userAvatar, content, isRead } = this.props;
+        const { classes, nid, createDate, fromUser, content, isRead, handleDelete, handleRead } = this.props;
 
         return (
-            <div className={classes["notification-item-container"]} data-nid={nid}>
+            <div className={classes["notification-item-container"]} data-nid={nid} onClick={() => handleRead(nid)}>
                 <div className={classes["author-avatar"]}>
-                    <Avatar src={userAvatar} width={32} />
+                    <Avatar src={FETCH_AVATAR(fromUser.uid)} width={32} />
                 </div>
-                <div className={classes["notification-clear"]}>
+                <div className={classes["notification-clear"]} onClick={() => handleDelete(nid)}>
                     <ClearIcon className={classes["clear-icon"]} />
                     删除
                 </div>
                 <div>
                     <div className={classes["notification-item-info"]}>
-                        <span className={classes["author-username"]}>{username}</span>
-                        <span>{new Date(time).toLocaleString()}</span>
+                        <span className={classes["author-username"]}>{fromUser.username}</span>
+                        <span>{new Date(createDate).toLocaleString()}</span>
                     </div>
                     {isRead && <div className={classes["content-container"]}>{content}</div>}
                     {!isRead && (
