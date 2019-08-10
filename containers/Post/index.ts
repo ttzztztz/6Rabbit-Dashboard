@@ -3,10 +3,14 @@ import { Dispatch } from "redux";
 
 import PostView from "../../view/Post";
 import { StoreState } from "../../reducers";
+import { enqueueSnackbar } from "../../actions";
+import { OptionsObject } from "notistack";
 
 const mapStateToProps = ({ basic: { forum } }: StoreState) => ({ forum });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({});
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options))
+});
 
 export default connect(
     mapStateToProps,

@@ -31,6 +31,7 @@ import axios from "axios";
 
 import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
+import { requestReply } from "../../model/Post";
 
 interface Props extends WithStyles {
     router: NextRouter;
@@ -101,10 +102,7 @@ class Thread extends React.Component<Props> {
         const { tid, enqueueSnackbar } = this.props;
         const { reply, quotepid, page } = this.state;
 
-        const {
-            data: { code, message }
-        } = await FrontendRequest({ url: POST_REPLY_THREAD(tid), data: { message: reply, quotepid }, method: "POST" }).toPromise();
-
+        const { code, message } = await requestReply(tid, reply, quotepid);
         if (code == 200) {
             enqueueSnackbar("回帖成功！", { variant: "success" });
             this.onPageChange(page);

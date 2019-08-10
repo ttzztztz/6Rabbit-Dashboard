@@ -73,9 +73,15 @@ const styles = (theme: Theme) =>
             zIndex: 9999
         },
         "post-btn": {
+            transition:
+                "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
+        },
+        "post-btn-container": {
+            transform: "scale(1)",
+            transition: "transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
             position: "fixed",
-            right: "5%",
-            bottom: "5%",
+            right: "40px",
+            bottom: "40px",
             zIndex: 9999
         },
         success: { backgroundColor: successColor },

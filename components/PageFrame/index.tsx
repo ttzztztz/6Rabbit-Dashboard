@@ -176,9 +176,11 @@ class Bar extends React.PureComponent<Props> {
                     {loading && <LinearProgress className={classes.progess} color="secondary" />}
                     {isLogin && (
                         <Link href="/thread/create">
-                            <Fab size="large" color="primary" className={classes["post-btn"]}>
-                                <AddIcon />
-                            </Fab>
+                            <div className={classes["post-btn-container"]}>
+                                <Fab size="large" color="primary" className={classes["post-btn"]}>
+                                    <AddIcon />
+                                </Fab>
+                            </div>
                         </Link>
                     )}
                 </div>

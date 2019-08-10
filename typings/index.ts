@@ -70,11 +70,11 @@ export interface INotificationItem {
     time: Date;
 }
 
-export enum PostPageType {
+export enum IPostPageType {
     CREATE_THREAD,
-    CREATE_POST,
+    CREATE_REPLY,
     EDIT_THREAD,
-    EDIT_POST
+    EDIT_REPLY
 }
 
 export interface ISnackbarItem {
@@ -112,4 +112,16 @@ export interface IForumItem {
     description: string;
     threads: number;
     type: "blog" | "shop" | "normal";
+}
+
+export interface IGeneralResponse {
+    code: number;
+    message: any;
+}
+
+export interface IThreadAttachForm {
+    aid: string;
+
+    credits: number;
+    creditsType: number;
 }
