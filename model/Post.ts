@@ -1,6 +1,6 @@
 import FrontendRequest from "./FrontendRequest";
 
-import { POST_REPLY_THREAD, POST_THREAD_CREATE, PUT_THREAD_EDIT, PUT_REPLY_EDIT } from "../consts/backend";
+import { POST_REPLY_THREAD, POST_THREAD_CREATE, OPTIONS_THREAD, PUT_REPLY_EDIT } from "../consts/backend";
 import { IGeneralResponse, IThreadAttachForm } from "../typings";
 
 export const requestReply = async (tid: string, message: string, quotepid: string) => {
@@ -14,7 +14,7 @@ export const requestCreateThread = async (fid: string, subject: string, message:
 };
 
 export const requestEditThread = async (tid: string, fid: string, subject: string, message: string, attachList: Array<IThreadAttachForm>) => {
-    const { data } = await FrontendRequest({ url: PUT_THREAD_EDIT(tid), data: { fid, subject, message, attach: attachList }, method: "PUT" }).toPromise();
+    const { data } = await FrontendRequest({ url: OPTIONS_THREAD(tid), data: { fid, subject, message, attach: attachList }, method: "PUT" }).toPromise();
     return data as IGeneralResponse;
 };
 

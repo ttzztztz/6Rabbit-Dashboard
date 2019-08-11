@@ -3,7 +3,7 @@ import styles from "./style";
 import clsx from "clsx";
 import { OptionsObject } from "notistack";
 
-import { WithStyles, withStyles, Fab } from "@material-ui/core";
+import { WithStyles, withStyles } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -11,12 +11,14 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import Fab from "@material-ui/core/Fab";
 import MessageIcon from "@material-ui/icons/Message";
 
 import FrontendRequest from "../../model/FrontendRequest";
 import Avatar from "../../components/Avatar";
 import PostListItem from "../../components/PostListItem";
 import PaginationComponent from "../../components/Pagination";
+import ThreadAdminPanel from "../../containers/ThreadAdminPanel";
 import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
 import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
@@ -33,12 +35,14 @@ import { requestReply } from "../../model/Post";
 
 interface Props extends WithStyles {
     router: NextRouter;
-    tid: string;
 
+    tid: string;
+    isAdmin: boolean;
     thread: IThreadListItem;
     firstPost: IPostListItem;
     needBuy: boolean;
     attachList: Array<IThreadAttach>;
+    uid: string;
 
     defaultPage: number;
     defaultRes: Array<IPostListItem>;
@@ -115,7 +119,7 @@ class Thread extends React.Component<Props> {
     }
 
     render() {
-        const { classes, thread, firstPost } = this.props;
+        const { classes, thread, firstPost, isAdmin, uid } = this.props;
         const { postList, reply, page } = this.state;
         return (
             <>
@@ -141,6 +145,11 @@ class Thread extends React.Component<Props> {
                 </Paper>
                 <Paper className={classes.paperRoot}>
                     <div id="content-container" dangerouslySetInnerHTML={{ __html: firstPost.message }} />
+                    {(isAdmin || uid === thread.user.uid) && (
+                        <>
+                            <ThreadAdminPanel target={[thread.tid]} />
+                        </>
+                    )}
                 </Paper>
                 {postList.length > 0 && (
                     <Paper className={classes.paperRoot}>

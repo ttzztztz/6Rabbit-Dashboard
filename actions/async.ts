@@ -245,3 +245,47 @@ export const getUserProfileOK = (payload: IOtherUser): IGetUserProfileOK => ({
     type: GET_USER_PROFILE_OK,
     payload
 });
+
+export const DELETE_THREAD_START = "DELETE_THREAD_START";
+export type DELETE_THREAD_START = typeof DELETE_THREAD_START;
+export interface IDeleteThreadStart {
+    type: DELETE_THREAD_START;
+    payload: Array<string>;
+}
+export const deleteThreadStart = (payload: Array<string>): IDeleteThreadStart => ({
+    type: DELETE_THREAD_START,
+    payload
+});
+
+export const SET_CLOSE_THREAD_START = "SET_CLOSE_THREAD_START";
+export type SET_CLOSE_THREAD_START = typeof SET_CLOSE_THREAD_START;
+export interface ISetCloseThreadStart {
+    type: SET_CLOSE_THREAD_START;
+    payload: Array<string>;
+}
+export const setCloseThreadStart = (payload: Array<string>): ISetCloseThreadStart => ({
+    type: SET_CLOSE_THREAD_START,
+    payload
+});
+
+export const SET_DIAMOND_THREAD_START = "SET_DIAMOND_THREAD_START";
+export type SET_DIAMOND_THREAD_START = typeof SET_DIAMOND_THREAD_START;
+export interface ISetDiamondThreadStart {
+    type: SET_DIAMOND_THREAD_START;
+    payload: Array<string>;
+}
+export const setDiamondThreadStart = (payload: Array<string>): ISetDiamondThreadStart => ({
+    type: SET_DIAMOND_THREAD_START,
+    payload
+});
+
+export const SET_TOP_THREAD_START = "SET_TOP_THREAD_START";
+export type SET_TOP_THREAD_START = typeof SET_TOP_THREAD_START;
+export interface ISetTopThreadStart {
+    type: SET_TOP_THREAD_START;
+    payload: Array<string>;
+}
+export const setTopThreadStart = (payload: Array<string>): ISetTopThreadStart => ({
+    type: SET_TOP_THREAD_START,
+    payload
+});

@@ -13,7 +13,7 @@ const initState: UserStore = {
     username: "6Rabbit",
     avatar: "https://www.6rabbit.com/api/user/avatar",
     isAdmin: false,
-    uid: ""
+    uid: "-1"
 };
 
 export const userReducer = function(state = initState, action: Action): UserStore {
