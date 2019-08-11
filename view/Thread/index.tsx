@@ -23,7 +23,7 @@ import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
-import { FETCH_THREAD, POST_REPLY_THREAD } from "../../consts/backend";
+import { FETCH_THREAD } from "../../consts/backend";
 
 import { of, Subject } from "rxjs";
 import { StateObservable, ActionsObservable } from "redux-observable";

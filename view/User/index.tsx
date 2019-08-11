@@ -5,7 +5,7 @@ import { WithStyles, withStyles } from "@material-ui/core";
 import AvatarBoard from "../../components/AvatarBoard";
 import SettingsComponent from "../../containers/Settings";
 import NotificationsComponent from "../../containers/Notifications";
-import ProfileThreadListComponent from "../../components/ProfileThreadList";
+import ProfileThreadListComponent from "../../containers/ProfileThreadList";
 import { TITLE_PREFIX } from "../../consts";
 
 import Paper from "@material-ui/core/Paper";
@@ -16,6 +16,7 @@ import Head from "next/head";
 
 interface Props extends WithStyles {
     username: string;
+    uid: string;
     avatar: string;
 }
 
@@ -29,7 +30,7 @@ class Profile extends React.PureComponent<Props> {
         });
     };
     render() {
-        const { classes, username, avatar } = this.props;
+        const { classes, username, avatar, uid } = this.props;
         const { activeTab } = this.state;
         return (
             <>
@@ -43,9 +44,11 @@ class Profile extends React.PureComponent<Props> {
                         <Tab label="帖子" />
                         <Tab label="通知" />
                     </Tabs>
-                    {activeTab === 0 && <SettingsComponent />}
-                    {activeTab === 1 && <ProfileThreadListComponent prefix="我的" showPurchased={true} />}
-                    {activeTab === 2 && <NotificationsComponent />}
+                    <div className={classes["user-infos-content-container"]}>
+                        {activeTab === 0 && <SettingsComponent />}
+                        {activeTab === 1 && <ProfileThreadListComponent prefix="我的" showPurchased={true} uid={uid} />}
+                        {activeTab === 2 && <NotificationsComponent />}
+                    </div>
                 </Paper>
             </>
         );

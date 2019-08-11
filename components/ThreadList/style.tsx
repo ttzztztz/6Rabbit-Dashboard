@@ -9,6 +9,9 @@ const styles = (theme: Theme) =>
         },
         "not-show-outline": {
             boxShadow: "0 0 0"
+        },
+        "no-border-cell": {
+            border: "0"
         }
     });
 

@@ -44,7 +44,7 @@ class ThreadList extends React.Component<Props> {
                     </TableBody>
                     <TableFooter>
                         <TableRow>
-                            <TableCell component="th" scope="row">
+                            <TableCell component="th" scope="row" className={classes["no-border-cell"]}>
                                 <PaginationComponent total={total} page={page} onPageChange={onPageChange} />
                             </TableCell>
                         </TableRow>

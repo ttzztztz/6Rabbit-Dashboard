@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./style";
 
-import ProfileThreadListComponent from "../../components/ProfileThreadList";
+import ProfileThreadListComponent from "../../containers/ProfileThreadList";
 import ProfileDetailComponent from "./ProfileDetail";
 import AvatarBoard from "../../components/AvatarBoard";
 import { TITLE_PREFIX } from "../../consts";
@@ -31,7 +31,7 @@ class User extends React.PureComponent<Props> {
     };
     render() {
         const { classes } = this.props;
-        const { activeTab } = this.state;
+        const { activeTab, uid } = this.state;
 
         return (
             <>
@@ -40,18 +40,12 @@ class User extends React.PureComponent<Props> {
                 </Head>
                 <AvatarBoard src={"/static/avatar.png"} username="hzytql" />
                 <Paper className={classes["user-infos-container"]}>
-                    <Tabs
-                        value={activeTab}
-                        onChange={this.handleTabChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        centered
-                    >
+                    <Tabs value={activeTab} onChange={this.handleTabChange} indicatorColor="primary" textColor="primary" centered>
                         <Tab label="资料" />
                         <Tab label="帖子" />
                     </Tabs>
                     {activeTab === 0 && <ProfileDetailComponent />}
-                    {activeTab === 1 && <ProfileThreadListComponent prefix="Ta的" showPurchased={false} />}
+                    {activeTab === 1 && <ProfileThreadListComponent prefix="Ta的" showPurchased={false} uid={uid} />}
                 </Paper>
             </>
         );

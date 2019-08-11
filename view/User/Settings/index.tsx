@@ -69,7 +69,6 @@ class Settings extends React.Component<Props> {
                     ...message
                 }
             });
-            enqueueSnackbar("获取用户信息成功！", { variant: "success" });
         } else {
             enqueueSnackbar(message, { variant: "error" });
         }
@@ -102,7 +101,7 @@ class Settings extends React.Component<Props> {
 
         return (
             <>
-                <section className={classes["setting-container"]}>
+                <section>
                     <List className={classes["list-root"]}>
                         <ListItem>
                             <ListItemAvatar>
@@ -138,7 +137,7 @@ class Settings extends React.Component<Props> {
                         </ListItem>
                     </List>
                 </section>
-                <section className={classes["setting-container"]}>
+                <section>
                     <Typography variant="h5" className={classes["setting-title"]}>
                         个人资料
                     </Typography>

@@ -4,8 +4,9 @@ import { Dispatch } from "redux";
 import UserView from "../../view/User";
 import { StoreState } from "../../reducers";
 
-const mapStateToProps = ({ user: { username, avatar } }: StoreState) => ({
+const mapStateToProps = ({ user: { username, avatar, uid } }: StoreState) => ({
     username,
+    uid,
     avatar
 });
 

@@ -10,13 +10,6 @@ const styles = (theme: Theme) =>
         button: {
             margin: theme.spacing(1)
         },
-        "setting-container": {
-            padding: theme.spacing(2, 1, 2, 1),
-            [theme.breakpoints.up("md")]: {
-                width: "60%",
-                margin: "auto"
-            }
-        },
         "setting-title": {
             margin: theme.spacing(4, 0, 3, 0),
             textAlign: "center",
