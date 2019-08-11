@@ -1,4 +1,4 @@
-import { IThreadListItem, ILoginResponse, IRegisterForm, IReplyForm, IUpdatePasswordForm, IUpdateProfileForm } from "../typings";
+import { IThreadListItem, ILoginResponse, IRegisterForm, IReplyForm, IUpdatePasswordForm, IUpdateProfileForm, IOtherUser } from "../typings";
 
 export const GET_FORUM_LIST_START = "GET_FORUM_LIST_START";
 export type GET_FORUM_LIST_START = typeof GET_FORUM_LIST_START;
@@ -63,9 +63,9 @@ export interface IGetThreadInfoOK {
     type: GET_THREAD_INFO_OK;
     payload: { list: Array<IThreadListItem>; total: number };
 }
-export const getThreadInfoOK = (list: Array<IThreadListItem>, total: number): IGetThreadInfoOK => ({
+export const getThreadInfoOK = (payload: { list: Array<IThreadListItem>; total: number }): IGetThreadInfoOK => ({
     type: GET_THREAD_INFO_OK,
-    payload: { list, total }
+    payload
 });
 
 export const LOGIN_START = "LOGIN_START";
@@ -222,4 +222,26 @@ export interface INotificationChangePageStart {
 export const notificationChangePageStart = (page: string): INotificationChangePageStart => ({
     type: NOTIFICATION_CHANGE_PAGE_START,
     page
+});
+
+export const GET_USER_PROFILE_START = "GET_USER_PROFILE_START";
+export type GET_USER_PROFILE_START = typeof GET_USER_PROFILE_START;
+export interface IGetUserProfileStart {
+    type: GET_USER_PROFILE_START;
+    uid: string;
+}
+export const getUserProfileStart = (uid: string): IGetUserProfileStart => ({
+    type: GET_USER_PROFILE_START,
+    uid
+});
+
+export const GET_USER_PROFILE_OK = "GET_USER_PROFILE_OK";
+export type GET_USER_PROFILE_OK = typeof GET_USER_PROFILE_OK;
+export interface IGetUserProfileOK {
+    type: GET_USER_PROFILE_OK;
+    payload: IOtherUser;
+}
+export const getUserProfileOK = (payload: IOtherUser): IGetUserProfileOK => ({
+    type: GET_USER_PROFILE_OK,
+    payload
 });

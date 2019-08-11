@@ -1,9 +1,9 @@
 import { Epic } from ".";
 import { ofType } from "redux-observable";
-import { mergeMap } from "rxjs/operators";
-import { of } from "rxjs";
+import { mergeMap, map } from "rxjs/operators";
+import { of, from } from "rxjs";
 
-import { POST_LOGIN, POST_REGISTER, FETCH_TOKEN, FETCH_MY_INFO, PUT_UPDATE_PASSWORD } from "../consts/backend";
+import { POST_LOGIN, POST_REGISTER, FETCH_TOKEN, FETCH_MY_INFO, PUT_UPDATE_PASSWORD, FETCH_USER_INFO_PROFILE } from "../consts/backend";
 import {
     ILoginStart,
     LOGIN_START,
@@ -15,11 +15,15 @@ import {
     IUserUpdateProfileStart,
     USER_UPDATE_PROFILE_START,
     IUserUpdatePasswordStart,
-    USER_UPDATE_PASSWORD_START
+    USER_UPDATE_PASSWORD_START,
+    IGetUserProfileStart,
+    GET_USER_PROFILE_START,
+    getUserProfileOK
 } from "../actions/async";
 import { enqueueSnackbar, loginOK, changeUserInfo, changeNotificationPage } from "../actions";
 import FrontendRequest from "../model/FrontendRequest";
 import passwordMD5 from "../model/PasswordMD5";
+import axios from "axios";
 
 const login: Epic<ILoginStart> = action$ =>
     action$.pipe(
@@ -147,4 +151,10 @@ const updatePassword: Epic<IUserUpdatePasswordStart> = action$ =>
         })
     );
 
-export default [login, register, checkToken, updateProfile, updatePassword];
+const getUserProfile: Epic<IGetUserProfileStart> = action$ =>
+    action$.pipe(
+        ofType(GET_USER_PROFILE_START),
+        mergeMap(({ uid }) => from(axios({ url: FETCH_USER_INFO_PROFILE(uid), method: "GET" })).pipe(map(({ data: { message } }) => getUserProfileOK(message))))
+    );
+
+export default [login, register, checkToken, updateProfile, updatePassword, getUserProfile];

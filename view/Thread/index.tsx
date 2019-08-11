@@ -3,11 +3,10 @@ import styles from "./style";
 import clsx from "clsx";
 import { OptionsObject } from "notistack";
 
-import { WithStyles, withStyles } from "@material-ui/core";
+import { WithStyles, withStyles, Fab } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
@@ -27,7 +26,6 @@ import { FETCH_THREAD } from "../../consts/backend";
 
 import { of, Subject } from "rxjs";
 import { StateObservable, ActionsObservable } from "redux-observable";
-import axios from "axios";
 
 import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
@@ -88,7 +86,7 @@ class Thread extends React.Component<Props> {
 
         const {
             data: { message }
-        } = await axios({ url: FETCH_THREAD(tid, page.toString()) });
+        } = await FrontendRequest({ url: FETCH_THREAD(tid, page.toString()) }).toPromise();
         this.patchPostList(message.postList);
     };
 
@@ -177,10 +175,10 @@ class Thread extends React.Component<Props> {
                         variant="outlined"
                     />
                     <div className={classes["reply-container"]}>
-                        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleReply}>
+                        <Fab variant="extended" size="medium" color="primary" aria-label="add" className={classes.button} onClick={this.handleReply}>
                             <MessageIcon className={classes["reply-icon"]} />
                             回复
-                        </Button>
+                        </Fab>
                     </div>
                 </Paper>
             </>

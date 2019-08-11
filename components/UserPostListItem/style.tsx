@@ -20,6 +20,19 @@ const styles = (_theme: Theme) =>
         "second-info": {
             color: "rgba(134, 142, 150, 0.8)",
             fontSize: "12px"
+        },
+        "message-container": {
+            maxHeight: "200px",
+            overflow: "hidden",
+            position: "relative",
+            "&:before": {
+                background: "linear-gradient(180deg,hsla(0,0%,100%,0) 0,#fff)",
+                content: '" "',
+                top: "120px",
+                height: "70px",
+                position: "absolute",
+                width: "100%"
+            }
         }
     });
 

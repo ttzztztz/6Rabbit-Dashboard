@@ -1,13 +1,13 @@
 import React from "react";
 import styles from "./style";
-import { WithStyles, withStyles } from "@material-ui/core";
+import { WithStyles, withStyles, Fab } from "@material-ui/core";
 import clsx from "clsx";
 
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import MessageIcon from "@material-ui/icons/Message";
 
 import { OptionsObject } from "notistack";
 import { IPostPageType, IForumItem, IThreadAttachForm, IGeneralResponse } from "../../typings";
@@ -190,9 +190,10 @@ class Post extends React.PureComponent<Props> {
                     </div>
                     <div className={classes["attach-container"]} />
                     <div className={classes["btn-container"]}>
-                        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSubmitClick}>
+                        <Fab variant="extended" size="medium" color="primary" aria-label="add" className={classes.button} onClick={this.handleSubmitClick}>
+                            <MessageIcon className={classes["btn-icon"]} />
                             {showTitle}
-                        </Button>
+                        </Fab>
                     </div>
                 </Paper>
             </>

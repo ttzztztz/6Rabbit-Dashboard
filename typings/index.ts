@@ -35,6 +35,14 @@ export interface IThreadListItem {
     user: IOtherUser;
 }
 
+export interface IUserPostItem {
+    pid: string;
+    thread: IThreadListItem;
+    isFirst: boolean;
+    message: string;
+    createDate: Date;
+}
+
 export interface IThreadAttach {
     aid: string;
     fileSize: number;

@@ -6,22 +6,13 @@ import { mergeMap, map } from "rxjs/operators";
 
 import { Epic } from "./index";
 
-import { GET_THREAD_INFO_START, GET_THREAD_INFO_OK, IGetThreadInfoStart } from "../actions/async";
+import { GET_THREAD_INFO_START, GET_THREAD_INFO_OK, IGetThreadInfoStart, getThreadInfoOK } from "../actions/async";
 import { FETCH_THREAD } from "../consts/backend";
 
 const fetchThreadInfo: Epic<IGetThreadInfoStart> = action$ =>
     action$.pipe(
         ofType(GET_THREAD_INFO_START),
-        mergeMap(({ tid, page }) =>
-            from(axios({ url: FETCH_THREAD(tid, page) })).pipe(
-                map(({ data }) => {
-                    return {
-                        type: GET_THREAD_INFO_OK,
-                        payload: data
-                    };
-                })
-            )
-        )
+        mergeMap(({ tid, page }) => from(axios({ url: FETCH_THREAD(tid, page) })).pipe(map(({ data }) => getThreadInfoOK(data))))
     );
 
 export default [fetchThreadInfo];

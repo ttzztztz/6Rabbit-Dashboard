@@ -40,6 +40,10 @@ const styles = (theme: Theme) =>
         },
         "post-content": {
             width: "98%"
+        },
+        "btn-icon": {
+            fontSize: "16px",
+            marginRight: theme.spacing(0.5)
         }
     });
 

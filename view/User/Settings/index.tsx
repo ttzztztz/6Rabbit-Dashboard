@@ -46,12 +46,12 @@ class Settings extends React.Component<Props> {
             mobile: "",
             usergroup: {
                 gid: "1",
-                name: "User",
+                name: "",
                 isAdmin: false
             },
-            credits: 12,
-            golds: 24,
-            rmbs: 12
+            credits: 0,
+            golds: 0,
+            rmbs: 0
         }
     };
     componentDidMount() {

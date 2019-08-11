@@ -4,25 +4,28 @@ import { WithStyles, withStyles } from "@material-ui/core";
 
 import Avatar from "../Avatar";
 import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
-import { IThreadListItem } from "../../typings";
+import { IUserPostItem } from "../../typings";
 
 import Typography from "@material-ui/core/Typography";
 import Link from "next/link";
 import { FETCH_AVATAR } from "../../consts/backend";
 
-interface Props extends WithStyles, IThreadListItem {
+interface Props extends WithStyles, IUserPostItem {
     showAvatar: boolean;
 }
 
-class ThreadListItem extends React.Component<Props> {
+class UserPostListItem extends React.Component<Props> {
     render() {
         const {
             classes,
-            subject,
+            thread: {
+                subject,
+                tid,
+                user: { username, uid }
+            },
             createDate,
             showAvatar,
-            tid,
-            user: { username, uid }
+            message
         } = this.props;
         const userAvatar = FETCH_AVATAR(uid);
 
@@ -37,10 +40,13 @@ class ThreadListItem extends React.Component<Props> {
                 )}
                 <div>
                     <Link href={THREAD_INFO_RAW} as={THREAD_INFO(tid)} passHref>
-                        <Typography variant="h6" component="h6" className={classes["thread-list-item-title"]}>
+                        <Typography variant="body1" component="a" className={classes["thread-list-item-title"]}>
                             {subject}
                         </Typography>
                     </Link>
+                    <div className={classes["message-container"]}>
+                        <div dangerouslySetInnerHTML={{ __html: message }} />
+                    </div>
                     <Typography variant="body1" className={classes["second-info"]}>
                         {showAvatar && (
                             <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
@@ -55,4 +61,4 @@ class ThreadListItem extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles)(ThreadListItem);
+export default withStyles(styles)(UserPostListItem);

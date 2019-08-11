@@ -10,7 +10,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
 import ThreadList from "../ThreadList";
-import { IThreadListItem } from "../../typings";
+import UserPostList from "../UserPostList";
+import { IThreadListItem, IUserPostItem } from "../../typings";
 import FrontendRequest from "../../model/FrontendRequest";
 import { FETCH_USER_THREAD_LIST, FETCH_USER_POST_LIST, FETCH_AGGREGATE_PURCHASED_LIST } from "../../consts/backend";
 
@@ -35,7 +36,7 @@ class ProfileThreadList extends React.PureComponent<Props> {
         activePage: 0,
         menuAnchorElement: null,
         threadList: [] as Array<IThreadListItem>,
-        postList: [],
+        postList: [] as Array<IUserPostItem>,
         purchasedList: [] as Array<IThreadListItem>,
 
         page: 1,
@@ -98,7 +99,18 @@ class ProfileThreadList extends React.PureComponent<Props> {
         );
     };
     renderPost = () => {
-        return <></>;
+        const { page, total, postList } = this.state;
+        const handlePageChange = (page: number) => {
+            this.setState({
+                page
+            });
+            this.fetchPostList(page);
+        };
+        return (
+            <>
+                <UserPostList page={page} total={total} onPageChange={handlePageChange} postList={postList} />
+            </>
+        );
     };
     renderPurchased = () => {
         const { page, total, purchasedList } = this.state;
