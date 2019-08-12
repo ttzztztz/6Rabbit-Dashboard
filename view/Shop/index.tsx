@@ -6,7 +6,7 @@ import { WithStyles, withStyles } from "@material-ui/core";
 import { Subject, of } from "rxjs";
 import { StateObservable, ActionsObservable } from "redux-observable";
 
-import ThreadListComponent from "../../components/ThreadList";
+import ThreadListComponent from "../../containers/ThreadList";
 import { TITLE_PREFIX } from "../../consts";
 import { getShopListStart, IGetShopListStart } from "../../actions/async";
 import { IThreadListItem, IExtendedNextPageContext } from "../../typings";
@@ -50,7 +50,14 @@ class ShopList extends React.PureComponent<Props> {
                 <Head>
                     <title>{TITLE_PREFIX}商城</title>
                 </Head>
-                <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} showAvatar={false} />
+                <ThreadListComponent
+                    threadList={threadList}
+                    total={total}
+                    page={page}
+                    onPageChange={this.handlePageChange}
+                    showAvatar={false}
+                    canAdmin={true}
+                />
             </>
         );
     }

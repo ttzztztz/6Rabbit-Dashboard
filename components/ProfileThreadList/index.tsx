@@ -9,7 +9,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
-import ThreadList from "../ThreadList";
+import ThreadList from "../../containers/ThreadList";
 import UserPostList from "../UserPostList";
 import { IThreadListItem, IUserPostItem } from "../../typings";
 import FrontendRequest from "../../model/FrontendRequest";
@@ -94,7 +94,7 @@ class ProfileThreadList extends React.PureComponent<Props> {
         };
         return (
             <>
-                <ThreadList page={page} total={total} onPageChange={handlePageChange} threadList={threadList} showOutline={false} />
+                <ThreadList page={page} total={total} onPageChange={handlePageChange} threadList={threadList} showOutline={false} canAdmin={false} />
             </>
         );
     };
@@ -122,7 +122,7 @@ class ProfileThreadList extends React.PureComponent<Props> {
         };
         return (
             <>
-                <ThreadList page={page} total={total} onPageChange={handlePageChange} threadList={purchasedList} showOutline={false} />
+                <ThreadList page={page} total={total} onPageChange={handlePageChange} threadList={purchasedList} showOutline={false} canAdmin={false} />
             </>
         );
     };

@@ -148,40 +148,43 @@ class ThreadAdminPanel extends React.Component<Props> {
     render() {
         const { classes, target } = this.props;
         const { openDialog, action } = this.state;
-
-        return (
-            <div className={classes["admin-panel-container"]}>
-                <ButtonGroup color="primary">{this.renderButton()}</ButtonGroup>
-                <Dialog open={openDialog} onClose={this.handleDialogClose}>
-                    <DialogTitle>操作确认</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            你即将操作
-                            {target.length.toString()}个主题。
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        {action === "置顶" ? (
-                            [
-                                <Button onClick={this.handleConfirmBtnClick} color="primary" autoFocus key="current">
-                                    本版{action}
-                                </Button>,
-                                <Button onClick={this.handleGlobalTopConfirmBtnClick} color="primary" key="global">
-                                    全局{action}
+        if (target.length === 0) {
+            return <></>;
+        } else {
+            return (
+                <div className={classes["admin-panel-container"]}>
+                    <ButtonGroup color="primary">{this.renderButton()}</ButtonGroup>
+                    <Dialog open={openDialog} onClose={this.handleDialogClose}>
+                        <DialogTitle>操作确认</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                你即将操作
+                                {target.length.toString()}个主题。
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            {action === "置顶" ? (
+                                [
+                                    <Button onClick={this.handleConfirmBtnClick} color="primary" autoFocus key="current">
+                                        本版{action}
+                                    </Button>,
+                                    <Button onClick={this.handleGlobalTopConfirmBtnClick} color="primary" key="global">
+                                        全局{action}
+                                    </Button>
+                                ]
+                            ) : (
+                                <Button onClick={this.handleConfirmBtnClick} color="primary" autoFocus>
+                                    设置{action}
                                 </Button>
-                            ]
-                        ) : (
-                            <Button onClick={this.handleConfirmBtnClick} color="primary" autoFocus>
-                                设置{action}
+                            )}
+                            <Button onClick={this.handleCancelBtnClick} color="primary">
+                                取消{action}
                             </Button>
-                        )}
-                        <Button onClick={this.handleCancelBtnClick} color="primary">
-                            取消{action}
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-        );
+                        </DialogActions>
+                    </Dialog>
+                </div>
+            );
+        }
     }
 }
 

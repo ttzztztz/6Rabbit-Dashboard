@@ -18,6 +18,13 @@ import LockIcon from "@material-ui/icons/Lock";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import GradeIcon from "@material-ui/icons/Grade";
 
+import { of, Subject } from "rxjs";
+import { StateObservable, ActionsObservable } from "redux-observable";
+
+import { NextRouter, withRouter } from "next/dist/client/router";
+import Head from "next/head";
+import Link from "next/link";
+
 import FrontendRequest from "../../model/FrontendRequest";
 import Avatar from "../../components/Avatar";
 import PostListItem from "../../containers/PostListItem";
@@ -29,13 +36,6 @@ import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
 import { FETCH_THREAD } from "../../consts/backend";
-
-import { of, Subject } from "rxjs";
-import { StateObservable, ActionsObservable } from "redux-observable";
-
-import { NextRouter, withRouter } from "next/dist/client/router";
-import Head from "next/head";
-import Link from "next/link";
 import { requestReply } from "../../model/Post";
 
 interface Props extends WithStyles {

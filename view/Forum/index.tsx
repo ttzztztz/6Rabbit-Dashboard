@@ -6,7 +6,7 @@ import { StateObservable, ActionsObservable } from "redux-observable";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 
-import ThreadListComponent from "../../components/ThreadList";
+import ThreadListComponent from "../../containers/ThreadList";
 import { IThreadListItem, IExtendedNextPageContext } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { FORUM_LIST_RAW, FORUM_LIST } from "../../consts/routers";
@@ -50,7 +50,7 @@ class Forum extends React.PureComponent<Props> {
                 <Head>
                     <title>{TITLE_PREFIX}讨论</title>
                 </Head>
-                <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} />
+                <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} canAdmin={true} />
             </>
         );
     }

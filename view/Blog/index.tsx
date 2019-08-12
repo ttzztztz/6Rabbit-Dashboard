@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
-import ThreadListComponent from "../../components/ThreadList";
+import ThreadListComponent from "../../containers/ThreadList";
 import { IThreadListItem, IExtendedNextPageContext } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 
@@ -48,7 +48,14 @@ class BlogList extends React.PureComponent<Props> {
                 <Head>
                     <title>{TITLE_PREFIX}博客</title>
                 </Head>
-                <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} showAvatar={false} />
+                <ThreadListComponent
+                    threadList={threadList}
+                    total={total}
+                    page={page}
+                    onPageChange={this.handlePageChange}
+                    showAvatar={false}
+                    canAdmin={true}
+                />
             </>
         );
     }
