@@ -9,9 +9,9 @@ const mapStateToProps = ({ user: { isAdmin } }: StoreState) => ({ isAdmin });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     deleteThreadStart: (list: Array<string>) => dispatch(deleteThreadStart(list)),
-    setCloseThreadStart: (list: Array<string>) => dispatch(setCloseThreadStart(list)),
-    setDiamondThreadStart: (list: Array<string>) => dispatch(setDiamondThreadStart(list)),
-    setTopThreadStart: (list: Array<string>) => dispatch(setTopThreadStart(list))
+    setCloseThreadStart: (list: Array<string>, payload: number) => dispatch(setCloseThreadStart(list, payload)),
+    setDiamondThreadStart: (list: Array<string>, payload: number) => dispatch(setDiamondThreadStart(list, payload)),
+    setTopThreadStart: (list: Array<string>, payload: number) => dispatch(setTopThreadStart(list, payload))
 });
 
 export default connect(

@@ -12,10 +12,12 @@ const styles = (theme: Theme) =>
             alignItems: "flex-start"
         },
         "thread-avatar": {
-            marginRight: "16px"
+            marginRight: "16px",
+            cursor: "pointer"
         },
         "author-username": {
-            marginRight: "12px"
+            marginRight: "12px",
+            cursor: "pointer"
         },
         "second-info": {
             color: "rgba(134, 142, 150, 0.8)",
@@ -37,6 +39,13 @@ const styles = (theme: Theme) =>
         "reply-icon": {
             fontSize: "16px",
             marginRight: theme.spacing(0.5)
+        },
+        "thread-icon": {
+            color: theme.palette.secondary.main
+        },
+        "thread-icon-container": {
+            display: "flex",
+            alignItems: "center"
         }
     });
 

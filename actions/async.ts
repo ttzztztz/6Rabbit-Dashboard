@@ -261,31 +261,31 @@ export const SET_CLOSE_THREAD_START = "SET_CLOSE_THREAD_START";
 export type SET_CLOSE_THREAD_START = typeof SET_CLOSE_THREAD_START;
 export interface ISetCloseThreadStart {
     type: SET_CLOSE_THREAD_START;
-    payload: Array<string>;
+    payload: { tid: Array<string>; close: number };
 }
-export const setCloseThreadStart = (payload: Array<string>): ISetCloseThreadStart => ({
+export const setCloseThreadStart = (tid: Array<string>, close: number): ISetCloseThreadStart => ({
     type: SET_CLOSE_THREAD_START,
-    payload
+    payload: { tid, close }
 });
 
 export const SET_DIAMOND_THREAD_START = "SET_DIAMOND_THREAD_START";
 export type SET_DIAMOND_THREAD_START = typeof SET_DIAMOND_THREAD_START;
 export interface ISetDiamondThreadStart {
     type: SET_DIAMOND_THREAD_START;
-    payload: Array<string>;
+    payload: { tid: Array<string>; diamond: number };
 }
-export const setDiamondThreadStart = (payload: Array<string>): ISetDiamondThreadStart => ({
+export const setDiamondThreadStart = (tid: Array<string>, diamond: number): ISetDiamondThreadStart => ({
     type: SET_DIAMOND_THREAD_START,
-    payload
+    payload: { tid, diamond }
 });
 
 export const SET_TOP_THREAD_START = "SET_TOP_THREAD_START";
 export type SET_TOP_THREAD_START = typeof SET_TOP_THREAD_START;
 export interface ISetTopThreadStart {
     type: SET_TOP_THREAD_START;
-    payload: Array<string>;
+    payload: { tid: Array<string>; top: number };
 }
-export const setTopThreadStart = (payload: Array<string>): ISetTopThreadStart => ({
+export const setTopThreadStart = (tid: Array<string>, top: number): ISetTopThreadStart => ({
     type: SET_TOP_THREAD_START,
-    payload
+    payload: { tid, top }
 });

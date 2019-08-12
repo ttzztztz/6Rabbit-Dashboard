@@ -4,58 +4,68 @@ import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-
-import clsx from "clsx";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 interface Props extends WithStyles {
     isAdmin: boolean;
     target: Array<string>;
 
     deleteThreadStart: (list: Array<string>) => void;
-    setCloseThreadStart: (list: Array<string>) => void;
-    setDiamondThreadStart: (list: Array<string>) => void;
-    setTopThreadStart: (list: Array<string>) => void;
+    setCloseThreadStart: (list: Array<string>, payload: number) => void;
+    setDiamondThreadStart: (list: Array<string>, payload: number) => void;
+    setTopThreadStart: (list: Array<string>, payload: number) => void;
 }
 
+type ActionType = "删除" | "置顶" | "精华" | "关闭";
+
 class ThreadAdminPanel extends React.Component<Props> {
+    state = {
+        openDialog: false,
+        action: "删除" as ActionType
+    };
+
     handleDelete = () => {
         const { deleteThreadStart, target } = this.props;
         deleteThreadStart(target);
     };
     handleEdit = () => {};
-    handleClose = () => {
+    handleClose = (payload: number) => {
         const { setCloseThreadStart, target } = this.props;
-        setCloseThreadStart(target);
+        setCloseThreadStart(target, payload);
     };
-    handleDiamond = () => {
+    handleDiamond = (payload: number) => {
         const { setDiamondThreadStart, target } = this.props;
-        setDiamondThreadStart(target);
+        setDiamondThreadStart(target, payload);
     };
-    handleTop = () => {
+    handleTop = (payload: number) => {
         const { setTopThreadStart, target } = this.props;
-        setTopThreadStart(target);
+        setTopThreadStart(target, payload);
     };
 
     renderButton = () => {
         const { isAdmin } = this.props;
         const basicOperation = [
-            <Button key="delete" onClick={this.handleDelete}>
+            <Button key="delete" onClick={() => this.handleDialogOpen("删除")}>
                 删帖
             </Button>,
             <Button key="edit" onClick={this.handleEdit}>
                 编辑
             </Button>
         ];
-        if (1 || isAdmin) {
+        if (isAdmin) {
             return [
                 ...basicOperation,
-                <Button key="close" onClick={this.handleClose}>
+                <Button key="close" onClick={() => this.handleDialogOpen("关闭")}>
                     关闭
                 </Button>,
-                <Button key="diamond" onClick={this.handleDiamond}>
+                <Button key="diamond" onClick={() => this.handleDialogOpen("精华")}>
                     精华
                 </Button>,
-                <Button key="top" onClick={this.handleTop}>
+                <Button key="top" onClick={() => this.handleDialogOpen("置顶")}>
                     置顶
                 </Button>
             ];
@@ -63,13 +73,96 @@ class ThreadAdminPanel extends React.Component<Props> {
             return basicOperation;
         }
     };
+    handleDialogClose = () => {
+        this.setState({
+            openDialog: false
+        });
+    };
+    handleDialogOpen = (action: ActionType) => {
+        this.setState({
+            openDialog: true,
+            action
+        });
+    };
+    applyCancelAction = () => {
+        const { action } = this.state;
+        switch (action) {
+            case "关闭":
+                this.handleClose(0);
+                break;
+            case "精华":
+                this.handleDiamond(0);
+                break;
+            case "置顶":
+                this.handleTop(0);
+                break;
+        }
+    };
+    applyConfirmAction = () => {
+        const { action } = this.state;
+        switch (action) {
+            case "关闭":
+                this.handleClose(1);
+                break;
+            case "精华":
+                this.handleDiamond(1);
+                break;
+            case "置顶":
+                this.handleTop(1);
+                break;
+            case "删除":
+                this.handleDelete();
+                break;
+        }
+    };
+    handleCancelBtnClick = () => {
+        this.handleDialogClose();
+        this.applyCancelAction();
+    };
+    handleConfirmBtnClick = () => {
+        this.handleDialogClose();
+        this.applyConfirmAction();
+    };
+    handleGlobalTopConfirmBtnClick = () => {
+        this.handleDialogClose();
+        this.handleTop(2);
+    };
 
     render() {
-        const { classes } = this.props;
+        const { classes, target } = this.props;
+        const { openDialog, action } = this.state;
 
         return (
             <div className={classes["admin-panel-container"]}>
                 <ButtonGroup color="primary">{this.renderButton()}</ButtonGroup>
+                <Dialog open={openDialog} onClose={this.handleDialogClose}>
+                    <DialogTitle>操作确认</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            你即将操作
+                            {target.length.toString()}个主题。
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleCancelBtnClick} color="primary">
+                            取消{action}
+                        </Button>
+                        {action === "置顶" ? (
+                            [
+                                <Button onClick={this.handleConfirmBtnClick} color="primary" autoFocus key="current">
+                                    本版{action}
+                                </Button>,
+                                <Button onClick={this.handleGlobalTopConfirmBtnClick} color="primary" key="global">
+                                    全局{action}
+                                </Button>
+                            ]
+                        ) : (
+                            <Button onClick={this.handleConfirmBtnClick} color="primary" autoFocus>
+                                设置{action}
+                            </Button>
+                        )}
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }

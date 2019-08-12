@@ -23,7 +23,7 @@ export const POST_LOGIN = `${BACKEND_ROOT}/user/login`;
 export const POST_REGISTER = `${BACKEND_ROOT}/user/register`;
 export const POST_THREAD_CLOSE = `${BACKEND_ROOT}/thread/close`;
 export const POST_THREAD_TOP = `${BACKEND_ROOT}/thread/top`;
-export const POST_THREAD_DIGEST = `${BACKEND_ROOT}/thread/digest`;
+export const POST_THREAD_DIAMOND = `${BACKEND_ROOT}/thread/diamond`;
 
 export const PUT_REPLY_EDIT = (pid: string) => `${BACKEND_ROOT}/post/${pid}`;
 export const PUT_UPDATE_PASSWORD = `${BACKEND_ROOT}/user/info/password`;

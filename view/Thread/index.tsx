@@ -12,14 +12,18 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import Fab from "@material-ui/core/Fab";
+
 import MessageIcon from "@material-ui/icons/Message";
+import LockIcon from "@material-ui/icons/Lock";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import GradeIcon from "@material-ui/icons/Grade";
 
 import FrontendRequest from "../../model/FrontendRequest";
 import Avatar from "../../components/Avatar";
 import PostListItem from "../../components/PostListItem";
 import PaginationComponent from "../../components/Pagination";
 import ThreadAdminPanel from "../../containers/ThreadAdminPanel";
-import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
+import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
 import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
@@ -31,6 +35,7 @@ import { StateObservable, ActionsObservable } from "redux-observable";
 
 import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
+import Link from "next/link";
 import { requestReply } from "../../model/Post";
 
 interface Props extends WithStyles {
@@ -131,14 +136,21 @@ class Thread extends React.Component<Props> {
                 </Head>
                 <Paper className={clsx(classes.paperRoot, classes["title-bar"])}>
                     <div className={classes["thread-avatar"]}>
-                        <Avatar src={"/static/avatar.png"} width={48} />
+                        <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
+                            <Avatar src={"/static/avatar.png"} width={48} />
+                        </Link>
                     </div>
                     <div>
-                        <Typography variant="h5" component="h3">
+                        <Typography variant="h5" component="h3" className={classes["thread-icon-container"]}>
+                            {thread.diamond > 0 && <GradeIcon className={classes["thread-icon"]} />}
+                            {thread.isTop && <ArrowUpwardIcon className={classes["thread-icon"]} />}
+                            {thread.isClosed && <LockIcon className={classes["thread-icon"]} />}
                             {thread.subject}
                         </Typography>
                         <Typography variant="body1" className={classes["second-info"]}>
-                            <span className={classes["author-username"]}>{thread.user.username}</span>
+                            <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
+                                <span className={classes["author-username"]}>{thread.user.username}</span>
+                            </Link>
                             <span>{new Date(thread.createDate).toLocaleString()}</span>
                         </Typography>
                     </div>

@@ -18,7 +18,7 @@ import {
     ISetDiamondThreadStart,
     SET_DIAMOND_THREAD_START
 } from "../actions/async";
-import { FETCH_THREAD, DELETE_MANY_THREADS, OPTIONS_THREAD, POST_THREAD_CLOSE, POST_THREAD_TOP } from "../consts/backend";
+import { FETCH_THREAD, DELETE_MANY_THREADS, OPTIONS_THREAD, POST_THREAD_CLOSE, POST_THREAD_TOP, POST_THREAD_DIAMOND } from "../consts/backend";
 import FrontendRequest from "../model/FrontendRequest";
 import { enqueueSnackbar } from "../actions";
 
@@ -94,7 +94,7 @@ const setDiamondThread: Epic<ISetDiamondThreadStart> = action$ =>
         ofType(SET_DIAMOND_THREAD_START),
         mergeMap(({ payload }) =>
             FrontendRequest({
-                url: POST_THREAD_TOP,
+                url: POST_THREAD_DIAMOND,
                 method: "POST",
                 data: payload
             }).pipe(

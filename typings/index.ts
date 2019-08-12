@@ -22,7 +22,7 @@ export interface IThreadListItem {
     posts: number;
     isTop: boolean;
     isClosed: boolean;
-    digest: number;
+    diamond: number;
     lastpid: string;
     firstpid: string;
 

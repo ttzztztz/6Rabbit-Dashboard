@@ -1,7 +1,7 @@
 import { createStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
-const styles = (_theme: Theme) =>
+const styles = (theme: Theme) =>
     createStyles({
         "thread-list-item-container": {
             display: "flex"
@@ -20,6 +20,13 @@ const styles = (_theme: Theme) =>
         "second-info": {
             color: "rgba(134, 142, 150, 0.8)",
             fontSize: "12px"
+        },
+        "thread-icon": {
+            color: theme.palette.secondary.main
+        },
+        "thread-icon-container": {
+            display: "flex",
+            alignItems: "center"
         }
     });
 

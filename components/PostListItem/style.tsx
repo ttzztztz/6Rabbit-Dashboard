@@ -4,10 +4,12 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 const styles = (_: Theme) =>
     createStyles({
         "post-avatar": {
-            marginRight: "16px"
+            marginRight: "16px",
+            cursor: "pointer"
         },
         "author-username": {
-            marginRight: "12px"
+            marginRight: "12px",
+            cursor: "pointer"
         },
         "post-list-item-container": {
             display: "flex",
