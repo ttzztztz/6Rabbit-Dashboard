@@ -161,9 +161,6 @@ class ThreadAdminPanel extends React.Component<Props> {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleCancelBtnClick} color="primary">
-                            取消{action}
-                        </Button>
                         {action === "置顶" ? (
                             [
                                 <Button onClick={this.handleConfirmBtnClick} color="primary" autoFocus key="current">
@@ -178,6 +175,9 @@ class ThreadAdminPanel extends React.Component<Props> {
                                 设置{action}
                             </Button>
                         )}
+                        <Button onClick={this.handleCancelBtnClick} color="primary">
+                            取消{action}
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </div>

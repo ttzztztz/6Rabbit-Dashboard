@@ -9,7 +9,13 @@ export interface BasicStore {
     forum: Array<IForumItem>;
 }
 
-type Action = actions.ILoginOK | actions.ILogoutOK | actions.IToggleProgress | actions.IEnqueueSnackbar | actions.IRemoveSnackbar | actions.IChangeForum;
+type Action =
+    | actions.IUserLoginOK
+    | actions.IUserLogoutOK
+    | actions.IToggleProgress
+    | actions.IEnqueueSnackbar
+    | actions.IRemoveSnackbar
+    | actions.IChangeForum;
 
 const initState: BasicStore = {
     title: "酷兔网",
@@ -23,9 +29,9 @@ export const basicReducer = function(state = initState, action: Action): BasicSt
     switch (action.type) {
         case actions.TOGGLE_PROGRESS:
             return { ...state, loading: action.on };
-        case actions.LOGIN_OK:
+        case actions.USER_LOGIN_OK:
             return { ...state, isLogin: true };
-        case actions.LOGOUT_OK:
+        case actions.USER_LOG_OUT_OK:
             return { ...state, isLogin: false };
         case actions.ENQUEUE_SNACKBAR:
             return { ...state, snackbars: [...state.snackbars, { ...action.notification }] };

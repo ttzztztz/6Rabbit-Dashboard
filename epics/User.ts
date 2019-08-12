@@ -18,9 +18,11 @@ import {
     USER_UPDATE_PASSWORD_START,
     IGetUserProfileStart,
     GET_USER_PROFILE_START,
-    getUserProfileOK
+    getUserProfileOK,
+    IUserLogoutStart,
+    USER_LOG_OUT_START
 } from "../actions/async";
-import { enqueueSnackbar, loginOK, changeUserInfo, changeNotificationPage } from "../actions";
+import { enqueueSnackbar, userLoginOK, changeUserInfo, changeNotificationPage, userLogoutOK } from "../actions";
 import FrontendRequest from "../model/FrontendRequest";
 import passwordMD5 from "../model/PasswordMD5";
 import axios from "axios";
@@ -42,7 +44,7 @@ const login: Epic<ILoginStart> = action$ =>
                         localStorage.setItem("token", message.token);
                         return of(
                             enqueueSnackbar("登陆成功！", { variant: "success" }),
-                            loginOK(message.uid),
+                            userLoginOK(message.uid),
                             changeUserInfo({ ...message }),
                             changeNotificationPage(1)
                         );
@@ -52,6 +54,15 @@ const login: Epic<ILoginStart> = action$ =>
                 })
             )
         )
+    );
+
+const logout: Epic<IUserLogoutStart> = action$ =>
+    action$.pipe(
+        ofType(USER_LOG_OUT_START),
+        mergeMap(() => {
+            localStorage.removeItem("token");
+            return of(userLogoutOK());
+        })
     );
 
 const register: Epic<IRegisterStart> = action$ =>
@@ -90,7 +101,7 @@ const checkToken: Epic<ICheckTokenStart> = action$ =>
                             localStorage.setItem("token", message.token);
                             return of(
                                 enqueueSnackbar("登陆成功！", { variant: "success" }),
-                                loginOK(message.uid),
+                                userLoginOK(message.uid),
                                 changeUserInfo({ ...message }),
                                 changeNotificationPage(1)
                             );
@@ -157,4 +168,4 @@ const getUserProfile: Epic<IGetUserProfileStart> = action$ =>
         mergeMap(({ uid }) => from(axios({ url: FETCH_USER_INFO_PROFILE(uid), method: "GET" })).pipe(map(({ data: { message } }) => getUserProfileOK(message))))
     );
 
-export default [login, register, checkToken, updateProfile, updatePassword, getUserProfile];
+export default [login, logout, register, checkToken, updateProfile, updatePassword, getUserProfile];

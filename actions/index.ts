@@ -2,29 +2,27 @@ import { OptionsObject } from "notistack";
 import { ILoginResponse, IForumItem, INotificationListResponse } from "../typings";
 import { FETCH_AVATAR } from "../consts/backend";
 
-export const LOGIN_OK = "LOGIN_OK";
-export type LOGIN_OK = typeof LOGIN_OK;
-export interface ILoginOK {
-    type: LOGIN_OK;
+export const USER_LOGIN_OK = "USER_LOGIN_OK";
+export type USER_LOGIN_OK = typeof USER_LOGIN_OK;
+export interface IUserLoginOK {
+    type: USER_LOGIN_OK;
     uid: string;
 }
-export const loginOK = (uid: string): ILoginOK => {
+export const userLoginOK = (uid: string): IUserLoginOK => {
     return {
-        type: LOGIN_OK,
+        type: USER_LOGIN_OK,
         uid
     };
 };
 
-export const LOGOUT_OK = "LOGOUT_OK";
-export type LOGOUT_OK = typeof LOGOUT_OK;
-export interface ILogoutOK {
-    type: LOGOUT_OK;
+export const USER_LOG_OUT_OK = "USER_LOG_OUT_OK";
+export type USER_LOG_OUT_OK = typeof USER_LOG_OUT_OK;
+export interface IUserLogoutOK {
+    type: USER_LOG_OUT_OK;
 }
-export const logoutOK = (): ILogoutOK => {
-    return {
-        type: LOGOUT_OK
-    };
-};
+export const userLogoutOK = (): IUserLogoutOK => ({
+    type: USER_LOG_OUT_OK
+});
 
 export const CHANGE_USER_INFO = "CHANGE_USER_INFO";
 export type CHANGE_USER_INFO = typeof CHANGE_USER_INFO;

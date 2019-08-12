@@ -42,39 +42,6 @@ interface Props extends WithStyles {
 }
 
 class Bar extends React.PureComponent<Props> {
-    navItemList = [
-        {
-            icon: <HomeIcon />,
-            title: "首页",
-            router: HOMEPAGE,
-            as: HOMEPAGE
-        },
-        {
-            icon: <SubjectIcon />,
-            title: "博客",
-            router: BLOG_LIST_RAW,
-            as: BLOG_LIST("1")
-        },
-        {
-            icon: <ShoppingCartIcon />,
-            title: "商城",
-            router: SHOP_LIST_RAW,
-            as: SHOP_LIST("1")
-        },
-        {
-            icon: <MessageIcon />,
-            title: "讨论",
-            router: FORUM_LIST_RAW,
-            as: FORUM_LIST("1")
-        },
-        {
-            icon: <PersonIcon />,
-            title: "用户",
-            router: this.props.isLogin ? USER_CENTER : USER_LOGIN,
-            as: this.props.isLogin ? USER_CENTER : USER_LOGIN
-        }
-    ];
-
     state = {
         open: false
     };
@@ -92,9 +59,43 @@ class Bar extends React.PureComponent<Props> {
     };
 
     renderNavList = () => {
+        const { isLogin } = this.props;
+        const navItemList = [
+            {
+                icon: <HomeIcon />,
+                title: "首页",
+                router: HOMEPAGE,
+                as: HOMEPAGE
+            },
+            {
+                icon: <SubjectIcon />,
+                title: "博客",
+                router: BLOG_LIST_RAW,
+                as: BLOG_LIST("1")
+            },
+            {
+                icon: <ShoppingCartIcon />,
+                title: "商城",
+                router: SHOP_LIST_RAW,
+                as: SHOP_LIST("1")
+            },
+            {
+                icon: <MessageIcon />,
+                title: "讨论",
+                router: FORUM_LIST_RAW,
+                as: FORUM_LIST("1")
+            },
+            {
+                icon: <PersonIcon />,
+                title: "用户",
+                router: isLogin ? USER_CENTER : USER_LOGIN,
+                as: isLogin ? USER_CENTER : USER_LOGIN
+            }
+        ];
+
         return (
             <>
-                {this.navItemList.map((item, key) => (
+                {navItemList.map((item, key) => (
                     <Link key={key} href={item.router} as={item.as}>
                         <ListItem button>
                             <ListItemIcon>{item.icon}</ListItemIcon>

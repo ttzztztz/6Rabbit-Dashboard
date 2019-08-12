@@ -354,3 +354,12 @@ export const deletePostStart = (pid: string): IDeletePostStart => ({
     type: DELETE_POST_START,
     pid
 });
+
+export const USER_LOG_OUT_START = "USER_LOG_OUT_START";
+export type USER_LOG_OUT_START = typeof USER_LOG_OUT_START;
+export interface IUserLogoutStart {
+    type: USER_LOG_OUT_START;
+}
+export const userLogoutStart = (): IUserLogoutStart => ({
+    type: USER_LOG_OUT_START
+});
