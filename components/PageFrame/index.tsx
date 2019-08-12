@@ -1,7 +1,8 @@
 import React from "react";
+import styles from "./style";
 import { SnackbarProvider } from "notistack";
-
 import clsx from "clsx";
+
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -14,6 +15,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Fab from "@material-ui/core/Fab";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
@@ -23,12 +25,13 @@ import MessageIcon from "@material-ui/icons/Message";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import PersonIcon from "@material-ui/icons/Person";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-
-import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
-import Link from "next/link";
+
 import Notifier from "../../containers/Notifier";
+import Footer from "../Footer";
+import { USER_LOGIN, USER_CENTER, HOMEPAGE, BLOG_LIST_RAW, BLOG_LIST, SHOP_LIST_RAW, SHOP_LIST, FORUM_LIST_RAW, FORUM_LIST } from "../../consts/routers";
+
+import Link from "next/link";
 
 interface Props extends WithStyles {
     title: string;
@@ -43,32 +46,32 @@ class Bar extends React.PureComponent<Props> {
         {
             icon: <HomeIcon />,
             title: "首页",
-            router: "/",
-            as: "/"
+            router: HOMEPAGE,
+            as: HOMEPAGE
         },
         {
             icon: <SubjectIcon />,
             title: "博客",
-            router: "/blog/[page]",
-            as: "/blog/1"
+            router: BLOG_LIST_RAW,
+            as: BLOG_LIST("1")
         },
         {
             icon: <ShoppingCartIcon />,
             title: "商城",
-            router: "/shop/[page]",
-            as: "/shop/1"
+            router: SHOP_LIST_RAW,
+            as: SHOP_LIST("1")
         },
         {
             icon: <MessageIcon />,
             title: "讨论",
-            router: "/forum/[page]",
-            as: "/forum/1"
+            router: FORUM_LIST_RAW,
+            as: FORUM_LIST("1")
         },
         {
             icon: <PersonIcon />,
             title: "用户",
-            router: "/user",
-            as: "/user"
+            router: this.props.isLogin ? USER_CENTER : USER_LOGIN,
+            as: this.props.isLogin ? USER_CENTER : USER_LOGIN
         }
     ];
 
@@ -171,7 +174,8 @@ class Bar extends React.PureComponent<Props> {
                     </Drawer>
                     <main className={classes.content}>
                         <div className={classes.toolbar} />
-                        {this.props.children}
+                        <div className={classes["content-children-container"]}>{this.props.children}</div>
+                        <Footer />
                     </main>
                     {loading && <LinearProgress className={classes.progess} color="secondary" />}
                     {isLogin && (

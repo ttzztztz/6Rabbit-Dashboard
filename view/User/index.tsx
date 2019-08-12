@@ -2,25 +2,30 @@ import React from "react";
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
+import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+
 import AvatarBoard from "../../components/AvatarBoard";
 import SettingsComponent from "../../containers/Settings";
 import NotificationsComponent from "../../containers/Notifications";
 import ProfileThreadListComponent from "../../containers/ProfileThreadList";
 import { TITLE_PREFIX } from "../../consts";
-
-import Paper from "@material-ui/core/Paper";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { USER_LOGIN } from "../../consts/routers";
 
 import Head from "next/head";
+import { NextRouter, withRouter } from "next/dist/client/router";
 
 interface Props extends WithStyles {
     username: string;
     uid: string;
     avatar: string;
+    isLogin: boolean;
+
+    router: NextRouter;
 }
 
-class Profile extends React.PureComponent<Props> {
+class User extends React.PureComponent<Props> {
     state = {
         activeTab: 0
     };
@@ -29,9 +34,17 @@ class Profile extends React.PureComponent<Props> {
             activeTab: newValue
         });
     };
+
+    componentDidUpdate() {
+        const { isLogin, router } = this.props;
+        if (!isLogin) {
+            router.push(USER_LOGIN, USER_LOGIN);
+        }
+    }
     render() {
         const { classes, username, avatar, uid } = this.props;
         const { activeTab } = this.state;
+
         return (
             <>
                 <Head>
@@ -55,4 +68,4 @@ class Profile extends React.PureComponent<Props> {
     }
 }
 
-export default withStyles(styles)(Profile);
+export default withRouter(withStyles(styles)(User));

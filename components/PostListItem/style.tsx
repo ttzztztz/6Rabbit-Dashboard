@@ -7,7 +7,7 @@ const styles = (_: Theme) =>
             marginRight: "16px",
             cursor: "pointer"
         },
-        "author-username": {
+        "action-btn": {
             marginRight: "12px",
             cursor: "pointer"
         },

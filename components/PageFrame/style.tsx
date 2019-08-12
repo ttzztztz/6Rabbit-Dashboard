@@ -66,23 +66,29 @@ const styles = (theme: Theme) =>
             padding: theme.spacing(3),
             maxWidth: "100%"
         },
+        "content-children-container": {
+            minHeight: "600px"
+        },
         progess: {
             width: "100%",
             position: "fixed",
             top: "64px",
-            zIndex: 9999
+            zIndex: 1200
         },
         "post-btn": {
             transition:
                 "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
         },
         "post-btn-container": {
-            transform: "scale(1)",
-            transition: "transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+            opacity: 0.65,
+            transition: "all 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
             position: "fixed",
             right: "40px",
             bottom: "40px",
-            zIndex: 9999
+            zIndex: 1200,
+            "&:hover": {
+                opacity: 1
+            }
         },
         success: { backgroundColor: successColor },
         error: { backgroundColor: dangerColor },

@@ -9,14 +9,18 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
 import { TITLE_PREFIX } from "../../consts";
+import { USER_CENTER } from "../../consts/routers";
 import { IRegisterStartPayload } from "../../actions/async";
 
 import Head from "next/head";
+import { withRouter, NextRouter } from "next/dist/client/router";
 
 interface Props extends WithStyles {
     isLogin: boolean;
+
     login: (username: string, password: string) => void;
     register: (payload: IRegisterStartPayload) => void;
+    router: NextRouter;
 }
 
 enum ActivePage {
@@ -182,9 +186,17 @@ class Login extends React.Component<Props> {
         );
     };
 
+    componentDidUpdate() {
+        const { isLogin, router } = this.props;
+        if (isLogin) {
+            router.push(USER_CENTER, USER_CENTER);
+        }
+    }
+
     render() {
         const { classes } = this.props;
         const { activePage } = this.state;
+
         return (
             <Paper className={classes.root}>
                 {activePage === ActivePage.Login && this.renderLogin()}
@@ -194,4 +206,4 @@ class Login extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles)(Login);
+export default withRouter(withStyles(styles)(Login));

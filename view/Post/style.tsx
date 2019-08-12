@@ -13,22 +13,16 @@ const styles = (theme: Theme) =>
         button: {
             margin: theme.spacing(1)
         },
-        textField: {
-            marginLeft: theme.spacing(1),
-            marginRight: theme.spacing(1)
-        },
         "btn-container": {
             display: "flex",
-            justifyContent: "flex-end",
-            width: "99%"
+            justifyContent: "flex-end"
+        },
+        "content-container": {
+            display: "flex"
         },
         "post-title": {
-            [theme.breakpoints.up("sm")]: {
-                width: "calc(98% - 16px - 30%)"
-            },
-            [theme.breakpoints.down("sm")]: {
-                width: "98%"
-            }
+            flexGrow: 1,
+            marginLeft: theme.spacing(0.5)
         },
         "post-forum": {
             [theme.breakpoints.up("sm")]: {
@@ -39,11 +33,15 @@ const styles = (theme: Theme) =>
             }
         },
         "post-content": {
-            width: "98%"
+            flexGrow: 1
         },
         "btn-icon": {
             fontSize: "16px",
             marginRight: theme.spacing(0.5)
+        },
+        "title-container": {
+            display: "flex",
+            flexFlow: "row nowrap"
         }
     });
 

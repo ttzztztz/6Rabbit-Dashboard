@@ -15,8 +15,7 @@ export interface IOtherUser {
     usergroup: IGroup;
 }
 
-export interface IThreadListItem {
-    fid: string;
+export interface IThreadAbstract {
     tid: string;
     subject: string;
     posts: number;
@@ -33,6 +32,10 @@ export interface IThreadListItem {
 
     lastUser: IOtherUser;
     user: IOtherUser;
+}
+
+export interface IThreadListItem extends IThreadAbstract {
+    fid: string;
 }
 
 export interface IUserPostItem {
@@ -153,4 +156,16 @@ export interface INotificationItem {
 export interface INotificationListResponse {
     count: { total: number; unread: number };
     list: Array<INotificationItem>;
+}
+
+export interface IThreadItem extends IThreadAbstract {
+    forum: IForumItem;
+}
+
+export interface IThreadItemResponse {
+    thread: IThreadItem;
+    postList: Array<IPostListItem>;
+    firstPost: IPostListItem;
+    attachList: Array<IThreadAttach>;
+    needBuy: boolean;
 }

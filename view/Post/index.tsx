@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./style";
 import { WithStyles, withStyles, Fab } from "@material-ui/core";
-import clsx from "clsx";
 
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -10,12 +9,16 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MessageIcon from "@material-ui/icons/Message";
 
 import { OptionsObject } from "notistack";
-import { IPostPageType, IForumItem, IThreadAttachForm, IGeneralResponse } from "../../typings";
+import { IPostPageType, IForumItem, IThreadAttachForm, IGeneralResponse, IExtendedNextPageContext } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { requestCreateThread, requestEditReply, requestEditThread, requestReply } from "../../model/Post";
 
 import Head from "next/head";
 import { NextRouter, withRouter } from "next/dist/client/router";
+import { StateObservable, ActionsObservable } from "redux-observable";
+import { Subject, of } from "rxjs";
+import { Epics } from "../../epics";
+import { getThreadInfoStart, IGetThreadInfoStart, IGetThreadInfoOK, IGetPostInfoOK, getPostInfoStart, IGetPostInfoStart } from "../../actions/async";
 
 interface IMapRouteToPageType {
     [key: string]: number;
@@ -32,9 +35,9 @@ const mapPageTypeToTitle: IMapPageTypeToTitle = {
 };
 const mapRouteToPageType: IMapRouteToPageType = {
     "/thread/create": IPostPageType.CREATE_THREAD,
-    "/post/create": IPostPageType.CREATE_REPLY,
-    "/thread/update": IPostPageType.EDIT_THREAD,
-    "/post/update": IPostPageType.EDIT_REPLY
+    "/post/create/[tid]": IPostPageType.CREATE_REPLY,
+    "/thread/update/[tid]": IPostPageType.EDIT_THREAD,
+    "/post/update/[pid]": IPostPageType.EDIT_REPLY
 };
 
 interface Props extends WithStyles {
@@ -42,13 +45,59 @@ interface Props extends WithStyles {
 
     forum: Array<IForumItem>;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
+    isPost: boolean;
+
+    defaultMessage: string;
+    defaultFid: string;
+    defaultSubject: string;
 }
 
 class Post extends React.PureComponent<Props> {
+    static async getInitialProps({ store, query, pathname }: IExtendedNextPageContext) {
+        let message = "",
+            fid = "2",
+            subject = "";
+        const state$ = new StateObservable(new Subject(), store.getState());
+
+        if (pathname === "/thread/update/[tid]") {
+            const tid = query["tid"] as string;
+            const {
+                payload: {
+                    thread: {
+                        subject: currentSubject,
+                        forum: { fid: currentFid }
+                    },
+                    firstPost: { message: currentMessage }
+                }
+            }: IGetThreadInfoOK = await Epics(of(getThreadInfoStart(tid, "1")) as ActionsObservable<IGetThreadInfoStart>, state$, {}).toPromise();
+
+            [subject, fid, message] = [currentSubject, currentFid, currentMessage];
+        } else if (pathname === "/post/create/[tid]") {
+            const urlMessage = query["message"] as string;
+            if (urlMessage && typeof urlMessage === "string" && urlMessage.length >= 1) {
+                message = urlMessage;
+            }
+        } else if (pathname === "/post/update/[pid]") {
+            const pid = query["pid"] as string;
+            const {
+                payload: { message: currentMessage }
+            }: IGetPostInfoOK = await Epics(of(getPostInfoStart(pid)) as ActionsObservable<IGetPostInfoStart>, state$, {}).toPromise();
+
+            message = currentMessage;
+        }
+
+        return {
+            isPost: pathname === "/post/create/[tid]" || pathname === "/post/update/[pid]",
+            defaultMessage: message,
+            defaultFid: fid,
+            defaultSubject: subject
+        };
+    }
+
     state = {
-        fid: "2",
-        subject: "",
-        message: "",
+        fid: this.props.defaultFid,
+        subject: this.props.defaultSubject,
+        message: this.props.defaultMessage,
         attach: [] as Array<IThreadAttachForm>
     };
 
@@ -127,7 +176,7 @@ class Post extends React.PureComponent<Props> {
     };
 
     render() {
-        const { classes, router, forum } = this.props;
+        const { classes, router, forum, isPost } = this.props;
         const { fid, subject: title, message: content } = this.state;
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
@@ -143,38 +192,40 @@ class Post extends React.PureComponent<Props> {
                     <Typography variant="h5" component="h3" className={classes["title"]}>
                         {showTitle}
                     </Typography>
-                    <div className={classes["title-container"]}>
-                        <TextField
-                            id="forum"
-                            select
-                            label="板块"
-                            className={clsx(classes.textField, classes["post-forum"])}
-                            value={fid}
-                            onChange={this.handleChange("fid")}
-                            SelectProps={{
-                                MenuProps: {
-                                    className: classes.menu
-                                }
-                            }}
-                            margin="dense"
-                            variant="outlined"
-                        >
-                            {forum.map(item => (
-                                <MenuItem key={item.fid} value={item.fid}>
-                                    {item.name}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <TextField
-                            id="title"
-                            label="帖子标题"
-                            className={clsx(classes.textField, classes["post-title"])}
-                            value={title}
-                            onChange={this.handleChange("subject")}
-                            margin="dense"
-                            variant="outlined"
-                        />
-                    </div>
+                    {!isPost && (
+                        <div className={classes["title-container"]}>
+                            <TextField
+                                id="forum"
+                                select
+                                label="板块"
+                                className={classes["post-forum"]}
+                                value={fid}
+                                onChange={this.handleChange("fid")}
+                                SelectProps={{
+                                    MenuProps: {
+                                        className: classes.menu
+                                    }
+                                }}
+                                margin="dense"
+                                variant="outlined"
+                            >
+                                {forum.map(item => (
+                                    <MenuItem key={item.fid} value={item.fid}>
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <TextField
+                                id="title"
+                                label="帖子标题"
+                                className={classes["post-title"]}
+                                value={title}
+                                onChange={this.handleChange("subject")}
+                                margin="dense"
+                                variant="outlined"
+                            />
+                        </div>
+                    )}
                     <div className={classes["content-container"]}>
                         <TextField
                             id="content"
@@ -183,7 +234,7 @@ class Post extends React.PureComponent<Props> {
                             rows="25"
                             value={content}
                             onChange={this.handleChange("message")}
-                            className={clsx(classes.textField, classes["post-content"])}
+                            className={classes["post-content"]}
                             margin="dense"
                             variant="outlined"
                         />

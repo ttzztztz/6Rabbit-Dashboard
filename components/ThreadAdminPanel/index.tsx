@@ -10,7 +10,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+import { withRouter, NextRouter } from "next/dist/client/router";
+
+import { THREAD_UPDATE_RAW, THREAD_UPDATE } from "../../consts/routers";
+
 interface Props extends WithStyles {
+    router: NextRouter;
     isAdmin: boolean;
     target: Array<string>;
 
@@ -32,7 +37,14 @@ class ThreadAdminPanel extends React.Component<Props> {
         const { deleteThreadStart, target } = this.props;
         deleteThreadStart(target);
     };
-    handleEdit = () => {};
+    handleEdit = () => {
+        const { router, target } = this.props;
+        const [tid] = target;
+
+        const url = THREAD_UPDATE_RAW;
+        const as = THREAD_UPDATE(tid);
+        router.push(url, as);
+    };
     handleClose = (payload: number) => {
         const { setCloseThreadStart, target } = this.props;
         setCloseThreadStart(target, payload);
@@ -47,15 +59,20 @@ class ThreadAdminPanel extends React.Component<Props> {
     };
 
     renderButton = () => {
-        const { isAdmin } = this.props;
+        const { isAdmin, target } = this.props;
         const basicOperation = [
             <Button key="delete" onClick={() => this.handleDialogOpen("删除")}>
                 删帖
-            </Button>,
-            <Button key="edit" onClick={this.handleEdit}>
-                编辑
             </Button>
         ];
+        if (target.length === 1) {
+            basicOperation.push(
+                <Button key="edit" onClick={this.handleEdit}>
+                    编辑
+                </Button>
+            );
+        }
+
         if (isAdmin) {
             return [
                 ...basicOperation,
@@ -168,4 +185,4 @@ class ThreadAdminPanel extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles)(ThreadAdminPanel);
+export default withRouter(withStyles(styles)(ThreadAdminPanel));

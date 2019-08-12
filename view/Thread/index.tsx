@@ -20,7 +20,7 @@ import GradeIcon from "@material-ui/icons/Grade";
 
 import FrontendRequest from "../../model/FrontendRequest";
 import Avatar from "../../components/Avatar";
-import PostListItem from "../../components/PostListItem";
+import PostListItem from "../../containers/PostListItem";
 import PaginationComponent from "../../components/Pagination";
 import ThreadAdminPanel from "../../containers/ThreadAdminPanel";
 import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
@@ -63,7 +63,7 @@ class Thread extends React.Component<Props> {
         const state$ = new StateObservable(new Subject(), store.getState());
         const { payload } = await Epics(of(getThreadInfoStart(tid, page)) as ActionsObservable<IGetThreadInfoStart>, state$, {}).toPromise();
 
-        return { defaultPage: page, tid, ...payload.message, defaultRes: payload.message.postList };
+        return { defaultPage: page, tid, ...payload, defaultRes: payload.postList };
     }
 
     state = {

@@ -1,4 +1,14 @@
-import { IThreadListItem, ILoginResponse, IRegisterForm, IReplyForm, IUpdatePasswordForm, IUpdateProfileForm, IOtherUser } from "../typings";
+import {
+    IThreadListItem,
+    ILoginResponse,
+    IRegisterForm,
+    IReplyForm,
+    IUpdatePasswordForm,
+    IUpdateProfileForm,
+    IOtherUser,
+    IPostListItem,
+    IThreadItemResponse
+} from "../typings";
 
 export const GET_FORUM_LIST_START = "GET_FORUM_LIST_START";
 export type GET_FORUM_LIST_START = typeof GET_FORUM_LIST_START;
@@ -44,6 +54,50 @@ export const getShopListOK = (list: Array<IThreadListItem>, total: number): IGet
     payload: { list, total }
 });
 
+export const GET_BLOG_LIST_START = "GET_BLOG_LIST_START";
+export type GET_BLOG_LIST_START = typeof GET_BLOG_LIST_START;
+export interface IGetBlogListStart {
+    type: GET_BLOG_LIST_START;
+    page: string;
+}
+export const getBlogListStart = (page: string): IGetBlogListStart => ({
+    type: GET_BLOG_LIST_START,
+    page
+});
+
+export const GET_BLOG_LIST_OK = "GET_BLOG_LIST_OK";
+export type GET_BLOG_LIST_OK = typeof GET_BLOG_LIST_OK;
+export interface IGetBlogListOK {
+    type: GET_BLOG_LIST_OK;
+    payload: { list: Array<IThreadListItem>; total: number };
+}
+export const getBlogListOK = (list: Array<IThreadListItem>, total: number): IGetBlogListOK => ({
+    type: GET_BLOG_LIST_OK,
+    payload: { list, total }
+});
+
+export const GET_POST_INFO_START = "GET_POST_INFO_START";
+export type GET_POST_INFO_START = typeof GET_POST_INFO_START;
+export interface IGetPostInfoStart {
+    type: GET_POST_INFO_START;
+    pid: string;
+}
+export const getPostInfoStart = (pid: string): IGetPostInfoStart => ({
+    type: GET_POST_INFO_START,
+    pid
+});
+
+export const GET_POST_INFO_OK = "GET_POST_INFO_OK";
+export type GET_POST_INFO_OK = typeof GET_POST_INFO_OK;
+export interface IGetPostInfoOK {
+    type: GET_POST_INFO_OK;
+    payload: IPostListItem;
+}
+export const getPostInfoOK = (payload: IPostListItem): IGetPostInfoOK => ({
+    type: GET_POST_INFO_OK,
+    payload
+});
+
 export const GET_THREAD_INFO_START = "GET_THREAD_INFO_START";
 export type GET_THREAD_INFO_START = typeof GET_THREAD_INFO_START;
 export interface IGetThreadInfoStart {
@@ -61,9 +115,9 @@ export const GET_THREAD_INFO_OK = "GET_THREAD_INFO_OK";
 export type GET_THREAD_INFO_OK = typeof GET_THREAD_INFO_OK;
 export interface IGetThreadInfoOK {
     type: GET_THREAD_INFO_OK;
-    payload: { list: Array<IThreadListItem>; total: number };
+    payload: IThreadItemResponse;
 }
-export const getThreadInfoOK = (payload: { list: Array<IThreadListItem>; total: number }): IGetThreadInfoOK => ({
+export const getThreadInfoOK = (payload: IThreadItemResponse): IGetThreadInfoOK => ({
     type: GET_THREAD_INFO_OK,
     payload
 });
@@ -288,4 +342,15 @@ export interface ISetTopThreadStart {
 export const setTopThreadStart = (tid: Array<string>, top: number): ISetTopThreadStart => ({
     type: SET_TOP_THREAD_START,
     payload: { tid, top }
+});
+
+export const DELETE_POST_START = "DELETE_POST_START";
+export type DELETE_POST_START = typeof DELETE_POST_START;
+export interface IDeletePostStart {
+    type: DELETE_POST_START;
+    pid: string;
+}
+export const deletePostStart = (pid: string): IDeletePostStart => ({
+    type: DELETE_POST_START,
+    pid
 });

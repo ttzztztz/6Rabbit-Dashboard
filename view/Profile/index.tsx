@@ -14,7 +14,7 @@ import { withRouter, NextRouter } from "next/dist/client/router";
 
 import { IExtendedNextPageContext, IOtherUser } from "../../typings";
 import { FETCH_AVATAR } from "../../consts/backend";
-import { getUserProfileStart, IGetForumListStart, IGetUserProfileStart } from "../../actions/async";
+import { getUserProfileStart, IGetUserProfileStart } from "../../actions/async";
 import { Epics } from "../../epics";
 import ProfileThreadListComponent from "../../containers/ProfileThreadList";
 import AvatarBoard from "../../components/AvatarBoard";
@@ -64,7 +64,9 @@ class Profile extends React.PureComponent<Props> {
                     <Tabs value={activeTab} onChange={this.handleTabChange} indicatorColor="primary" textColor="primary" centered>
                         <Tab label="帖子" />
                     </Tabs>
-                    {activeTab === 0 && <ProfileThreadListComponent prefix="Ta的" showPurchased={false} uid={uid} />}
+                    <div className={classes["user-infos-content-container"]}>
+                        {activeTab === 0 && <ProfileThreadListComponent prefix="Ta的" showPurchased={false} uid={uid} />}
+                    </div>
                 </Paper>
             </>
         );

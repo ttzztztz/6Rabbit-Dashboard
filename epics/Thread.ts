@@ -25,7 +25,7 @@ import { enqueueSnackbar } from "../actions";
 const fetchThreadInfo: Epic<IGetThreadInfoStart> = action$ =>
     action$.pipe(
         ofType(GET_THREAD_INFO_START),
-        mergeMap(({ tid, page }) => from(axios({ url: FETCH_THREAD(tid, page) })).pipe(map(({ data }) => getThreadInfoOK(data))))
+        mergeMap(({ tid, page }) => from(axios({ url: FETCH_THREAD(tid, page) })).pipe(map(({ data: { message } }) => getThreadInfoOK(message))))
     );
 
 const deleteThread: Epic<IDeleteThreadStart> = action$ =>
