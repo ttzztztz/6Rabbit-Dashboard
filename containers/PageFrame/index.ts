@@ -3,16 +3,21 @@ import { Dispatch } from "redux";
 
 import PageFrame from "../../components/PageFrame";
 import { StoreState } from "../../reducers";
-import { initStart } from "../../actions/async";
+import { initStart, userLogoutStart } from "../../actions/async";
 
-const mapStateToProps = ({ basic: { title, loading, isLogin } }: StoreState) => ({
+const mapStateToProps = ({ basic: { title, loading, isLogin }, user: { username, avatar, uid }, notification: { unread } }: StoreState) => ({
     title,
     loading,
-    isLogin
+    isLogin,
+    username,
+    avatar,
+    uid,
+    unread
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    init: () => dispatch(initStart())
+    init: () => dispatch(initStart()),
+    logout: () => dispatch(userLogoutStart())
 });
 
 export default connect(

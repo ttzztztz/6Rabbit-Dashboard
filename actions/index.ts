@@ -154,3 +154,18 @@ export function readOneNotification(nid: string): IReadOneNotification {
         nid
     };
 }
+
+export const CHANGE_NOTIFICATION_STATICS = "CHANGE_NOTIFICATION_STATICS";
+export type CHANGE_NOTIFICATION_STATICS = typeof CHANGE_NOTIFICATION_STATICS;
+export interface IChangeNotificationStatics {
+    type: CHANGE_NOTIFICATION_STATICS;
+    total: number;
+    unread: number;
+}
+export function changeNotificationStatics(total: number, unread: number): IChangeNotificationStatics {
+    return {
+        type: CHANGE_NOTIFICATION_STATICS,
+        total,
+        unread
+    };
+}

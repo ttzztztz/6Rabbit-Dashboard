@@ -15,7 +15,13 @@ const initState: NotificationStore = {
     list: []
 };
 
-type Action = actions.IChangeNotification | actions.IChangeNotificationPage | actions.IDeleteOneNotification | actions.IReadOneNotification;
+type Action =
+    | actions.IChangeNotification
+    | actions.IChangeNotificationPage
+    | actions.IDeleteOneNotification
+    | actions.IReadOneNotification
+    | actions.IUserLogoutOK
+    | actions.IChangeNotificationStatics;
 
 export const notificationReducer = function(state = initState, action: Action): NotificationStore {
     switch (action.type) {
@@ -27,6 +33,14 @@ export const notificationReducer = function(state = initState, action: Action): 
             return { ...state, list: state.list.filter(item => item.nid !== action.nid) };
         case actions.READ_ONE_NOTIFICATION:
             return { ...state, list: state.list.map(item => (item.nid === action.nid ? { ...item, isRead: true } : item)) };
+        case actions.USER_LOG_OUT_OK:
+            return { ...state, list: [], total: 0, page: 1, unread: 0 };
+        case actions.CHANGE_NOTIFICATION_STATICS:
+            return {
+                ...state,
+                total: action.total,
+                unread: action.unread
+            };
     }
     return state;
 };

@@ -43,6 +43,16 @@ class Login extends React.Component<Props> {
         }
     };
 
+    componentDidMount() {
+        const { router } = this.props;
+        const state = router.query["state"] as string | undefined;
+        if (state && state === "register") {
+            this.setState({
+                activePage: ActivePage.Register
+            });
+        }
+    }
+
     handleChange = (key: string, method: "login" | "register") => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             [method]: {

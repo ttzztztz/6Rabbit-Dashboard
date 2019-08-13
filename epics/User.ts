@@ -20,7 +20,8 @@ import {
     GET_USER_PROFILE_START,
     getUserProfileOK,
     IUserLogoutStart,
-    USER_LOG_OUT_START
+    USER_LOG_OUT_START,
+    notificationStaticFetchStart
 } from "../actions/async";
 import { enqueueSnackbar, userLoginOK, changeUserInfo, changeNotificationPage, userLogoutOK } from "../actions";
 import FrontendRequest from "../model/FrontendRequest";
@@ -46,7 +47,7 @@ const login: Epic<ILoginStart> = action$ =>
                             enqueueSnackbar("登陆成功！", { variant: "success" }),
                             userLoginOK(message.uid),
                             changeUserInfo({ ...message }),
-                            changeNotificationPage(1)
+                            notificationStaticFetchStart()
                         );
                     } else {
                         return of(enqueueSnackbar(message, { variant: "error" }));
@@ -103,7 +104,7 @@ const checkToken: Epic<ICheckTokenStart> = action$ =>
                                 enqueueSnackbar("登陆成功！", { variant: "success" }),
                                 userLoginOK(message.uid),
                                 changeUserInfo({ ...message }),
-                                changeNotificationPage(1)
+                                notificationStaticFetchStart()
                             );
                         } else {
                             localStorage.removeItem("token");

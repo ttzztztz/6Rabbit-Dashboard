@@ -25,15 +25,31 @@ interface Props extends WithStyles {
     router: NextRouter;
 }
 
+enum ActiveTab {
+    Settings,
+    Threads,
+    Notification
+}
+
 class User extends React.PureComponent<Props> {
     state = {
-        activeTab: 0
+        activeTab: ActiveTab.Settings
     };
     handleTabChange = (_e: React.ChangeEvent<{}>, newValue: number) => {
         this.setState({
             activeTab: newValue
         });
     };
+
+    componentDidMount() {
+        const { router } = this.props;
+        const state = router.query["state"] as string | undefined;
+        if (state && state === "notification") {
+            this.setState({
+                activeTab: ActiveTab.Notification
+            });
+        }
+    }
 
     componentDidUpdate() {
         const { isLogin, router } = this.props;
@@ -58,9 +74,9 @@ class User extends React.PureComponent<Props> {
                         <Tab label="通知" />
                     </Tabs>
                     <div className={classes["user-infos-content-container"]}>
-                        {activeTab === 0 && <SettingsComponent />}
-                        {activeTab === 1 && <ProfileThreadListComponent prefix="我的" showPurchased={true} uid={uid} />}
-                        {activeTab === 2 && <NotificationsComponent />}
+                        {activeTab === ActiveTab.Settings && <SettingsComponent />}
+                        {activeTab === ActiveTab.Threads && <ProfileThreadListComponent prefix="我的" showPurchased={true} uid={uid} />}
+                        {activeTab === ActiveTab.Notification && <NotificationsComponent />}
                     </div>
                 </Paper>
             </>

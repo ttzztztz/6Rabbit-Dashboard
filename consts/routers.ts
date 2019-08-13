@@ -1,5 +1,7 @@
 export const USER_LOGIN = `/user/login`;
+export const USER_REGISTER = `/user/login?state=register`;
 export const USER_CENTER = `/user`;
+export const USER_NOTIFICATION_CENTER = `/user?state=notification`;
 export const HOMEPAGE = `/`;
 
 export const USER_PROFILE_RAW = `/profile/[uid]`;

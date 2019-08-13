@@ -7,11 +7,11 @@ export interface UserStore {
     uid: string;
 }
 
-type Action = actions.IChangeUserInfo;
+type Action = actions.IChangeUserInfo | actions.IUserLogoutOK;
 
 const initState: UserStore = {
     username: "6Rabbit",
-    avatar: "https://www.6rabbit.com/api/user/avatar",
+    avatar: "https://www.6rabbit.com/api/user/1",
     isAdmin: false,
     uid: "-1"
 };
@@ -25,6 +25,14 @@ export const userReducer = function(state = initState, action: Action): UserStor
                 avatar: action.avatar,
                 isAdmin: action.isAdmin,
                 uid: action.uid
+            };
+        case actions.USER_LOG_OUT_OK:
+            return {
+                ...state,
+                username: "",
+                uid: "-1",
+                avatar: "https://www.6rabbit.com/api/user/1",
+                isAdmin: false
             };
     }
     return state;

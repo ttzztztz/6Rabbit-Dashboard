@@ -32,11 +32,11 @@ class NotificationItem extends React.PureComponent<Props> {
                         <span className={classes["author-username"]}>{fromUser.username}</span>
                         <span>{new Date(createDate).toLocaleString()}</span>
                     </div>
-                    {isRead && <div className={classes["content-container"]}>{content}</div>}
+                    {isRead && <div className={classes["content-container"]} dangerouslySetInnerHTML={{ __html: content }} />}
                     {!isRead && (
                         <div className={clsx(classes["content-container"], classes["content-unread"])}>
                             <div className={classes["unread-circle"]} />
-                            {content}
+                            <span dangerouslySetInnerHTML={{ __html: content }} />
                         </div>
                     )}
                 </div>

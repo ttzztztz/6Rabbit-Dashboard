@@ -363,3 +363,12 @@ export interface IUserLogoutStart {
 export const userLogoutStart = (): IUserLogoutStart => ({
     type: USER_LOG_OUT_START
 });
+
+export const NOTIFICATION_STATIC_FETCH_START = "NOTIFICATION_STATIC_FETCH_START";
+export type NOTIFICATION_STATIC_FETCH_START = typeof NOTIFICATION_STATIC_FETCH_START;
+export interface INotificationStaticFetchStart {
+    type: NOTIFICATION_STATIC_FETCH_START;
+}
+export const notificationStaticFetchStart = (): INotificationStaticFetchStart => ({
+    type: NOTIFICATION_STATIC_FETCH_START
+});
