@@ -1,3 +1,5 @@
+import "braft-editor/dist/output.css";
+
 import React from "react";
 import styles from "./style";
 import clsx from "clsx";
@@ -156,7 +158,7 @@ class Thread extends React.Component<Props> {
                     </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>
-                    <div id="content-container" dangerouslySetInnerHTML={{ __html: firstPost.message }} />
+                    <div id="content-container" className="braft-output-content" dangerouslySetInnerHTML={{ __html: firstPost.message }} />
                     {(isAdmin || uid === thread.user.uid) && (
                         <>
                             <ThreadAdminPanel target={[thread.tid]} />

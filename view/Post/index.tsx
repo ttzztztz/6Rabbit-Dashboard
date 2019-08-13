@@ -1,7 +1,8 @@
+import "braft-editor/dist/index.css";
 import React from "react";
 import styles from "./style";
-import { WithStyles, withStyles, Fab } from "@material-ui/core";
 
+import { WithStyles, withStyles, Fab } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -9,16 +10,16 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MessageIcon from "@material-ui/icons/Message";
 
 import { OptionsObject } from "notistack";
-import { IPostPageType, IForumItem, IThreadAttachForm, IGeneralResponse, IExtendedNextPageContext } from "../../typings";
+import BraftEditor from "braft-editor";
+
+import { IPostPageType, IForumItem, IThreadAttachForm, IGeneralResponse } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { requestCreateThread, requestEditReply, requestEditThread, requestReply } from "../../model/Post";
 
 import Head from "next/head";
 import { NextRouter, withRouter } from "next/dist/client/router";
-import { StateObservable, ActionsObservable } from "redux-observable";
-import { Subject, of } from "rxjs";
-import { Epics } from "../../epics";
-import { getThreadInfoStart, IGetThreadInfoStart, IGetThreadInfoOK, IGetPostInfoOK, getPostInfoStart, IGetPostInfoStart } from "../../actions/async";
+import FrontendRequest from "../../model/FrontendRequest";
+import { FETCH_THREAD, FETCH_POST } from "../../consts/backend";
 
 interface IMapRouteToPageType {
     [key: string]: number;
@@ -45,31 +46,34 @@ interface Props extends WithStyles {
 
     forum: Array<IForumItem>;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
-    isPost: boolean;
-
-    defaultMessage: string;
-    defaultFid: string;
-    defaultSubject: string;
 }
 
 class Post extends React.PureComponent<Props> {
-    static async getInitialProps({ store, query, pathname }: IExtendedNextPageContext) {
+    async componentDidMount() {
+        const {
+            router: { pathname, query }
+        } = this.props;
+
         let message = "",
             fid = "2",
             subject = "";
-        const state$ = new StateObservable(new Subject(), store.getState());
 
         if (pathname === "/thread/update/[tid]") {
             const tid = query["tid"] as string;
             const {
-                payload: {
-                    thread: {
-                        subject: currentSubject,
-                        forum: { fid: currentFid }
-                    },
-                    firstPost: { message: currentMessage }
+                data: {
+                    message: {
+                        thread: {
+                            subject: currentSubject,
+                            forum: { fid: currentFid }
+                        },
+                        firstPost: { message: currentMessage }
+                    }
                 }
-            }: IGetThreadInfoOK = await Epics(of(getThreadInfoStart(tid, "1")) as ActionsObservable<IGetThreadInfoStart>, state$, {}).toPromise();
+            } = await FrontendRequest({
+                url: FETCH_THREAD(tid, "1"),
+                method: "GET"
+            }).toPromise();
 
             [subject, fid, message] = [currentSubject, currentFid, currentMessage];
         } else if (pathname === "/post/create/[tid]") {
@@ -80,30 +84,44 @@ class Post extends React.PureComponent<Props> {
         } else if (pathname === "/post/update/[pid]") {
             const pid = query["pid"] as string;
             const {
-                payload: { message: currentMessage }
-            }: IGetPostInfoOK = await Epics(of(getPostInfoStart(pid)) as ActionsObservable<IGetPostInfoStart>, state$, {}).toPromise();
+                data: {
+                    message: { message: currentMessage }
+                }
+            } = await FrontendRequest({
+                url: FETCH_POST(pid),
+                method: "GET"
+            }).toPromise();
 
             message = currentMessage;
         }
 
-        return {
+        this.setState({
             isPost: pathname === "/post/create/[tid]" || pathname === "/post/update/[pid]",
-            defaultMessage: message,
-            defaultFid: fid,
-            defaultSubject: subject
-        };
+            message,
+            fid,
+            subject,
+            editorState: BraftEditor.createEditorState(message)
+        });
     }
 
     state = {
-        fid: this.props.defaultFid,
-        subject: this.props.defaultSubject,
-        message: this.props.defaultMessage,
-        attach: [] as Array<IThreadAttachForm>
+        fid: "2",
+        subject: "",
+        message: "",
+        attach: [] as Array<IThreadAttachForm>,
+        editorState: BraftEditor.createEditorState("<p>Hello <b>World!</b></p>"),
+        isPost: false
     };
 
     handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         this.setState({
             [key]: e.target.value
+        });
+    };
+    handleContentChange = (editorState: any) => {
+        this.setState({
+            editorState,
+            message: editorState.toHTML()
         });
     };
 
@@ -175,9 +193,25 @@ class Post extends React.PureComponent<Props> {
         }
     };
 
+    renderEditor = () => {
+        const { classes } = this.props;
+        const { editorState } = this.state;
+        const excludeControls: any = ["media", "clear"];
+
+        return (
+            <BraftEditor
+                id="editor-with-code-highlighter"
+                value={editorState}
+                onChange={this.handleContentChange}
+                className={classes["post-content"]}
+                excludeControls={excludeControls}
+            />
+        );
+    };
+
     render() {
-        const { classes, router, forum, isPost } = this.props;
-        const { fid, subject: title, message: content } = this.state;
+        const { classes, router, forum } = this.props;
+        const { fid, subject: title, editorState, isPost } = this.state;
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
         return (
@@ -226,19 +260,7 @@ class Post extends React.PureComponent<Props> {
                             />
                         </div>
                     )}
-                    <div className={classes["content-container"]}>
-                        <TextField
-                            id="content"
-                            label="帖子内容"
-                            multiline
-                            rows="25"
-                            value={content}
-                            onChange={this.handleChange("message")}
-                            className={classes["post-content"]}
-                            margin="dense"
-                            variant="outlined"
-                        />
-                    </div>
+                    <div className={classes["content-container"]}>{this.renderEditor()}</div>
                     <div className={classes["attach-container"]} />
                     <div className={classes["btn-container"]}>
                         <Fab variant="extended" size="medium" color="primary" aria-label="add" className={classes.button} onClick={this.handleSubmitClick}>

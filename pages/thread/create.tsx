@@ -1,3 +1,5 @@
-import PostView from "../../containers/Post";
+import dynamic from "next/dynamic";
 
-export default PostView;
+export default dynamic(import("../../containers/Post"), {
+    ssr: false
+});
