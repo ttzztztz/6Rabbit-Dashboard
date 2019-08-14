@@ -202,3 +202,12 @@ export interface IOAuthInfoResponse {
     userInfo: IOAuthUserInfo;
     active: boolean;
 }
+
+export interface IOAuth {
+    oid: string;
+    uid: string;
+    platform: string;
+    openid: string;
+}
+
+export const OAuthWebsites = ["Github", "QQ"];

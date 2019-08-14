@@ -38,6 +38,10 @@ const styles = (theme: Theme) =>
                 flexWrap: "wrap"
             }
         },
+        "oauth-list-root": {
+            display: "flex",
+            justifyContent: "center"
+        },
         "credits-title": {
             margin: theme.spacing(4, 0, 0, 0),
             textAlign: "center",

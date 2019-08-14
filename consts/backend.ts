@@ -14,6 +14,8 @@ export const FETCH_AGGREGATE_PURCHASED_LIST = (page: string) => `${BACKEND_ROOT}
 export const FETCH_USER_THREAD_LIST = (uid: string, page: string) => `${BACKEND_ROOT}/user/thread/${uid}/${page}`;
 export const FETCH_USER_POST_LIST = (uid: string, page: string) => `${BACKEND_ROOT}/user/post/${uid}/${page}`;
 export const FETCH_USER_INFO_PROFILE = (uid: string) => `${BACKEND_ROOT}/user/info/${uid}`;
+export const FETCH_OAUTH_REDIRECT = (platform: string) => `${BACKEND_ROOT}/oauth/${platform}`;
+export const FETCH_OAUTH_LIST = `${BACKEND_ROOT}/oauth/list`;
 export const FETCH_OAUTH_INFO = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/info/${platform}/${code}`;
 export const FETCH_OAUTH_BIND = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/bind/${platform}/${code}`;
 export const FETCH_OAUTH_LOGIN = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/login/${platform}/${code}`;
@@ -36,3 +38,4 @@ export const PUT_UPDATE_PASSWORD = `${BACKEND_ROOT}/user/info/password`;
 
 export const DELETE_MANY_THREADS = `${BACKEND_ROOT}/thread/batch`;
 export const DELETE_OAUTH_TOKEN = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/${platform}/${code}`;
+export const DELETE_OAUTH_BIND = (platform: string) => `${BACKEND_ROOT}/oauth/${platform}`;

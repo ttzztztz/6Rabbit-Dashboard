@@ -18,12 +18,15 @@ import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 
 import { OptionsObject } from "notistack";
+import { NextRouter, withRouter } from "next/dist/client/router";
 
 import FrontendRequest from "../../../model/FrontendRequest";
-import { FETCH_MY_INFO } from "../../../consts/backend";
-import { IUpdateProfileForm, IUpdatePasswordForm } from "../../../typings";
+import { FETCH_MY_INFO, FETCH_OAUTH_LIST, FETCH_OAUTH_REDIRECT, DELETE_OAUTH_BIND } from "../../../consts/backend";
+import { IUpdateProfileForm, IUpdatePasswordForm, IOAuth } from "../../../typings";
 
 interface Props extends WithStyles {
+    router: NextRouter;
+
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     updateProfile: (payload: IUpdateProfileForm) => void;
     updatePassword: (payload: IUpdatePasswordForm) => void;
@@ -52,10 +55,11 @@ class Settings extends React.Component<Props> {
             credits: 0,
             golds: 0,
             rmbs: 0
-        }
+        },
+        oauthList: [] as Array<IOAuth>
     };
-    componentDidMount() {
-        this.fetchInfo();
+    async componentDidMount() {
+        await Promise.all([this.fetchInfo(), this.fetchOAuthList()]);
     }
     fetchInfo = async () => {
         const { enqueueSnackbar } = this.props;
@@ -68,6 +72,20 @@ class Settings extends React.Component<Props> {
                 profile: {
                     ...message
                 }
+            });
+        } else {
+            enqueueSnackbar(message, { variant: "error" });
+        }
+    };
+    fetchOAuthList = async () => {
+        const { enqueueSnackbar } = this.props;
+        const {
+            data: { code, message }
+        } = await FrontendRequest({ url: FETCH_OAUTH_LIST, method: "GET" }).toPromise();
+
+        if (code === 200) {
+            this.setState({
+                oauthList: [...message]
             });
         } else {
             enqueueSnackbar(message, { variant: "error" });
@@ -90,6 +108,54 @@ class Settings extends React.Component<Props> {
         const { password } = this.state;
         const { updatePassword } = this.props;
         updatePassword(password);
+    };
+
+    renderButton = (platform: string) => {
+        const { enqueueSnackbar } = this.props;
+        const { oauthList } = this.state;
+
+        if (oauthList.some(item => item.platform === platform)) {
+            const handleUnbind = async () => {
+                const {
+                    data: { code, message }
+                } = await FrontendRequest({
+                    url: DELETE_OAUTH_BIND(platform),
+                    method: "DELETE"
+                }).toPromise();
+
+                if (code === 200) {
+                    this.setState({
+                        oauthList: oauthList.reduce(
+                            (previous, item) => {
+                                if (item.platform !== platform) {
+                                    previous.push(item);
+                                }
+                                return previous;
+                            },
+                            [] as Array<IOAuth>
+                        )
+                    });
+                } else {
+                    enqueueSnackbar(message, { variant: "error" });
+                }
+            };
+            return (
+                <Button size="small" variant="contained" color="secondary" onClick={handleUnbind}>
+                    解绑
+                </Button>
+            );
+        } else {
+            const handleBind = () => {
+                const { router } = this.props;
+                router.push(FETCH_OAUTH_REDIRECT(platform));
+            };
+
+            return (
+                <Button size="small" variant="contained" color="primary" onClick={handleBind}>
+                    绑定
+                </Button>
+            );
+        }
     };
 
     render() {
@@ -218,7 +284,6 @@ class Settings extends React.Component<Props> {
                             </Button>
                         </div>
                     </div>
-
                     <Typography variant="h5" className={classes["setting-title"]}>
                         修改密码
                     </Typography>
@@ -259,10 +324,33 @@ class Settings extends React.Component<Props> {
                             </Button>
                         </div>
                     </div>
+                    <Typography variant="h5" className={classes["setting-title"]}>
+                        账号绑定
+                    </Typography>
+                    <div className={classes["input-container"]}>
+                        <List className={classes["oauth-list-root"]}>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <img src="/static/oauth/github.png" alt="Github" />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary="Github" secondary={this.renderButton("Github")} />
+                            </ListItem>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <img src="/static/oauth/qq.png" alt="Github" />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary="QQ" secondary={this.renderButton("QQ")} />
+                            </ListItem>
+                        </List>
+                    </div>
                 </section>
             </>
         );
     }
 }
 
-export default withStyles(styles)(Settings);
+export default withRouter(withStyles(styles)(Settings));
