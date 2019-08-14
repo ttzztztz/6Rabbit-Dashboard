@@ -3,7 +3,18 @@ import { ofType } from "redux-observable";
 import { mergeMap, map } from "rxjs/operators";
 import { of, from } from "rxjs";
 
-import { POST_LOGIN, POST_REGISTER, FETCH_TOKEN, FETCH_MY_INFO, PUT_UPDATE_PASSWORD, FETCH_USER_INFO_PROFILE } from "../consts/backend";
+import {
+    POST_LOGIN,
+    POST_REGISTER,
+    FETCH_TOKEN,
+    FETCH_MY_INFO,
+    PUT_UPDATE_PASSWORD,
+    FETCH_USER_INFO_PROFILE,
+    FETCH_OAUTH_INFO,
+    FETCH_OAUTH_BIND,
+    DELETE_OAUTH_TOKEN,
+    FETCH_OAUTH_LOGIN
+} from "../consts/backend";
 import {
     ILoginStart,
     LOGIN_START,
@@ -21,12 +32,25 @@ import {
     getUserProfileOK,
     IUserLogoutStart,
     USER_LOG_OUT_START,
-    notificationStaticFetchStart
+    notificationStaticFetchStart,
+    IOAuthFetchInfoStart,
+    OAUTH_FETCH_INFO_START,
+    ILoginResponseProcessStart,
+    LOGIN_RESPONSE_PROCESS_START,
+    loginResponseProcessStart,
+    IOAuthLoginStart,
+    OAUTH_LOGIN_START,
+    IOAuthBindUserStart,
+    OAUTH_BIND_USER_START,
+    OAUTH_CLEAR_TOKEN_START,
+    IOAuthClearTokenStart
 } from "../actions/async";
-import { enqueueSnackbar, userLoginOK, changeUserInfo, changeNotificationPage, userLogoutOK } from "../actions";
+import { enqueueSnackbar, userLoginOK, changeUserInfo, userLogoutOK, setOAuthInfo, clearOAuthStore } from "../actions";
 import FrontendRequest from "../model/FrontendRequest";
 import passwordMD5 from "../model/PasswordMD5";
 import axios from "axios";
+import { USER_CENTER } from "../consts/routers";
+import { IOAuthInfoResponse } from "../typings";
 
 const login: Epic<ILoginStart> = action$ =>
     action$.pipe(
@@ -42,19 +66,27 @@ const login: Epic<ILoginStart> = action$ =>
             }).pipe(
                 mergeMap(({ data: { code, message } }) => {
                     if (code === 200) {
-                        localStorage.setItem("token", message.token);
-                        return of(
-                            enqueueSnackbar("登陆成功！", { variant: "success" }),
-                            userLoginOK(message.uid),
-                            changeUserInfo({ ...message }),
-                            notificationStaticFetchStart()
-                        );
+                        return of(loginResponseProcessStart(message));
                     } else {
                         return of(enqueueSnackbar(message, { variant: "error" }));
                     }
                 })
             )
         )
+    );
+
+const loginResponseProcess: Epic<ILoginResponseProcessStart> = action$ =>
+    action$.pipe(
+        ofType(LOGIN_RESPONSE_PROCESS_START),
+        mergeMap(({ payload: message }) => {
+            localStorage.setItem("token", message.token);
+            return of(
+                enqueueSnackbar("登陆成功！", { variant: "success" }),
+                userLoginOK(message.uid),
+                changeUserInfo({ ...message }),
+                notificationStaticFetchStart()
+            );
+        })
     );
 
 const logout: Epic<IUserLogoutStart> = action$ =>
@@ -99,13 +131,7 @@ const checkToken: Epic<ICheckTokenStart> = action$ =>
                 return FrontendRequest({ url: FETCH_TOKEN, method: "GET" }).pipe(
                     mergeMap(({ data: { code, message } }) => {
                         if (code === 200) {
-                            localStorage.setItem("token", message.token);
-                            return of(
-                                enqueueSnackbar("登陆成功！", { variant: "success" }),
-                                userLoginOK(message.uid),
-                                changeUserInfo({ ...message }),
-                                notificationStaticFetchStart()
-                            );
+                            return of(loginResponseProcessStart(message));
                         } else {
                             localStorage.removeItem("token");
                             return of(enqueueSnackbar(message, { variant: "error" }));
@@ -138,8 +164,7 @@ const updateProfile: Epic<IUserUpdateProfileStart> = action$ =>
 const updatePassword: Epic<IUserUpdatePasswordStart> = action$ =>
     action$.pipe(
         ofType(USER_UPDATE_PASSWORD_START),
-        mergeMap(({ payload }) => {
-            const { oldPassword, newPassword, newPasswordRepeat } = payload;
+        mergeMap(({ payload: { oldPassword, newPassword, newPasswordRepeat } }) => {
             if (newPasswordRepeat !== newPassword) {
                 return of(enqueueSnackbar("两次新密码输入的不一致！", { variant: "error" }));
             } else {
@@ -169,4 +194,99 @@ const getUserProfile: Epic<IGetUserProfileStart> = action$ =>
         mergeMap(({ uid }) => from(axios({ url: FETCH_USER_INFO_PROFILE(uid), method: "GET" })).pipe(map(({ data: { message } }) => getUserProfileOK(message))))
     );
 
-export default [login, logout, register, checkToken, updateProfile, updatePassword, getUserProfile];
+const oauthFetchInfo: Epic<IOAuthFetchInfoStart> = action$ =>
+    action$.pipe(
+        ofType(OAUTH_FETCH_INFO_START),
+        mergeMap(({ platform, code }) =>
+            FrontendRequest({
+                url: FETCH_OAUTH_INFO(platform, code),
+                method: "GET"
+            }).pipe(
+                mergeMap(({ data: { code, message } }) => {
+                    if (code === 200) {
+                        const {
+                            userInfo: { username, avatarURL },
+                            active
+                        } = message as IOAuthInfoResponse;
+                        return of(setOAuthInfo(username, avatarURL, active));
+                    } else {
+                        return of(enqueueSnackbar(message, { variant: "error" }));
+                    }
+                })
+            )
+        )
+    );
+
+const oauthLogin: Epic<IOAuthLoginStart> = action$ =>
+    action$.pipe(
+        ofType(OAUTH_LOGIN_START),
+        mergeMap(({ payload: { platform, code }, router }) =>
+            FrontendRequest({
+                url: FETCH_OAUTH_LOGIN(platform, code),
+                method: "GET"
+            }).pipe(
+                mergeMap(({ data: { code, message } }) => {
+                    if (code === 200) {
+                        router.push(USER_CENTER, USER_CENTER);
+                        return of(clearOAuthStore(), loginResponseProcessStart(message));
+                    } else {
+                        return of(enqueueSnackbar(message, { variant: "error" }));
+                    }
+                })
+            )
+        )
+    );
+
+const oauthBindUser: Epic<IOAuthBindUserStart> = action$ =>
+    action$.pipe(
+        ofType(OAUTH_BIND_USER_START),
+        mergeMap(({ payload: { platform, code }, router }) =>
+            FrontendRequest({
+                url: FETCH_OAUTH_BIND(platform, code),
+                method: "GET"
+            }).pipe(
+                mergeMap(({ data: { code, message } }) => {
+                    if (code === 200) {
+                        router.push(USER_CENTER, USER_CENTER);
+                        return of(clearOAuthStore(), enqueueSnackbar("绑定成功！", { variant: "success" }));
+                    } else {
+                        return of(enqueueSnackbar(message, { variant: "error" }));
+                    }
+                })
+            )
+        )
+    );
+
+const oauthClearToken: Epic<IOAuthClearTokenStart> = action$ =>
+    action$.pipe(
+        ofType(OAUTH_CLEAR_TOKEN_START),
+        mergeMap(({ platform, code }) =>
+            FrontendRequest({
+                url: DELETE_OAUTH_TOKEN(platform, code),
+                method: "DELETE"
+            }).pipe(
+                mergeMap(({ data: { code, message } }) => {
+                    if (code === 200) {
+                        return of(clearOAuthStore());
+                    } else {
+                        return of(enqueueSnackbar(message, { variant: "error" }));
+                    }
+                })
+            )
+        )
+    );
+
+export default [
+    login,
+    loginResponseProcess,
+    oauthLogin,
+    oauthBindUser,
+    oauthFetchInfo,
+    oauthClearToken,
+    checkToken,
+    logout,
+    register,
+    updateProfile,
+    updatePassword,
+    getUserProfile
+];

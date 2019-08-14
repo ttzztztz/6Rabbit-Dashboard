@@ -14,6 +14,9 @@ export const FETCH_AGGREGATE_PURCHASED_LIST = (page: string) => `${BACKEND_ROOT}
 export const FETCH_USER_THREAD_LIST = (uid: string, page: string) => `${BACKEND_ROOT}/user/thread/${uid}/${page}`;
 export const FETCH_USER_POST_LIST = (uid: string, page: string) => `${BACKEND_ROOT}/user/post/${uid}/${page}`;
 export const FETCH_USER_INFO_PROFILE = (uid: string) => `${BACKEND_ROOT}/user/info/${uid}`;
+export const FETCH_OAUTH_INFO = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/info/${platform}/${code}`;
+export const FETCH_OAUTH_BIND = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/bind/${platform}/${code}`;
+export const FETCH_OAUTH_LOGIN = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/login/${platform}/${code}`;
 
 export const OPTIONS_NOTIFICATION_ALL = `${BACKEND_ROOT}/notification/all`;
 export const OPTIONS_NOTIFICATION_ITEM = (nid: string) => `${BACKEND_ROOT}/notification/item/${nid}`;
@@ -32,3 +35,4 @@ export const POST_THREAD_SEARCH = (page: string) => `${BACKEND_ROOT}/thread/sear
 export const PUT_UPDATE_PASSWORD = `${BACKEND_ROOT}/user/info/password`;
 
 export const DELETE_MANY_THREADS = `${BACKEND_ROOT}/thread/batch`;
+export const DELETE_OAUTH_TOKEN = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/${platform}/${code}`;

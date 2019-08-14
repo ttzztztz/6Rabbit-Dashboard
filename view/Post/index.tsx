@@ -12,12 +12,12 @@ import MessageIcon from "@material-ui/icons/Message";
 import { OptionsObject } from "notistack";
 import BraftEditor from "braft-editor";
 
+import Head from "next/head";
+import { NextRouter, withRouter } from "next/dist/client/router";
+
 import { IPostPageType, IForumItem, IThreadAttachForm, IGeneralResponse } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { requestCreateThread, requestEditReply, requestEditThread, requestReply } from "../../model/Post";
-
-import Head from "next/head";
-import { NextRouter, withRouter } from "next/dist/client/router";
 import FrontendRequest from "../../model/FrontendRequest";
 import { FETCH_THREAD, FETCH_POST } from "../../consts/backend";
 

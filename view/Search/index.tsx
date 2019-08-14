@@ -126,19 +126,19 @@ class Search extends React.PureComponent<Props> {
                 <Head>
                     <title>{TITLE_PREFIX}搜索</title>
                 </Head>
+                <Paper className={classes["search-input-container"]}>
+                    <InputBase
+                        className={classes.input}
+                        placeholder="搜索..."
+                        onChange={this.handleSearchInputChange}
+                        onKeyDown={this.handleSearchInputKeyDown}
+                        value={searchBoxInput}
+                    />
+                    <IconButton className={classes.iconButton} aria-label="search" onClick={this.handleSearch}>
+                        <SearchIcon />
+                    </IconButton>
+                </Paper>
                 <Paper className={classes.root}>
-                    <div className={classes["search-input-container"]}>
-                        <InputBase
-                            className={classes.input}
-                            placeholder="搜索..."
-                            onChange={this.handleSearchInputChange}
-                            onKeyDown={this.handleSearchInputKeyDown}
-                            value={searchBoxInput}
-                        />
-                        <IconButton className={classes.iconButton} aria-label="search" onClick={this.handleSearch}>
-                            <SearchIcon />
-                        </IconButton>
-                    </div>
                     <UserPostList page={page} total={total} onPageChange={this.handlePageChange} postList={postList} />
                 </Paper>
             </>

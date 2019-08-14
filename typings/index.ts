@@ -179,3 +179,26 @@ export interface ISearchResponse {
     count: number;
     list: Array<ISearchItem>;
 }
+
+export interface ILoginResponse {
+    token: string;
+    uid: string;
+    username: string;
+    isAdmin: boolean;
+}
+
+export interface IOAuthActionPayload {
+    code: string;
+    platform: string;
+}
+
+export interface IOAuthUserInfo {
+    openid: string;
+    username: string;
+    avatarURL: string;
+}
+
+export interface IOAuthInfoResponse {
+    userInfo: IOAuthUserInfo;
+    active: boolean;
+}

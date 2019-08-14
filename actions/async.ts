@@ -7,8 +7,10 @@ import {
     IUpdateProfileForm,
     IOtherUser,
     IPostListItem,
-    IThreadItemResponse
+    IThreadItemResponse,
+    IOAuthActionPayload
 } from "../typings";
+import { NextRouter } from "next/dist/client/router";
 
 export const GET_FORUM_LIST_START = "GET_FORUM_LIST_START";
 export type GET_FORUM_LIST_START = typeof GET_FORUM_LIST_START;
@@ -371,4 +373,67 @@ export interface INotificationStaticFetchStart {
 }
 export const notificationStaticFetchStart = (): INotificationStaticFetchStart => ({
     type: NOTIFICATION_STATIC_FETCH_START
+});
+
+export const OAUTH_FETCH_INFO_START = "OAUTH_FETCH_INFO_START";
+export type OAUTH_FETCH_INFO_START = typeof OAUTH_FETCH_INFO_START;
+export interface IOAuthFetchInfoStart {
+    type: OAUTH_FETCH_INFO_START;
+    platform: string;
+    code: string;
+}
+export const oauthFetchInfoStart = (platform: string, code: string): IOAuthFetchInfoStart => ({
+    type: OAUTH_FETCH_INFO_START,
+    platform,
+    code
+});
+
+export const LOGIN_RESPONSE_PROCESS_START = "LOGIN_RESPONSE_PROCESS_START";
+export type LOGIN_RESPONSE_PROCESS_START = typeof LOGIN_RESPONSE_PROCESS_START;
+export interface ILoginResponseProcessStart {
+    type: LOGIN_RESPONSE_PROCESS_START;
+    payload: ILoginResponse;
+}
+export const loginResponseProcessStart = (payload: ILoginResponse): ILoginResponseProcessStart => ({
+    type: LOGIN_RESPONSE_PROCESS_START,
+    payload
+});
+
+export const OAUTH_LOGIN_START = "OAUTH_LOGIN_START";
+export type OAUTH_LOGIN_START = typeof OAUTH_LOGIN_START;
+export interface IOAuthLoginStart {
+    type: OAUTH_LOGIN_START;
+    router: NextRouter;
+    payload: IOAuthActionPayload;
+}
+export const oauthLoginStart = (router: NextRouter, payload: IOAuthActionPayload): IOAuthLoginStart => ({
+    type: OAUTH_LOGIN_START,
+    payload,
+    router
+});
+
+export const OAUTH_BIND_USER_START = "OAUTH_BIND_USER_START";
+export type OAUTH_BIND_USER_START = typeof OAUTH_BIND_USER_START;
+export interface IOAuthBindUserStart {
+    type: OAUTH_BIND_USER_START;
+    router: NextRouter;
+    payload: IOAuthActionPayload;
+}
+export const oauthBindUserStart = (router: NextRouter, payload: IOAuthActionPayload): IOAuthBindUserStart => ({
+    type: OAUTH_BIND_USER_START,
+    payload,
+    router
+});
+
+export const OAUTH_CLEAR_TOKEN_START = "OAUTH_CLEAR_TOKEN_START";
+export type OAUTH_CLEAR_TOKEN_START = typeof OAUTH_CLEAR_TOKEN_START;
+export interface IOAuthClearTokenStart {
+    type: OAUTH_CLEAR_TOKEN_START;
+    platform: string;
+    code: string;
+}
+export const oauthClearTokenStart = (platform: string, code: string): IOAuthClearTokenStart => ({
+    type: OAUTH_CLEAR_TOKEN_START,
+    platform,
+    code
 });

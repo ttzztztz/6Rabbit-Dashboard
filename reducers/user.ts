@@ -11,7 +11,7 @@ type Action = actions.IChangeUserInfo | actions.IUserLogoutOK;
 
 const initState: UserStore = {
     username: "6Rabbit",
-    avatar: "https://www.6rabbit.com/api/user/1",
+    avatar: "/static/avatar.png",
     isAdmin: false,
     uid: "-1"
 };
@@ -31,7 +31,7 @@ export const userReducer = function(state = initState, action: Action): UserStor
                 ...state,
                 username: "",
                 uid: "-1",
-                avatar: "https://www.6rabbit.com/api/user/1",
+                avatar: "/static/avatar.png",
                 isAdmin: false
             };
     }

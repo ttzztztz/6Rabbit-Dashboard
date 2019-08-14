@@ -4,20 +4,15 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 const styles = (theme: Theme) =>
     createStyles({
         root: {
-            padding: theme.spacing(2)
+            padding: theme.spacing(3, 2),
+            margin: theme.spacing(2, 0)
         },
-        "search-input-container": {
-            margin: theme.spacing(2, 0),
-            padding: theme.spacing(0.5),
+        "platform-btn-container": {
             display: "flex",
             justifyContent: "center"
         },
-        input: {
-            marginLeft: 8,
-            flex: 1
-        },
-        iconButton: {
-            padding: 10
+        button: {
+            margin: theme.spacing(1)
         }
     });
 

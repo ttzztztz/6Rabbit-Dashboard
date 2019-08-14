@@ -37,7 +37,7 @@ import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
-import { FETCH_THREAD } from "../../consts/backend";
+import { FETCH_THREAD, FETCH_AVATAR } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
 
 interface Props extends WithStyles {
@@ -139,7 +139,7 @@ class Thread extends React.Component<Props> {
                 <Paper className={clsx(classes.paperRoot, classes["title-bar"])}>
                     <div className={classes["thread-avatar"]}>
                         <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
-                            <Avatar src={"/static/avatar.png"} width={48} />
+                            <Avatar src={FETCH_AVATAR(uid)} width={48} />
                         </Link>
                     </div>
                     <div>

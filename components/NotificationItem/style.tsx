@@ -11,7 +11,8 @@ const styles = (_: Theme) =>
         },
         "notification-item-container": {
             display: "flex",
-            alignItems: "flex-start"
+            alignItems: "flex-start",
+            position: "relative"
         },
         "notification-item-info": {
             color: "rgba(134, 142, 150, 0.8)",
@@ -31,7 +32,7 @@ const styles = (_: Theme) =>
         },
         "notification-clear": {
             position: "absolute",
-            right: "42px",
+            right: "2px",
             color: "rgba(134, 142, 150, 0.8)",
             fontSize: "12px",
             cursor: "pointer"

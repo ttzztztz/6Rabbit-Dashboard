@@ -237,9 +237,39 @@ class Bar extends React.PureComponent<Props> {
         );
     };
 
+    renderSearchBar = () => {
+        const { classes } = this.props;
+        const { searchBoxInput } = this.state;
+        return (
+            <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                    <SearchIcon />
+                </div>
+                <InputBase
+                    placeholder="搜索..."
+                    classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput
+                    }}
+                    onKeyDown={this.handleSearchBoxKeyDown}
+                    onChange={this.handleSearchBoxChange}
+                    value={searchBoxInput}
+                />
+            </div>
+        );
+    };
+
     render() {
-        const { classes, title, loading, isLogin, unread, avatar } = this.props;
-        const { open, searchBoxInput } = this.state;
+        const {
+            classes,
+            title,
+            loading,
+            isLogin,
+            unread,
+            avatar,
+            router: { pathname }
+        } = this.props;
+        const { open } = this.state;
         return (
             <SnackbarProvider
                 maxSnack={5}
@@ -274,23 +304,7 @@ class Bar extends React.PureComponent<Props> {
                             <Typography variant="h6" noWrap className={classes.title}>
                                 {title}
                             </Typography>
-                            {isLogin && (
-                                <div className={classes.search}>
-                                    <div className={classes.searchIcon}>
-                                        <SearchIcon />
-                                    </div>
-                                    <InputBase
-                                        placeholder="搜索..."
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput
-                                        }}
-                                        onKeyDown={this.handleSearchBoxKeyDown}
-                                        onChange={this.handleSearchBoxChange}
-                                        value={searchBoxInput}
-                                    />
-                                </div>
-                            )}
+                            {isLogin && pathname !== SEARCH_RAW && this.renderSearchBar()}
                             <div className={classes.grow} />
                             <div>
                                 <IconButton edge="end" color="inherit" onClick={this.handleMenuOpen}>
