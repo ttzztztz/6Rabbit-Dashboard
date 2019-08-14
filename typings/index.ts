@@ -169,3 +169,13 @@ export interface IThreadItemResponse {
     attachList: Array<IThreadAttach>;
     needBuy: boolean;
 }
+
+export interface ISearchItem extends IUserPostItem {
+    uid: string;
+    username: string;
+}
+
+export interface ISearchResponse {
+    count: number;
+    list: Array<ISearchItem>;
+}

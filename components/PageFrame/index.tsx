@@ -47,7 +47,9 @@ import {
     FORUM_LIST_RAW,
     FORUM_LIST,
     USER_REGISTER,
-    USER_NOTIFICATION_CENTER
+    USER_NOTIFICATION_CENTER,
+    SEARCH_RAW,
+    SEARCH
 } from "../../consts/routers";
 
 import Link from "next/link";
@@ -71,7 +73,8 @@ interface Props extends WithStyles {
 class Bar extends React.PureComponent<Props> {
     state = {
         open: false,
-        anchorEl: null as null | HTMLElement
+        anchorEl: null as null | HTMLElement,
+        searchBoxInput: ""
     };
 
     handleDrawerOpen = () => {
@@ -179,6 +182,23 @@ class Bar extends React.PureComponent<Props> {
         const url = USER_REGISTER;
         router.push(url, url);
     };
+    handleSearch = () => {
+        const { searchBoxInput } = this.state;
+        const { router } = this.props;
+        const url = SEARCH_RAW;
+        const as = SEARCH(searchBoxInput, "1");
+        router.push(url, as);
+    };
+    handleSearchBoxKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (event.keyCode === 13) {
+            this.handleSearch();
+        }
+    };
+    handleSearchBoxChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        this.setState({
+            searchBoxInput: event.target.value
+        });
+    };
 
     renderMenu = () => {
         const { anchorEl } = this.state;
@@ -219,7 +239,7 @@ class Bar extends React.PureComponent<Props> {
 
     render() {
         const { classes, title, loading, isLogin, unread, avatar } = this.props;
-        const { open } = this.state;
+        const { open, searchBoxInput } = this.state;
         return (
             <SnackbarProvider
                 maxSnack={5}
@@ -254,18 +274,23 @@ class Bar extends React.PureComponent<Props> {
                             <Typography variant="h6" noWrap className={classes.title}>
                                 {title}
                             </Typography>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon />
+                            {isLogin && (
+                                <div className={classes.search}>
+                                    <div className={classes.searchIcon}>
+                                        <SearchIcon />
+                                    </div>
+                                    <InputBase
+                                        placeholder="搜索..."
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput
+                                        }}
+                                        onKeyDown={this.handleSearchBoxKeyDown}
+                                        onChange={this.handleSearchBoxChange}
+                                        value={searchBoxInput}
+                                    />
                                 </div>
-                                <InputBase
-                                    placeholder="搜索..."
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput
-                                    }}
-                                />
-                            </div>
+                            )}
                             <div className={classes.grow} />
                             <div>
                                 <IconButton edge="end" color="inherit" onClick={this.handleMenuOpen}>

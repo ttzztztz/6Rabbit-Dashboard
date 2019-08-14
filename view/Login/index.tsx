@@ -61,6 +61,11 @@ class Login extends React.Component<Props> {
             }
         });
     };
+    handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.keyCode === 13) {
+            this.handleLoginBtnClick();
+        }
+    };
 
     handleRegisterBtnClick = () => {
         if (this.state.activePage === ActivePage.Login) {
@@ -112,6 +117,7 @@ class Login extends React.Component<Props> {
                         className={classes.textField}
                         value={password}
                         onChange={this.handleChange("password", "login")}
+                        onKeyDown={this.handleKeyDown}
                         margin="dense"
                         variant="outlined"
                         type="password"

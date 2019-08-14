@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./style";
+import clsx from "clsx";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -90,7 +91,7 @@ class PostListItem extends React.PureComponent<Props> {
                         </Link>
                         <span>{new Date(createDate).toLocaleString()}</span>
                     </div>
-                    <div className={classes["content-container"]} dangerouslySetInnerHTML={{ __html: message }} />
+                    <div className={clsx(classes["content-container"], "braft-output-content")} dangerouslySetInnerHTML={{ __html: message }} />
                     {(isAdmin || readerUid === uid) && (
                         <div className={classes["post-list-item-info"]}>
                             <Link href={POST_UPDATE_RAW} as={POST_UPDATE(pid)}>

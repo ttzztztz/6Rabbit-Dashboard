@@ -5,14 +5,15 @@ import { WithStyles, withStyles } from "@material-ui/core";
 import ThreadListComponent from "../../containers/ThreadList";
 import { IThreadListItem, IExtendedNextPageContext } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
+import { BLOG_LIST_RAW, BLOG_LIST } from "../../consts/routers";
+import { Epics } from "../../epics";
+import { getBlogListStart, IGetBlogListStart } from "../../actions/async";
+
+import { StateObservable, ActionsObservable } from "redux-observable";
+import { Subject, of } from "rxjs";
 
 import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
-import { BLOG_LIST_RAW, BLOG_LIST } from "../../consts/routers";
-import { StateObservable, ActionsObservable } from "redux-observable";
-import { Subject, of } from "rxjs";
-import { Epics } from "../../epics";
-import { getBlogListStart, IGetBlogListStart } from "../../actions/async";
 
 interface Props extends WithStyles {
     router: NextRouter;
