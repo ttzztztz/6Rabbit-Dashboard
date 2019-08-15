@@ -34,7 +34,8 @@ export const POST_THREAD_CLOSE = `${BACKEND_ROOT}/thread/close`;
 export const POST_THREAD_TOP = `${BACKEND_ROOT}/thread/top`;
 export const POST_THREAD_DIAMOND = `${BACKEND_ROOT}/thread/diamond`;
 export const POST_THREAD_SEARCH = (page: string) => `${BACKEND_ROOT}/thread/search/${page}`;
-export const POST_FILE = `${BACKEND_ROOT}/file/upload`;
+export const POST_FILE_UPLOAD = `${BACKEND_ROOT}/file/upload`;
+export const POST_FILE_DOWNLOAD = (aid: string) => `${BACKEND_ROOT}/file/download/${aid}`;
 
 export const PUT_UPDATE_PASSWORD = `${BACKEND_ROOT}/user/info/password`;
 

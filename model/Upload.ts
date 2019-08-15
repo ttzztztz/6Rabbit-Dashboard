@@ -18,7 +18,6 @@ export const upload = (tempId: string, url: string, { method, headers, body }: R
         xhr.send(body);
 
         abortList[tempId] = () => xhr.abort();
-        console.log(abortList);
     });
 
 export const abortAll = () => {
@@ -33,7 +32,6 @@ export const abortAll = () => {
 };
 
 export const abortOne = (tempId: string) => {
-    console.log(abortList);
     try {
         const result = Object.entries(abortList).filter(([k, v]) => k === tempId);
         if (result.length === 1) {

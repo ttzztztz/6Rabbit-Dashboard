@@ -36,7 +36,7 @@ const styles = (theme: Theme) =>
         "post-list-container": {
             margin: theme.spacing(1)
         },
-        "reply-icon": {
+        icon: {
             fontSize: "16px",
             marginRight: theme.spacing(0.5)
         },
@@ -46,6 +46,29 @@ const styles = (theme: Theme) =>
         "thread-icon-container": {
             display: "flex",
             alignItems: "center"
+        },
+        "attach-list-container": {
+            margin: theme.spacing(2, 0)
+        },
+        heading: {
+            flexGrow: 2,
+            display: "flex",
+            alignItems: "center"
+        },
+        secondaryHeading: {
+            color: theme.palette.text.secondary,
+            flexGrow: 1
+        },
+        "btn-container": {
+            display: "flex",
+            alignItems: "center"
+        },
+        "detail-container": {
+            display: "flex",
+            justifyContent: "space-between"
+        },
+        "attach-icon": {
+            marginRight: theme.spacing(0.5)
         }
     });
 

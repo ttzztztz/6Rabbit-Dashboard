@@ -42,8 +42,6 @@ const mapRouteToPageType: IMapRouteToPageType = {
     "/post/update/[pid]": IPostPageType.EDIT_REPLY
 };
 
-type ActualFileObject = Blob & { readonly lastModified: number; readonly name: string };
-
 interface Props extends WithStyles {
     router: NextRouter;
 

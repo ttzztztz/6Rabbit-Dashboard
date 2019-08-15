@@ -10,13 +10,13 @@ const styles = (theme: Theme) =>
             margin: theme.spacing(1, 0)
         },
         heading: {
-            fontSize: theme.typography.pxToRem(15),
-            flexBasis: "33.33%",
-            flexShrink: 0
+            flexGrow: 2,
+            display: "flex",
+            alignItems: "center"
         },
         secondaryHeading: {
-            fontSize: theme.typography.pxToRem(15),
-            color: theme.palette.text.secondary
+            color: theme.palette.text.secondary,
+            flexGrow: 1
         },
         "charge-container": {
             flexGrow: 1
@@ -38,6 +38,9 @@ const styles = (theme: Theme) =>
         "detail-container": {
             display: "flex",
             justifyContent: "space-between"
+        },
+        "attach-icon": {
+            marginRight: theme.spacing(0.5)
         }
     });
 

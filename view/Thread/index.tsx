@@ -14,11 +14,17 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import Fab from "@material-ui/core/Fab";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 
 import MessageIcon from "@material-ui/icons/Message";
 import LockIcon from "@material-ui/icons/Lock";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import GradeIcon from "@material-ui/icons/Grade";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import AttachmentIcon from "@material-ui/icons/Attachment";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 
 import { of, Subject } from "rxjs";
 import { StateObservable, ActionsObservable } from "redux-observable";
@@ -37,7 +43,7 @@ import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
-import { FETCH_THREAD, FETCH_AVATAR } from "../../consts/backend";
+import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
 
 interface Props extends WithStyles {
@@ -50,6 +56,7 @@ interface Props extends WithStyles {
     needBuy: boolean;
     attachList: Array<IThreadAttach>;
     uid: string;
+    isLogin: boolean;
 
     defaultPage: number;
     defaultRes: Array<IPostListItem>;
@@ -73,7 +80,9 @@ class Thread extends React.Component<Props> {
         quotepid: "0",
 
         postList: [] as Array<IPostListItem>,
-        page: this.props.defaultPage
+        page: this.props.defaultPage,
+
+        attachExpanded: false as boolean | string
     };
 
     handleChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -125,9 +134,39 @@ class Thread extends React.Component<Props> {
         this.patchPostList(defaultRes);
     }
 
+    handleExpandPanel = (panel: string) => (_e: React.ChangeEvent<{}>, isExpanded: boolean) => {
+        this.setState({
+            attachExpanded: isExpanded ? panel : false
+        });
+    };
+
+    handleDownload = (aid: string) => () => {
+        const { isLogin, enqueueSnackbar } = this.props;
+        const token = localStorage.getItem("token");
+        if (!isLogin || !token) {
+            enqueueSnackbar("请先登录！", { variant: "error" });
+            return;
+        }
+
+        const tempForm = document.createElement("form");
+        tempForm.action = POST_FILE_DOWNLOAD(aid);
+        tempForm.target = "_blank";
+        tempForm.method = "POST";
+        tempForm.style.display = "none";
+
+        const tokenElement = document.createElement("textarea");
+        tokenElement.name = "token";
+        tokenElement.value = token!;
+        tempForm.appendChild(tokenElement);
+
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+        tempForm.remove();
+    };
+
     render() {
-        const { classes, thread, firstPost, isAdmin, uid } = this.props;
-        const { postList, reply, page } = this.state;
+        const { classes, thread, firstPost, isAdmin, uid, attachList } = this.props;
+        const { postList, reply, page, attachExpanded } = this.state;
         return (
             <>
                 <Head>
@@ -165,6 +204,40 @@ class Thread extends React.Component<Props> {
                         </>
                     )}
                 </Paper>
+                {attachList.length > 0 && (
+                    <div className={classes["attach-list-container"]}>
+                        {attachList.map(item => (
+                            <ExpansionPanel expanded={attachExpanded === item.aid} onChange={this.handleExpandPanel(item.aid)} key={item.aid}>
+                                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
+                                    <Typography className={classes.heading}>
+                                        <AttachmentIcon className={classes["attach-icon"]} />
+                                        {item.originalName}
+                                    </Typography>
+                                    <Typography className={classes.secondaryHeading}>{(item.fileSize / 1024).toFixed(2)} KB</Typography>
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails className={classes["detail-container"]}>
+                                    <div className={classes["charge-container"]}>
+                                        下载次数：{item.downloads}
+                                        <br />
+                                        上传日期：{new Date(item.createDate).toLocaleString()}
+                                    </div>
+                                    <div className={classes["btn-container"]}>
+                                        <Fab
+                                            variant="extended"
+                                            size="medium"
+                                            color="primary"
+                                            className={classes.button}
+                                            onClick={this.handleDownload(item.aid)}
+                                        >
+                                            <ArrowDownwardIcon className={classes["icon"]} />
+                                            下载
+                                        </Fab>
+                                    </div>
+                                </ExpansionPanelDetails>
+                            </ExpansionPanel>
+                        ))}
+                    </div>
+                )}
                 {postList.length > 0 && (
                     <Paper className={classes.paperRoot}>
                         <Typography variant="body2" className={classes.strong}>
@@ -198,8 +271,8 @@ class Thread extends React.Component<Props> {
                         variant="outlined"
                     />
                     <div className={classes["reply-container"]}>
-                        <Fab variant="extended" size="medium" color="primary" aria-label="add" className={classes.button} onClick={this.handleReply}>
-                            <MessageIcon className={classes["reply-icon"]} />
+                        <Fab variant="extended" size="medium" color="primary" className={classes.button} onClick={this.handleReply}>
+                            <MessageIcon className={classes["icon"]} />
                             回复
                         </Fab>
                     </div>

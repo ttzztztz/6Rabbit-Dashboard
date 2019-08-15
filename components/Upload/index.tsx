@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./style";
 
-import clsx from "clsx";
 import { OptionsObject } from "notistack";
 
 import { WithStyles, withStyles } from "@material-ui/core";
@@ -10,14 +9,16 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import AttachmentIcon from "@material-ui/icons/Attachment";
 
 import { IThreadAttach, ICreditsTypeMapper, IUploadingItem } from "../../typings";
 import { MAX_UPLOAD_PER_FILE, MAX_UPLOAD_FILE_SIZE } from "../../consts";
 import { upload, abortAll, abortOne } from "../../model/Upload";
-import { POST_FILE } from "../../consts/backend";
+import { POST_FILE_UPLOAD } from "../../consts/backend";
 
 interface Props extends WithStyles {
     fileList: Array<IThreadAttach>;
@@ -40,7 +41,7 @@ class UserPostList extends React.Component<Props> {
         abortAll();
     }
 
-    handleChangePanel = (panel: string) => (_e: React.ChangeEvent<{}>, isExpanded: boolean) => {
+    handleExpandPanel = (panel: string) => (_e: React.ChangeEvent<{}>, isExpanded: boolean) => {
         this.setState({
             expanded: isExpanded ? panel : false
         });
@@ -96,7 +97,6 @@ class UserPostList extends React.Component<Props> {
                 return;
             }
             for (let i = 0; i < files.length; i++) {
-                console.log(files[i]);
                 if (files[i].size > MAX_UPLOAD_FILE_SIZE) {
                     const { enqueueSnackbar } = this.props;
                     enqueueSnackbar("单个文件最大" + MAX_UPLOAD_FILE_SIZE / 1024 / 1024 + "MB！", { variant: "error" });
@@ -118,7 +118,7 @@ class UserPostList extends React.Component<Props> {
                 formData.append("attach", file);
                 const promise = upload(
                     tempId,
-                    POST_FILE,
+                    POST_FILE_UPLOAD,
                     {
                         method: "POST",
                         body: formData
@@ -164,7 +164,9 @@ class UserPostList extends React.Component<Props> {
         }
     };
     handleUploadBtnClick = () => {
-        this.uploadElementRef!.click();
+        if (this.uploadElementRef) {
+            this.uploadElementRef.click();
+        }
     };
     handleAbort = (tempId: string) => () => {
         const { uploadingList: oldList } = this.state;
@@ -196,9 +198,12 @@ class UserPostList extends React.Component<Props> {
                 </div>
                 <div className={classes["upload-list"]}>
                     {fileList.map(item => (
-                        <ExpansionPanel expanded={expanded === item.aid} onChange={this.handleChangePanel(item.aid)} key={item.aid}>
+                        <ExpansionPanel expanded={expanded === item.aid} onChange={this.handleExpandPanel(item.aid)} key={item.aid}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
-                                <Typography className={classes.heading}>{item.originalName}</Typography>
+                                <Typography className={classes.heading}>
+                                    <AttachmentIcon className={classes["attach-icon"]} />
+                                    {item.originalName}
+                                </Typography>
                                 <Typography className={classes.secondaryHeading}>{(item.fileSize / 1024).toFixed(2)} KB</Typography>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails className={classes["detail-container"]}>
@@ -252,7 +257,7 @@ class UserPostList extends React.Component<Props> {
                 </div>
                 <div className={classes["uploading-list"]}>
                     {uploadingList.map(item => (
-                        <ExpansionPanel expanded={expanded === item.tempId} onChange={this.handleChangePanel(item.tempId)} key={item.tempId}>
+                        <ExpansionPanel expanded={expanded === item.tempId} onChange={this.handleExpandPanel(item.tempId)} key={item.tempId}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
                                 <Typography className={classes.heading}>{item.file.name}</Typography>
                                 <Typography className={classes.secondaryHeading}>
