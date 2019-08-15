@@ -19,6 +19,7 @@ export const FETCH_OAUTH_LIST = `${BACKEND_ROOT}/oauth/list`;
 export const FETCH_OAUTH_INFO = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/info/${platform}/${code}`;
 export const FETCH_OAUTH_BIND = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/bind/${platform}/${code}`;
 export const FETCH_OAUTH_LOGIN = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/login/${platform}/${code}`;
+export const FETCH_UNUSED_ATTACH = `${BACKEND_ROOT}/attach/unused`;
 
 export const OPTIONS_NOTIFICATION_ALL = `${BACKEND_ROOT}/notification/all`;
 export const OPTIONS_NOTIFICATION_ITEM = (nid: string) => `${BACKEND_ROOT}/notification/item/${nid}`;
@@ -33,9 +34,11 @@ export const POST_THREAD_CLOSE = `${BACKEND_ROOT}/thread/close`;
 export const POST_THREAD_TOP = `${BACKEND_ROOT}/thread/top`;
 export const POST_THREAD_DIAMOND = `${BACKEND_ROOT}/thread/diamond`;
 export const POST_THREAD_SEARCH = (page: string) => `${BACKEND_ROOT}/thread/search/${page}`;
+export const POST_FILE = `${BACKEND_ROOT}/file/upload`;
 
 export const PUT_UPDATE_PASSWORD = `${BACKEND_ROOT}/user/info/password`;
 
 export const DELETE_MANY_THREADS = `${BACKEND_ROOT}/thread/batch`;
 export const DELETE_OAUTH_TOKEN = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/${platform}/${code}`;
 export const DELETE_OAUTH_BIND = (platform: string) => `${BACKEND_ROOT}/oauth/${platform}`;
+export const DELETE_ATTACH = (aid: string) => `${BACKEND_ROOT}/attach/${aid}`;

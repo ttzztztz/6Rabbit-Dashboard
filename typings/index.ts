@@ -51,8 +51,33 @@ export interface IThreadAttach {
     fileSize: number;
     downloads: number;
     originalName: string;
+    creditsType: 0 | 1 | 2 | 3;
+    credits: number;
     createDate: Date;
 }
+
+export const ICreditsTypeMapper = [
+    {
+        id: 0,
+        text: "关闭",
+        field: "none"
+    },
+    {
+        id: 1,
+        text: "经验",
+        field: "credits"
+    },
+    {
+        id: 2,
+        text: "金币",
+        field: "golds"
+    },
+    {
+        id: 3,
+        text: "人民币",
+        field: "rmbs"
+    }
+];
 
 export interface IQuotePost {
     pid: string;
@@ -211,3 +236,9 @@ export interface IOAuth {
 }
 
 export const OAuthWebsites = ["Github", "QQ"];
+
+export interface IUploadingItem {
+    file: File;
+    progress: number;
+    tempId: string;
+}

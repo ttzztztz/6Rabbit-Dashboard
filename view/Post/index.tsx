@@ -15,11 +15,12 @@ import BraftEditor from "braft-editor";
 import Head from "next/head";
 import { NextRouter, withRouter } from "next/dist/client/router";
 
-import { IPostPageType, IForumItem, IThreadAttachForm, IGeneralResponse } from "../../typings";
+import { IPostPageType, IForumItem, IGeneralResponse, IThreadAttach } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { requestCreateThread, requestEditReply, requestEditThread, requestReply } from "../../model/Post";
 import FrontendRequest from "../../model/FrontendRequest";
-import { FETCH_THREAD, FETCH_POST } from "../../consts/backend";
+import { FETCH_THREAD, FETCH_POST, FETCH_UNUSED_ATTACH, DELETE_ATTACH } from "../../consts/backend";
+import Upload from "../../containers/Upload";
 
 interface IMapRouteToPageType {
     [key: string]: number;
@@ -41,6 +42,8 @@ const mapRouteToPageType: IMapRouteToPageType = {
     "/post/update/[pid]": IPostPageType.EDIT_REPLY
 };
 
+type ActualFileObject = Blob & { readonly lastModified: number; readonly name: string };
+
 interface Props extends WithStyles {
     router: NextRouter;
 
@@ -58,7 +61,9 @@ class Post extends React.PureComponent<Props> {
             fid = "2",
             subject = "";
 
-        if (pathname === "/thread/update/[tid]") {
+        if (pathname === "/thread/create") {
+            await this.fetchUnusedAttach();
+        } else if (pathname === "/thread/update/[tid]") {
             const tid = query["tid"] as string;
             const {
                 data: {
@@ -76,6 +81,7 @@ class Post extends React.PureComponent<Props> {
             }).toPromise();
 
             [subject, fid, message] = [currentSubject, currentFid, currentMessage];
+            await this.fetchUnusedAttach();
         } else if (pathname === "/post/create/[tid]") {
             const urlMessage = query["message"] as string;
             if (urlMessage && typeof urlMessage === "string" && urlMessage.length >= 1) {
@@ -104,11 +110,29 @@ class Post extends React.PureComponent<Props> {
         });
     }
 
+    fetchUnusedAttach = async () => {
+        const {
+            data: { code, message }
+        } = await FrontendRequest({
+            url: FETCH_UNUSED_ATTACH,
+            method: "GET"
+        }).toPromise();
+
+        if (code === 200) {
+            this.setState({
+                attach: message
+            });
+        } else {
+            const { enqueueSnackbar } = this.props;
+            enqueueSnackbar(message, { variant: "error" });
+        }
+    };
+
     state = {
         fid: "2",
         subject: "",
         message: "",
-        attach: [] as Array<IThreadAttachForm>,
+        attach: [] as Array<IThreadAttach>,
         editorState: BraftEditor.createEditorState("<p>Hello <b>World!</b></p>"),
         isPost: false
     };
@@ -209,9 +233,32 @@ class Post extends React.PureComponent<Props> {
         );
     };
 
+    renderAttach = () => {
+        const handleRemove = async (item: IThreadAttach) => {
+            const {
+                data: { code, message }
+            } = await FrontendRequest({
+                url: DELETE_ATTACH(item.aid),
+                method: "DELETE"
+            }).toPromise();
+            if (code !== 200) {
+                const { enqueueSnackbar } = this.props;
+                enqueueSnackbar(message, { variant: "error" });
+            }
+        };
+        const handleChange = (list: IThreadAttach[], _changedItem: IThreadAttach) => {
+            this.setState({
+                attach: list
+            });
+        };
+
+        const { attach } = this.state;
+        return <Upload fileList={attach} onRemove={handleRemove} onChange={handleChange} />;
+    };
+
     render() {
         const { classes, router, forum } = this.props;
-        const { fid, subject: title, editorState, isPost } = this.state;
+        const { fid, subject: title, isPost } = this.state;
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
         return (
@@ -261,7 +308,7 @@ class Post extends React.PureComponent<Props> {
                         </div>
                     )}
                     <div className={classes["content-container"]}>{this.renderEditor()}</div>
-                    <div className={classes["attach-container"]} />
+                    {!isPost && this.renderAttach()}
                     <div className={classes["btn-container"]}>
                         <Fab variant="extended" size="medium" color="primary" aria-label="add" className={classes.button} onClick={this.handleSubmitClick}>
                             <MessageIcon className={classes["btn-icon"]} />

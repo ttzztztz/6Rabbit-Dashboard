@@ -8,3 +8,5 @@ export const TITLE_PREFIX = "酷兔网 - ";
 export const TITLE_SUFFIX = " - 酷兔网";
 
 export const PAGESIZE = 20;
+export const MAX_UPLOAD_FILE_SIZE = 1 * 1024 * 1024;
+export const MAX_UPLOAD_PER_FILE = 10;
