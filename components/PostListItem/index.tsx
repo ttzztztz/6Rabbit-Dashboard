@@ -91,7 +91,7 @@ class PostListItem extends React.PureComponent<Props> {
                         </Link>
                         <span>{new Date(createDate).toLocaleString()}</span>
                     </div>
-                    <div className={clsx(classes["content-container"], "braft-output-content")} dangerouslySetInnerHTML={{ __html: message }} />
+                    <div className={clsx("content-container", "braft-output-content")} dangerouslySetInnerHTML={{ __html: message }} />
                     {(isAdmin || readerUid === uid) && (
                         <div className={classes["post-list-item-info"]}>
                             <Link href={POST_UPDATE_RAW} as={POST_UPDATE(pid)}>

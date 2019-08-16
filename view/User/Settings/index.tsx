@@ -21,11 +21,14 @@ import { OptionsObject } from "notistack";
 import { NextRouter, withRouter } from "next/dist/client/router";
 
 import FrontendRequest from "../../../model/FrontendRequest";
-import { FETCH_MY_INFO, FETCH_OAUTH_LIST, FETCH_OAUTH_REDIRECT, DELETE_OAUTH_BIND } from "../../../consts/backend";
+import { FETCH_MY_INFO, FETCH_OAUTH_LIST, FETCH_OAUTH_REDIRECT, DELETE_OAUTH_BIND, FETCH_AVATAR, POST_AVATAR_UPLOAD } from "../../../consts/backend";
 import { IUpdateProfileForm, IUpdatePasswordForm, IOAuth } from "../../../typings";
+import { MAX_UPLOAD_AVATAR_SIZE } from "../../../consts";
+import { upload } from "../../../model/Upload";
 
 interface Props extends WithStyles {
     router: NextRouter;
+    uid: string;
 
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     updateProfile: (payload: IUpdateProfileForm) => void;
@@ -157,9 +160,51 @@ class Settings extends React.Component<Props> {
             );
         }
     };
+    handleChangeAvatar = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>) => {
+        const { enqueueSnackbar } = this.props;
 
+        if (files) {
+            // check if file valid
+            if (files.length <= 0) {
+                enqueueSnackbar("未选择文件！", { variant: "error" });
+                return;
+            }
+            const file = files[0];
+            if (file.size > MAX_UPLOAD_AVATAR_SIZE) {
+                const { enqueueSnackbar } = this.props;
+                enqueueSnackbar("单个头像最大" + MAX_UPLOAD_AVATAR_SIZE / 1024 + "KB！", { variant: "error" });
+                return;
+            }
+            enqueueSnackbar("头像开始上传！", { variant: "warning" });
+            const formData = new FormData();
+            formData.append("avatar", file);
+            upload("avatar", POST_AVATAR_UPLOAD, {
+                method: "POST",
+                body: formData
+            }).then(
+                (response: string) => {
+                    const { code, message } = JSON.parse(response);
+                    if (code === 200) {
+                        enqueueSnackbar("头像上传成功，一段时间后生效！", { variant: "success" });
+                    } else {
+                        enqueueSnackbar(message, { variant: "error" });
+                    }
+                },
+                reason => {
+                    enqueueSnackbar(reason.toString(), { variant: "error" });
+                }
+            );
+        }
+    };
+    handleChangeAvatarClick = () => {
+        if (this.uploadElementRef) {
+            this.uploadElementRef.click();
+        }
+    };
+
+    uploadElementRef: HTMLInputElement | null = null;
     render() {
-        const { classes } = this.props;
+        const { classes, uid } = this.props;
         const {
             password: { oldPassword, newPassword, newPasswordRepeat },
             profile: { realname, signature, qq, wechat, gender, email, mobile, credits, golds, rmbs, usergroup }
@@ -323,6 +368,21 @@ class Settings extends React.Component<Props> {
                                 提交
                             </Button>
                         </div>
+                    </div>
+                    <Typography variant="h5" className={classes["setting-title"]}>
+                        修改头像
+                    </Typography>
+                    <div className={classes["input-container"]}>由于头像存在缓存，修改后需要等待一段时间后，才会生效！</div>
+                    <div className={classes["avatar-container"]}>
+                        <input
+                            type="file"
+                            onChange={this.handleChangeAvatar}
+                            id="fileUpload"
+                            className={classes.none}
+                            ref={elem => (this.uploadElementRef = elem)}
+                            accept=".gif, .bmp, .jpeg, .png, .jpg"
+                        />
+                        <Avatar src={FETCH_AVATAR(uid)} className={classes["big-avatar"]} onClick={this.handleChangeAvatarClick} />
                     </div>
                     <Typography variant="h5" className={classes["setting-title"]}>
                         账号绑定

@@ -53,6 +53,19 @@ const styles = (theme: Theme) =>
         },
         "credits-log-table": {
             minWidth: "600px"
+        },
+        "big-avatar": {
+            margin: theme.spacing(1),
+            width: "72px",
+            height: "72px",
+            cursor: "pointer"
+        },
+        "avatar-container": {
+            display: "flex",
+            justifyContent: "center"
+        },
+        none: {
+            display: "none"
         }
     });
 

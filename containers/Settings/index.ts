@@ -8,7 +8,7 @@ import { enqueueSnackbar } from "../../actions";
 import { userUpdateProfileStart, userUpdatePasswordStart } from "../../actions/async";
 import { IUpdateProfileForm, IUpdatePasswordForm } from "../../typings";
 
-const mapStateToProps = (_: StoreState) => ({});
+const mapStateToProps = ({ user: { uid } }: StoreState) => ({ uid });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),

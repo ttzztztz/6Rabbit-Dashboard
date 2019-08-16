@@ -32,16 +32,12 @@ class Forum extends React.PureComponent<Props> {
         const fid = query["fid"] as string;
 
         const state$ = new StateObservable(new Subject(), store.getState());
-        const [
-            {
-                payload: { list, total }
-            },
-            { payload: forum }
-        ] = await Promise.all([
-            Epics(of(getThreadListStart(fid, page)) as ActionsObservable<IGetThreadListStart>, state$, {}).toPromise(),
-            Epics(of(getForumInfoStart(fid)) as ActionsObservable<IGetForumInfoStart>, state$, {}).toPromise()
-        ]);
-        return { threadList: list, page: Number.parseInt(page), total, fid, forum };
+        const {
+            payload: { list, forum },
+            payload
+        } = await Epics(of(getThreadListStart(fid, page)) as ActionsObservable<IGetThreadListStart>, state$, {}).toPromise();
+
+        return { threadList: list, page: Number.parseInt(page), total: forum.threads, fid, forum };
     }
 
     handlePageChange = (page: number) => {

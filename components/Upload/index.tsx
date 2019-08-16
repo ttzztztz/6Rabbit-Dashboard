@@ -16,7 +16,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 
 import { IThreadAttach, ICreditsTypeMapper, IUploadingItem } from "../../typings";
-import { MAX_UPLOAD_PER_FILE, MAX_UPLOAD_FILE_SIZE } from "../../consts";
+import { MAX_UPLOAD_PER_REQUEST, MAX_UPLOAD_FILE_SIZE, SUPPORT_IMAGE_PREVIEW_SUFFIX } from "../../consts";
 import { upload, abortAll, abortOne } from "../../model/Upload";
 import { POST_FILE_UPLOAD } from "../../consts/backend";
 
@@ -26,6 +26,7 @@ interface Props extends WithStyles {
     onRemove: (item: IThreadAttach) => void;
     onChange: (list: Array<IThreadAttach>, changedItem: IThreadAttach) => void;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
+    onInsertImage: (aid: string) => void;
 }
 
 class UserPostList extends React.Component<Props> {
@@ -92,8 +93,8 @@ class UserPostList extends React.Component<Props> {
         if (files) {
             const addedItem: Array<IUploadingItem> = [];
             // check if file valid
-            if (files.length > MAX_UPLOAD_PER_FILE) {
-                enqueueSnackbar("每次最多只能上传" + MAX_UPLOAD_PER_FILE + "个文件！", { variant: "error" });
+            if (files.length > MAX_UPLOAD_PER_REQUEST) {
+                enqueueSnackbar("每次最多只能上传" + MAX_UPLOAD_PER_REQUEST + "个文件！", { variant: "error" });
                 return;
             }
             for (let i = 0; i < files.length; i++) {
@@ -175,7 +176,29 @@ class UserPostList extends React.Component<Props> {
         });
         abortOne(tempId);
     };
+    handleInsertImage = (aid: string) => () => {
+        const { onInsertImage } = this.props;
+        onInsertImage(aid);
+    };
 
+    renderInsertImage = (item: IThreadAttach) => {
+        const { classes } = this.props;
+        const splitedArr = item.originalName.split(".");
+        if (splitedArr.length <= 0) {
+            return <></>;
+        }
+        const suffix = splitedArr[splitedArr.length - 1].toLowerCase();
+
+        if (splitedArr.length >= 2 && SUPPORT_IMAGE_PREVIEW_SUFFIX.includes(suffix)) {
+            return (
+                <Button variant="contained" color="primary" className={classes.button} size="medium" onClick={this.handleInsertImage(item.aid)}>
+                    插入
+                </Button>
+            );
+        } else {
+            return <></>;
+        }
+    };
     uploadElementRef: HTMLInputElement | null = null;
     render() {
         const { classes, fileList } = this.props;
@@ -241,6 +264,7 @@ class UserPostList extends React.Component<Props> {
                                     )}
                                 </div>
                                 <div className={classes["delete-btn-container"]}>
+                                    {this.renderInsertImage(item)}
                                     <Button
                                         variant="contained"
                                         color="secondary"
@@ -248,7 +272,7 @@ class UserPostList extends React.Component<Props> {
                                         size="medium"
                                         onClick={this.handleRemove(item.aid)}
                                     >
-                                        删除附件
+                                        删除
                                     </Button>
                                 </div>
                             </ExpansionPanelDetails>

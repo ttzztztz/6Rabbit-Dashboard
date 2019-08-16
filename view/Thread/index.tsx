@@ -219,7 +219,7 @@ class Thread extends React.Component<Props> {
                                     <div className={classes["charge-container"]}>
                                         下载次数：{item.downloads}
                                         <br />
-                                        上传日期：{new Date(item.createDate).toLocaleString()}
+                                        上传时间：{new Date(item.createDate).toLocaleString()}
                                     </div>
                                     <div className={classes["btn-container"]}>
                                         <Fab

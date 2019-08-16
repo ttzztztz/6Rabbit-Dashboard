@@ -1,6 +1,6 @@
 let abortList: { [key: string]: () => void } = {};
 
-export const upload = (tempId: string, url: string, { method, headers, body }: RequestInit, onProgress: XMLHttpRequestEventTarget["onprogress"]) =>
+export const upload = (tempId: string, url: string, { method, headers, body }: RequestInit, onProgress?: XMLHttpRequestEventTarget["onprogress"]) =>
     new Promise<string>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open(method || "get", url);
@@ -14,7 +14,9 @@ export const upload = (tempId: string, url: string, { method, headers, body }: R
             delete abortList[tempId];
             reject();
         };
-        xhr.upload.onprogress = onProgress;
+        if (onProgress) {
+            xhr.upload.onprogress = onProgress;
+        }
         xhr.send(body);
 
         abortList[tempId] = () => xhr.abort();

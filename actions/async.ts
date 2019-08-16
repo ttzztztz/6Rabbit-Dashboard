@@ -29,11 +29,11 @@ export const GET_THREAD_LIST_OK = "GET_THREAD_LIST_OK";
 export type GET_THREAD_LIST_OK = typeof GET_THREAD_LIST_OK;
 export interface IGetThreadListOK {
     type: GET_THREAD_LIST_OK;
-    payload: { list: Array<IThreadListItem>; total: number };
+    payload: { list: Array<IThreadListItem>; forum: IForumItem };
 }
-export const getThreadListOK = (list: Array<IThreadListItem>, total: number): IGetThreadListOK => ({
+export const getThreadListOK = (list: Array<IThreadListItem>, forum: IForumItem): IGetThreadListOK => ({
     type: GET_THREAD_LIST_OK,
-    payload: { list, total }
+    payload: { list, forum }
 });
 
 export const GET_POST_INFO_START = "GET_POST_INFO_START";

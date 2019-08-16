@@ -16,7 +16,7 @@ import {
     getForumOK
 } from "../actions/async";
 import { FETCH_THREAD_LIST, FETCH_FORUM_LIST, FETCH_FORUM_INFO } from "../consts/backend";
-import { IThreadListItem } from "../typings";
+import { IThreadListItem, IForumItem } from "../typings";
 import FrontendRequest from "../model/FrontendRequest";
 import { enqueueSnackbar, changeForum } from "../actions";
 
@@ -27,9 +27,9 @@ const fetchThreadList: Epic<IGetThreadListStart> = action$ =>
             from(axios({ url: FETCH_THREAD_LIST(fid, page), method: "GET" })).pipe(
                 map(({ data: { message } }) => {
                     const list: Array<IThreadListItem> = message.list as Array<IThreadListItem>;
-                    const total = message.forum.threads;
+                    const forum: IForumItem = message.forum;
 
-                    return getThreadListOK(list, total);
+                    return getThreadListOK(list, forum);
                 })
             )
         )

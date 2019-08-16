@@ -27,7 +27,9 @@ const styles = (theme: Theme) =>
             fontWeight: 600
         },
         button: {
-            margin: theme.spacing(1)
+            [theme.breakpoints.up("md")]: {
+                margin: theme.spacing(1)
+            }
         },
         "reply-container": {
             display: "flex",

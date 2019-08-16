@@ -2,15 +2,15 @@ import "braft-editor/dist/index.css";
 import React from "react";
 import styles from "./style";
 
+import { OptionsObject } from "notistack";
+import BraftEditor from "braft-editor";
+
 import { WithStyles, withStyles, Fab } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import MessageIcon from "@material-ui/icons/Message";
-
-import { OptionsObject } from "notistack";
-import BraftEditor from "braft-editor";
 
 import Head from "next/head";
 import { NextRouter, withRouter } from "next/dist/client/router";
@@ -19,7 +19,7 @@ import { IPostPageType, IForumItem, IGeneralResponse, IThreadAttach } from "../.
 import { TITLE_PREFIX } from "../../consts";
 import { requestCreateThread, requestEditReply, requestEditThread, requestReply } from "../../model/Post";
 import FrontendRequest from "../../model/FrontendRequest";
-import { FETCH_THREAD, FETCH_POST, FETCH_UNUSED_ATTACH, DELETE_ATTACH } from "../../consts/backend";
+import { FETCH_THREAD, FETCH_POST, FETCH_UNUSED_ATTACH, DELETE_ATTACH, FETCH_PICTURE_ATTACH } from "../../consts/backend";
 import Upload from "../../containers/Upload";
 
 interface IMapRouteToPageType {
@@ -64,23 +64,33 @@ class Post extends React.PureComponent<Props> {
             await this.fetchUnusedAttach();
         } else if (pathname === "/thread/update/[tid]") {
             const tid = query["tid"] as string;
-            const {
-                data: {
-                    message: {
-                        thread: {
-                            subject: currentSubject,
-                            forum: { fid: currentFid }
-                        },
-                        firstPost: { message: currentMessage }
+            const [
+                {
+                    data: {
+                        message: {
+                            thread: {
+                                subject: currentSubject,
+                                forum: { fid: currentFid }
+                            },
+                            firstPost: { message: currentMessage },
+                            attachList
+                        }
                     }
                 }
-            } = await FrontendRequest({
-                url: FETCH_THREAD(tid, "1"),
-                method: "GET"
-            }).toPromise();
+            ] = await Promise.all([
+                FrontendRequest({
+                    url: FETCH_THREAD(tid, "1"),
+                    method: "GET"
+                }).toPromise(),
+                this.fetchUnusedAttach()
+            ]);
+
+            const { attach } = this.state;
+            this.setState({
+                attach: [...attach, ...attachList]
+            });
 
             [subject, fid, message] = [currentSubject, currentFid, currentMessage];
-            await this.fetchUnusedAttach();
         } else if (pathname === "/post/create/[tid]") {
             const urlMessage = query["message"] as string;
             if (urlMessage && typeof urlMessage === "string" && urlMessage.length >= 1) {
@@ -118,8 +128,9 @@ class Post extends React.PureComponent<Props> {
         }).toPromise();
 
         if (code === 200) {
+            const { attach } = this.state;
             this.setState({
-                attach: message
+                attach: [...attach, ...message]
             });
         } else {
             const { enqueueSnackbar } = this.props;
@@ -250,9 +261,18 @@ class Post extends React.PureComponent<Props> {
                 attach: list
             });
         };
+        const handleInsertImage = (aid: string) => {
+            const url = FETCH_PICTURE_ATTACH(aid);
+            const insertHTML = `<img alt="${aid}_image" src="${url}"/><p></p>`;
+            const { message } = this.state;
+
+            this.setState({
+                editorState: BraftEditor.createEditorState(message + insertHTML)
+            });
+        };
 
         const { attach } = this.state;
-        return <Upload fileList={attach} onRemove={handleRemove} onChange={handleChange} />;
+        return <Upload fileList={attach} onRemove={handleRemove} onChange={handleChange} onInsertImage={handleInsertImage} />;
     };
 
     render() {

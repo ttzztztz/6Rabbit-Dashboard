@@ -9,4 +9,6 @@ export const TITLE_SUFFIX = " - 酷兔网";
 
 export const PAGESIZE = 20;
 export const MAX_UPLOAD_FILE_SIZE = 1 * 1024 * 1024;
-export const MAX_UPLOAD_PER_FILE = 10;
+export const MAX_UPLOAD_AVATAR_SIZE = 200 * 1024;
+export const MAX_UPLOAD_PER_REQUEST = 10;
+export const SUPPORT_IMAGE_PREVIEW_SUFFIX = ["jpg", "jpeg", "png", "gif", "bmp"];

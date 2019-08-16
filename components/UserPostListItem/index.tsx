@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./style";
+import clsx from "clsx";
 import { WithStyles, withStyles } from "@material-ui/core";
 
 import Avatar from "../Avatar";
@@ -44,8 +45,8 @@ class UserPostListItem extends React.Component<Props> {
                             {subject}
                         </Typography>
                     </Link>
-                    <div className={classes["message-container"]}>
-                        <div dangerouslySetInnerHTML={{ __html: message }} />
+                    <div className={clsx("content-container", classes["message-container"])}>
+                        <div className="braft-output-content" dangerouslySetInnerHTML={{ __html: message }} />
                     </div>
                     <Typography variant="body1" className={classes["second-info"]}>
                         {showAvatar && (

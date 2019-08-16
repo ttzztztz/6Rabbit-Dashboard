@@ -40,6 +40,9 @@ const styles = (theme: Theme) =>
         },
         "attach-icon": {
             marginRight: theme.spacing(0.5)
+        },
+        button: {
+            marginRight: theme.spacing(0.5)
         }
     });
 

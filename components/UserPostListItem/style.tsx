@@ -28,7 +28,7 @@ const styles = (_theme: Theme) =>
             "&:before": {
                 background: "linear-gradient(180deg,hsla(0,0%,100%,0) 0,#fff)",
                 content: '" "',
-                top: "120px",
+                bottom: "0",
                 height: "70px",
                 position: "absolute",
                 width: "100%"

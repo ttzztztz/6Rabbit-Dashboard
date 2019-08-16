@@ -19,6 +19,7 @@ export const FETCH_OAUTH_INFO = (platform: string, code: string) => `${BACKEND_R
 export const FETCH_OAUTH_BIND = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/bind/${platform}/${code}`;
 export const FETCH_OAUTH_LOGIN = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/login/${platform}/${code}`;
 export const FETCH_UNUSED_ATTACH = `${BACKEND_ROOT}/attach/unused`;
+export const FETCH_PICTURE_ATTACH = (aid: string) => `${BACKEND_ROOT}/file/picture/${aid}`;
 
 export const OPTIONS_NOTIFICATION_ALL = `${BACKEND_ROOT}/notification/all`;
 export const OPTIONS_NOTIFICATION_ITEM = (nid: string) => `${BACKEND_ROOT}/notification/item/${nid}`;
@@ -33,6 +34,7 @@ export const POST_THREAD_CLOSE = `${BACKEND_ROOT}/thread/close`;
 export const POST_THREAD_TOP = `${BACKEND_ROOT}/thread/top`;
 export const POST_THREAD_DIAMOND = `${BACKEND_ROOT}/thread/diamond`;
 export const POST_THREAD_SEARCH = (page: string) => `${BACKEND_ROOT}/thread/search/${page}`;
+export const POST_AVATAR_UPLOAD = `${BACKEND_ROOT}/file/avatar`;
 export const POST_FILE_UPLOAD = `${BACKEND_ROOT}/file/upload`;
 export const POST_FILE_DOWNLOAD = (aid: string) => `${BACKEND_ROOT}/file/download/${aid}`;
 
