@@ -6,11 +6,9 @@ import { VariantType } from "notistack";
 import { enqueueSnackbar, toggleProgress } from "../actions";
 
 import ForumEpics from "./Forum";
-import ShopEpics from "./Shop";
 import ThreadEpics from "./Thread";
 import UserEpics from "./User";
 import BasicEpics from "./Basic";
-import BlogEpics from "./Blog";
 import PostEpics from "./Post";
 import NotificationEpics from "./Notification";
 
@@ -37,4 +35,4 @@ export const errHandler = ({ message, type }: CustomError, customAction?: AnyAct
         ? of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || "error" }), toggleProgress(), customAction)
         : of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || "error" }), toggleProgress());
 
-export const Epics = combineEpics(...BasicEpics, ...ForumEpics, ...ShopEpics, ...ThreadEpics, ...UserEpics, ...NotificationEpics, ...BlogEpics, ...PostEpics);
+export const Epics = combineEpics(...BasicEpics, ...ForumEpics, ...ThreadEpics, ...UserEpics, ...NotificationEpics, ...PostEpics);

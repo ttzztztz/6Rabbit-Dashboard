@@ -47,6 +47,7 @@ interface Props extends WithStyles {
 
     forum: Array<IForumItem>;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
+    isAdmin: boolean;
 }
 
 class Post extends React.PureComponent<Props> {
@@ -255,10 +256,11 @@ class Post extends React.PureComponent<Props> {
     };
 
     render() {
-        const { classes, router, forum } = this.props;
+        const { classes, router, forum, isAdmin } = this.props;
         const { fid, subject: title, isPost } = this.state;
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
+        const renderForum = forum.filter(item => (!isAdmin && !item.adminPost) || isAdmin);
         return (
             <>
                 <Head>
@@ -288,7 +290,7 @@ class Post extends React.PureComponent<Props> {
                                 margin="dense"
                                 variant="outlined"
                             >
-                                {forum.map(item => (
+                                {renderForum.map(item => (
                                     <MenuItem key={item.fid} value={item.fid}>
                                         {item.name}
                                     </MenuItem>

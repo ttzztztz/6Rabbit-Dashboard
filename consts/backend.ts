@@ -1,13 +1,12 @@
 export const BACKEND_ROOT = "http://localhost:8000";
 
-export const FETCH_BLOG_LIST = (page: string) => `${BACKEND_ROOT}/thread/list/1/${page}`;
-export const FETCH_FORUM_LIST = (page: string) => `${BACKEND_ROOT}/thread/list/2/${page}`;
-export const FETCH_SHOP_LIST = (page: string) => `${BACKEND_ROOT}/thread/list/3/${page}`;
+export const FETCH_THREAD_LIST = (fid: string, page: string) => `${BACKEND_ROOT}/thread/list/${fid}/${page}`;
 export const FETCH_AVATAR = (uid: string) => `${BACKEND_ROOT}/file/avatar/${uid}`;
 export const FETCH_THREAD = (tid: string, page: string) => `${BACKEND_ROOT}/thread/${tid}/${page}`;
 export const FETCH_POST = (pid: string) => `${BACKEND_ROOT}/post/${pid}`;
 export const FETCH_TOKEN = `${BACKEND_ROOT}/user/token`;
-export const FETCH_FORUM = `${BACKEND_ROOT}/forum/list`;
+export const FETCH_FORUM_LIST = `${BACKEND_ROOT}/forum/list`;
+export const FETCH_FORUM_INFO = (fid: string) => `${BACKEND_ROOT}/forum/info/${fid}`;
 export const FETCH_MY_INFO = `${BACKEND_ROOT}/user/info/my`;
 export const FETCH_NOTIFICATION_LIST = (page: string) => `${BACKEND_ROOT}/notification/all/${page}`;
 export const FETCH_AGGREGATE_PURCHASED_LIST = (page: string) => `${BACKEND_ROOT}/user/purchased/aggregate/${page}`;

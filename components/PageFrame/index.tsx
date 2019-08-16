@@ -40,12 +40,8 @@ import {
     USER_LOGIN,
     USER_CENTER,
     HOMEPAGE,
-    BLOG_LIST_RAW,
-    BLOG_LIST,
-    SHOP_LIST_RAW,
-    SHOP_LIST,
-    FORUM_LIST_RAW,
-    FORUM_LIST,
+    THREAD_LIST_RAW,
+    THREAD_LIST,
     USER_REGISTER,
     USER_NOTIFICATION_CENTER,
     SEARCH_RAW,
@@ -101,20 +97,20 @@ class Bar extends React.PureComponent<Props> {
             {
                 icon: <SubjectIcon />,
                 title: "博客",
-                router: BLOG_LIST_RAW,
-                as: BLOG_LIST("1")
-            },
-            {
-                icon: <ShoppingCartIcon />,
-                title: "商城",
-                router: SHOP_LIST_RAW,
-                as: SHOP_LIST("1")
+                router: THREAD_LIST_RAW,
+                as: THREAD_LIST("1")
             },
             {
                 icon: <MessageIcon />,
                 title: "讨论",
-                router: FORUM_LIST_RAW,
-                as: FORUM_LIST("1")
+                router: THREAD_LIST_RAW,
+                as: THREAD_LIST("2")
+            },
+            {
+                icon: <ShoppingCartIcon />,
+                title: "商城",
+                router: THREAD_LIST_RAW,
+                as: THREAD_LIST("3")
             },
             {
                 icon: <PersonIcon />,

@@ -15,8 +15,7 @@ const styles = (theme: Theme) =>
             alignItems: "center"
         },
         secondaryHeading: {
-            color: theme.palette.text.secondary,
-            flexGrow: 1
+            color: theme.palette.text.secondary
         },
         "charge-container": {
             flexGrow: 1

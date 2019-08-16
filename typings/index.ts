@@ -6,6 +6,8 @@ export interface IGroup {
     gid: string;
     name: string;
     isAdmin: boolean;
+    canPost: boolean;
+    canLogin: boolean;
 }
 
 export interface IOtherUser {
@@ -138,7 +140,8 @@ export interface IForumItem {
     name: string;
     description: string;
     threads: number;
-    type: "blog" | "shop" | "normal";
+    type: "blog" | "image" | "normal";
+    adminPost: boolean;
 }
 
 export interface IGeneralResponse {

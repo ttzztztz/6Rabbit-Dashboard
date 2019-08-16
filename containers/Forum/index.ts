@@ -6,7 +6,7 @@ import { StoreState } from "../../reducers";
 
 const mapStateToProps = (_: StoreState) => ({});
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({});
+const mapDispatchToProps = (_dispatch: Dispatch) => ({});
 
 export default connect(
     mapStateToProps,

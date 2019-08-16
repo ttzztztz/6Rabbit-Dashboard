@@ -6,7 +6,7 @@ import { StoreState } from "../../reducers";
 import { enqueueSnackbar } from "../../actions";
 import { OptionsObject } from "notistack";
 
-const mapStateToProps = ({ basic: { forum } }: StoreState) => ({ forum });
+const mapStateToProps = ({ basic: { forum }, user: { isAdmin } }: StoreState) => ({ forum, isAdmin });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options))

@@ -2,79 +2,37 @@ import {
     IThreadListItem,
     ILoginResponse,
     IRegisterForm,
-    IReplyForm,
     IUpdatePasswordForm,
     IUpdateProfileForm,
     IOtherUser,
     IPostListItem,
     IThreadItemResponse,
-    IOAuthActionPayload
+    IOAuthActionPayload,
+    IForumItem
 } from "../typings";
 import { NextRouter } from "next/dist/client/router";
 
-export const GET_FORUM_LIST_START = "GET_FORUM_LIST_START";
-export type GET_FORUM_LIST_START = typeof GET_FORUM_LIST_START;
-export interface IGetForumListStart {
-    type: GET_FORUM_LIST_START;
+export const GET_THREAD_LIST_START = "GET_THREAD_LIST_START";
+export type GET_THREAD_LIST_START = typeof GET_THREAD_LIST_START;
+export interface IGetThreadListStart {
+    type: GET_THREAD_LIST_START;
+    fid: string;
     page: string;
 }
-export const getForumListStart = (page: string): IGetForumListStart => ({
-    type: GET_FORUM_LIST_START,
+export const getThreadListStart = (fid: string, page: string): IGetThreadListStart => ({
+    type: GET_THREAD_LIST_START,
+    fid,
     page
 });
 
-export const GET_FORUM_LIST_OK = "GET_FORUM_LIST_OK";
-export type GET_FORUM_LIST_OK = typeof GET_FORUM_LIST_OK;
-export interface IGetForumListOK {
-    type: GET_FORUM_LIST_OK;
+export const GET_THREAD_LIST_OK = "GET_THREAD_LIST_OK";
+export type GET_THREAD_LIST_OK = typeof GET_THREAD_LIST_OK;
+export interface IGetThreadListOK {
+    type: GET_THREAD_LIST_OK;
     payload: { list: Array<IThreadListItem>; total: number };
 }
-export const getForumListOK = (list: Array<IThreadListItem>, total: number): IGetForumListOK => ({
-    type: GET_FORUM_LIST_OK,
-    payload: { list, total }
-});
-
-export const GET_SHOP_LIST_START = "GET_SHOP_LIST_START";
-export type GET_SHOP_LIST_START = typeof GET_SHOP_LIST_START;
-export interface IGetShopListStart {
-    type: GET_SHOP_LIST_START;
-    page: string;
-}
-export const getShopListStart = (page: string): IGetShopListStart => ({
-    type: GET_SHOP_LIST_START,
-    page
-});
-
-export const GET_SHOP_LIST_OK = "GET_SHOP_LIST_OK";
-export type GET_SHOP_LIST_OK = typeof GET_SHOP_LIST_OK;
-export interface IGetShopListOK {
-    type: GET_SHOP_LIST_OK;
-    payload: { list: Array<IThreadListItem>; total: number };
-}
-export const getShopListOK = (list: Array<IThreadListItem>, total: number): IGetShopListOK => ({
-    type: GET_SHOP_LIST_OK,
-    payload: { list, total }
-});
-
-export const GET_BLOG_LIST_START = "GET_BLOG_LIST_START";
-export type GET_BLOG_LIST_START = typeof GET_BLOG_LIST_START;
-export interface IGetBlogListStart {
-    type: GET_BLOG_LIST_START;
-    page: string;
-}
-export const getBlogListStart = (page: string): IGetBlogListStart => ({
-    type: GET_BLOG_LIST_START,
-    page
-});
-
-export const GET_BLOG_LIST_OK = "GET_BLOG_LIST_OK";
-export type GET_BLOG_LIST_OK = typeof GET_BLOG_LIST_OK;
-export interface IGetBlogListOK {
-    type: GET_BLOG_LIST_OK;
-    payload: { list: Array<IThreadListItem>; total: number };
-}
-export const getBlogListOK = (list: Array<IThreadListItem>, total: number): IGetBlogListOK => ({
-    type: GET_BLOG_LIST_OK,
+export const getThreadListOK = (list: Array<IThreadListItem>, total: number): IGetThreadListOK => ({
+    type: GET_THREAD_LIST_OK,
     payload: { list, total }
 });
 
@@ -189,13 +147,35 @@ export const checkTokenOK = (): ICheckTokenOK => ({
     type: CHECK_TOKEN_OK
 });
 
-export const GET_FORUM_START = "GET_FORUM_START";
-export type GET_FORUM_START = typeof GET_FORUM_START;
-export interface IGetForumStart {
-    type: GET_FORUM_START;
+export const GET_FORUM_LIST_START = "GET_FORUM_LIST_START";
+export type GET_FORUM_LIST_START = typeof GET_FORUM_LIST_START;
+export interface IGetForumListStart {
+    type: GET_FORUM_LIST_START;
 }
-export const getForumStart = (): IGetForumStart => ({
-    type: GET_FORUM_START
+export const getForumListStart = (): IGetForumListStart => ({
+    type: GET_FORUM_LIST_START
+});
+
+export const GET_FORUM_INFO_START = "GET_FORUM_INFO_START";
+export type GET_FORUM_INFO_START = typeof GET_FORUM_INFO_START;
+export interface IGetForumInfoStart {
+    type: GET_FORUM_INFO_START;
+    fid: string;
+}
+export const getForumInfoStart = (fid: string): IGetForumInfoStart => ({
+    type: GET_FORUM_INFO_START,
+    fid
+});
+
+export const GET_FORUM_OK = "GET_FORUM_OK";
+export type GET_FORUM_OK = typeof GET_FORUM_OK;
+export interface IGetForumOK {
+    type: GET_FORUM_OK;
+    payload: IForumItem;
+}
+export const getForumOK = (payload: IForumItem): IGetForumOK => ({
+    type: GET_FORUM_OK,
+    payload
 });
 
 export const INIT_START = "INIT_START";

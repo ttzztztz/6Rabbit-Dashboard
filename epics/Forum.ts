@@ -5,32 +5,53 @@ import { from, of } from "rxjs";
 import { mergeMap, map } from "rxjs/operators";
 import axios from "axios";
 
-import { GET_FORUM_LIST_START, GET_FORUM_LIST_OK, IGetForumListStart, GET_FORUM_START, IGetForumStart, getForumListOK } from "../actions/async";
-import { FETCH_FORUM_LIST, FETCH_FORUM } from "../consts/backend";
+import {
+    GET_THREAD_LIST_START,
+    IGetThreadListStart,
+    GET_FORUM_LIST_START,
+    IGetForumListStart,
+    getThreadListOK,
+    IGetForumInfoStart,
+    GET_FORUM_INFO_START,
+    getForumOK
+} from "../actions/async";
+import { FETCH_THREAD_LIST, FETCH_FORUM_LIST, FETCH_FORUM_INFO } from "../consts/backend";
 import { IThreadListItem } from "../typings";
 import FrontendRequest from "../model/FrontendRequest";
 import { enqueueSnackbar, changeForum } from "../actions";
 
-const fetchForumList: Epic<IGetForumListStart> = action$ =>
+const fetchThreadList: Epic<IGetThreadListStart> = action$ =>
     action$.pipe(
-        ofType(GET_FORUM_LIST_START),
-        mergeMap(action =>
-            from(axios({ url: FETCH_FORUM_LIST(action.page), method: "GET" })).pipe(
+        ofType(GET_THREAD_LIST_START),
+        mergeMap(({ fid, page }) =>
+            from(axios({ url: FETCH_THREAD_LIST(fid, page), method: "GET" })).pipe(
                 map(({ data: { message } }) => {
                     const list: Array<IThreadListItem> = message.list as Array<IThreadListItem>;
                     const total = message.forum.threads;
 
-                    return getForumListOK(list, total);
+                    return getThreadListOK(list, total);
                 })
             )
         )
     );
 
-const fetchForum: Epic<IGetForumStart> = action$ =>
+const fetchForumInfo: Epic<IGetForumInfoStart> = action$ =>
     action$.pipe(
-        ofType(GET_FORUM_START),
+        ofType(GET_FORUM_INFO_START),
+        mergeMap(({ fid }) =>
+            from(axios({ url: FETCH_FORUM_INFO(fid), method: "GET" })).pipe(
+                map(({ data: { message } }) => {
+                    return getForumOK(message);
+                })
+            )
+        )
+    );
+
+const fetchForumList: Epic<IGetForumListStart> = action$ =>
+    action$.pipe(
+        ofType(GET_FORUM_LIST_START),
         mergeMap(() =>
-            FrontendRequest({ url: FETCH_FORUM, method: "GET" }).pipe(
+            FrontendRequest({ url: FETCH_FORUM_LIST, method: "GET" }).pipe(
                 mergeMap(({ data: { code, message } }) => {
                     if (code === 200) {
                         return of(changeForum(message));
@@ -42,4 +63,4 @@ const fetchForum: Epic<IGetForumStart> = action$ =>
         )
     );
 
-export default [fetchForumList, fetchForum];
+export default [fetchThreadList, fetchForumList, fetchForumInfo];

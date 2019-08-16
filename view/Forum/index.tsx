@@ -7,11 +7,11 @@ import { StateObservable, ActionsObservable } from "redux-observable";
 import { WithStyles, withStyles } from "@material-ui/core";
 
 import ThreadListComponent from "../../containers/ThreadList";
-import { IThreadListItem, IExtendedNextPageContext } from "../../typings";
+import { IThreadListItem, IExtendedNextPageContext, IForumItem } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
-import { FORUM_LIST_RAW, FORUM_LIST } from "../../consts/routers";
+import { THREAD_LIST, THREAD_LIST_RAW } from "../../consts/routers";
 import { Epics } from "../../epics";
-import { getForumListStart, IGetForumListStart } from "../../actions/async";
+import { getThreadListStart, IGetThreadListStart, getForumInfoStart, IGetForumInfoStart } from "../../actions/async";
 
 import { withRouter, NextRouter } from "next/dist/client/router";
 import Head from "next/head";
@@ -22,35 +22,58 @@ interface Props extends WithStyles {
     threadList: Array<IThreadListItem>;
     page: number;
     total: number;
+    fid: string;
+    forum: IForumItem;
 }
 
 class Forum extends React.PureComponent<Props> {
     static async getInitialProps({ store, query }: IExtendedNextPageContext) {
         const page = query["page"] as string;
+        const fid = query["fid"] as string;
 
         const state$ = new StateObservable(new Subject(), store.getState());
-        const {
-            payload: { list, total }
-        } = await Epics(of(getForumListStart(page)) as ActionsObservable<IGetForumListStart>, state$, {}).toPromise();
-
-        return { threadList: list, page: Number.parseInt(page), total };
+        const [
+            {
+                payload: { list, total }
+            },
+            { payload: forum }
+        ] = await Promise.all([
+            Epics(of(getThreadListStart(fid, page)) as ActionsObservable<IGetThreadListStart>, state$, {}).toPromise(),
+            Epics(of(getForumInfoStart(fid)) as ActionsObservable<IGetForumInfoStart>, state$, {}).toPromise()
+        ]);
+        return { threadList: list, page: Number.parseInt(page), total, fid, forum };
     }
 
     handlePageChange = (page: number) => {
-        const url = FORUM_LIST_RAW;
-        const as = FORUM_LIST(page.toString());
+        const url = THREAD_LIST_RAW;
+        const as = THREAD_LIST(page.toString());
         this.props.router.push(url, as);
     };
 
     render() {
-        const { threadList, page, total } = this.props;
+        const { threadList, page, total, forum } = this.props;
 
         return (
             <>
                 <Head>
-                    <title>{TITLE_PREFIX}讨论</title>
+                    <title>
+                        {TITLE_PREFIX}
+                        {forum.name}
+                    </title>
                 </Head>
-                <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} canAdmin={true} />
+                {forum.type === "normal" && (
+                    <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} canAdmin={true} />
+                )}
+                {forum.type === "blog" && (
+                    <ThreadListComponent
+                        threadList={threadList}
+                        total={total}
+                        page={page}
+                        onPageChange={this.handlePageChange}
+                        showAvatar={false}
+                        canAdmin={true}
+                    />
+                )}
             </>
         );
     }
