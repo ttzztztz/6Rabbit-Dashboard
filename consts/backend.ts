@@ -20,7 +20,6 @@ export const FETCH_OAUTH_BIND = (platform: string, code: string) => `${BACKEND_R
 export const FETCH_OAUTH_LOGIN = (platform: string, code: string) => `${BACKEND_ROOT}/oauth/login/${platform}/${code}`;
 export const FETCH_UNUSED_ATTACH = `${BACKEND_ROOT}/attach/unused`;
 export const FETCH_PICTURE_ATTACH = (aid: string) => `${BACKEND_ROOT}/file/picture/${aid}`;
-export const FETCH_THREAD_PAY = (tid: string) => `${BACKEND_ROOT}/thread/pay/${tid}`;
 export const FETCH_ATTACH_PAY = (aid: string) => `${BACKEND_ROOT}/attach/pay/${aid}`;
 export const FETCH_ATTACH_INFO = (aid: string) => `${BACKEND_ROOT}/attach/info/${aid}`;
 

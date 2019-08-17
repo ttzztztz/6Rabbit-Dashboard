@@ -197,7 +197,6 @@ export interface IThreadItemResponse {
     postList: Array<IPostListItem>;
     firstPost: IPostListItem;
     attachList: Array<IThreadAttach>;
-    needBuy: boolean;
 }
 
 export interface ISearchItem extends IUserPostItem {

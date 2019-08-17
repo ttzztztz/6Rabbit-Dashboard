@@ -49,7 +49,7 @@ import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach, IAttachPrefetchInfo } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
-import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD, FETCH_THREAD_PAY, FETCH_ATTACH_PAY, FETCH_ATTACH_INFO } from "../../consts/backend";
+import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD, FETCH_ATTACH_PAY, FETCH_ATTACH_INFO } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
 import getCreditsNameById from "../../model/CreditsName";
 
@@ -101,16 +101,15 @@ class Thread extends React.Component<Props> {
         attachExpanded: false as boolean | string,
         payDialog: {
             open: false,
-            type: "thread" as "thread" | "attach",
             data: "1",
             title: "",
             creditsType: 0,
             credits: 0
-        },
+        }
 
-        thread: this.props.thread,
-        attachList: this.props.attachList,
-        firstPost: this.props.firstPost
+        // thread: this.props.thread,
+        // attachList: this.props.attachList,
+        // firstPost: this.props.firstPost
     };
 
     handleChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -179,7 +178,6 @@ class Thread extends React.Component<Props> {
                 this.setState({
                     payDialog: {
                         open: true,
-                        type: "attach",
                         title: item.originalName,
                         data: attach.aid,
                         creditsType: attach.creditsType,
@@ -193,8 +191,7 @@ class Thread extends React.Component<Props> {
             return false;
         };
 
-        const { isLogin, enqueueSnackbar, uid } = this.props;
-        const { thread } = this.state;
+        const { isLogin, enqueueSnackbar, uid, thread } = this.props;
         const { aid } = item;
         const token = localStorage.getItem("token");
         if (!isLogin || !token) {
@@ -227,7 +224,7 @@ class Thread extends React.Component<Props> {
 
     renderPayDialog = () => {
         const {
-            payDialog: { open, type, data, creditsType, credits, title }
+            payDialog: { open, data, creditsType, credits, title }
         } = this.state;
 
         const handleDialogClose = () => {
@@ -242,7 +239,7 @@ class Thread extends React.Component<Props> {
             handleDialogClose();
 
             const { enqueueSnackbar } = this.props;
-            const url = type === "thread" ? FETCH_THREAD_PAY(data) : FETCH_ATTACH_PAY(data);
+            const url = FETCH_ATTACH_PAY(data);
             const {
                 data: { code, message }
             } = await FrontendRequest({
@@ -252,9 +249,7 @@ class Thread extends React.Component<Props> {
 
             if (code === 200) {
                 enqueueSnackbar("购买成功！", { variant: "success" });
-                if (type === "attach") {
-                    this.startDownload(data);
-                }
+                this.startDownload(data);
             } else {
                 enqueueSnackbar(message, { variant: "warning" });
             }
@@ -265,7 +260,7 @@ class Thread extends React.Component<Props> {
                 <DialogTitle>操作确认</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        请您先购买{type === "thread" ? "主题" : "附件"}：【{title}】，您需要支付{credits}
+                        请您先购买附件：【{title}】，您需要支付{credits}
                         {getCreditsNameById(creditsType)}。
                     </DialogContentText>
                 </DialogContent>
@@ -282,10 +277,11 @@ class Thread extends React.Component<Props> {
     };
 
     renderBuyThread = () => {
-        const { classes } = this.props;
         const {
+            classes,
             thread: { credits, creditsType }
-        } = this.state;
+        } = this.props;
+
         return (
             <div className={classes["purchase-container"]}>
                 该主题为付费主题，您需要先支付{credits}
@@ -295,8 +291,8 @@ class Thread extends React.Component<Props> {
     };
 
     render() {
-        const { classes, isAdmin, uid, needBuy } = this.props;
-        const { postList, reply, page, attachExpanded, thread, firstPost, attachList } = this.state;
+        const { classes, isAdmin, uid, needBuy, thread, firstPost, attachList } = this.props;
+        const { postList, reply, page, attachExpanded } = this.state;
 
         return (
             <>
