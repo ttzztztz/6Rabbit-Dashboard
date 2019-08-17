@@ -10,7 +10,7 @@ import Head from "next/head";
 import { NextRouter, withRouter } from "next/dist/client/router";
 
 import { TITLE_PREFIX } from "../../consts";
-import { HOMEPAGE, USER_CENTER, USER_REGISTER } from "../../consts/routers";
+import { HOMEPAGE, USER_CENTER, USER_REGISTER, USER_LOGIN } from "../../consts/routers";
 import { IOAuthActionPayload } from "../../typings";
 import AvatarBoard from "../../components/AvatarBoard";
 
@@ -62,7 +62,7 @@ class OAuthView extends React.PureComponent<Props> {
     };
     handleRegister = () => {
         const { router } = this.props;
-        const url = USER_CENTER;
+        const url = USER_LOGIN;
         const as = USER_REGISTER;
         router.push(url, as);
     };

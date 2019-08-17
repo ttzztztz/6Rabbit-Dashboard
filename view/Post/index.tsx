@@ -15,7 +15,7 @@ import MessageIcon from "@material-ui/icons/Message";
 import Head from "next/head";
 import { NextRouter, withRouter } from "next/dist/client/router";
 
-import { IPostPageType, IForumItem, IGeneralResponse, IThreadAttach } from "../../typings";
+import { IPostPageType, IForumItem, IGeneralResponse, IThreadAttach, ICreditsTypeMapper } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { requestCreateThread, requestEditReply, requestEditThread, requestReply } from "../../model/Post";
 import FrontendRequest from "../../model/FrontendRequest";
@@ -61,7 +61,10 @@ class Post extends React.PureComponent<Props> {
             subject = "";
 
         if (pathname === "/thread/create") {
-            await this.fetchUnusedAttach();
+            const attach = await this.fetchUnusedAttach();
+            this.setState({
+                attach
+            });
         } else if (pathname === "/thread/update/[tid]") {
             const tid = query["tid"] as string;
             const [
@@ -70,13 +73,16 @@ class Post extends React.PureComponent<Props> {
                         message: {
                             thread: {
                                 subject: currentSubject,
-                                forum: { fid: currentFid }
+                                forum: { fid: currentFid },
+                                creditsType,
+                                credits
                             },
                             firstPost: { message: currentMessage },
                             attachList
                         }
                     }
-                }
+                },
+                attach
             ] = await Promise.all([
                 FrontendRequest({
                     url: FETCH_THREAD(tid, "1"),
@@ -85,9 +91,10 @@ class Post extends React.PureComponent<Props> {
                 this.fetchUnusedAttach()
             ]);
 
-            const { attach } = this.state;
             this.setState({
-                attach: [...attach, ...attachList]
+                attach: [...attach, ...attachList],
+                creditsType,
+                credits
             });
 
             [subject, fid, message] = [currentSubject, currentFid, currentMessage];
@@ -128,14 +135,13 @@ class Post extends React.PureComponent<Props> {
         }).toPromise();
 
         if (code === 200) {
-            const { attach } = this.state;
-            this.setState({
-                attach: [...attach, ...message]
-            });
+            return message as Array<IThreadAttach>;
         } else {
             const { enqueueSnackbar } = this.props;
             enqueueSnackbar(message, { variant: "error" });
         }
+
+        return [];
     };
 
     state = {
@@ -144,12 +150,14 @@ class Post extends React.PureComponent<Props> {
         message: "",
         attach: [] as Array<IThreadAttach>,
         editorState: BraftEditor.createEditorState("<p>Hello <b>World!</b></p>"),
-        isPost: false
+        isPost: false,
+        creditsType: 0,
+        credits: 0
     };
 
-    handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    handleChange = (key: string, isNumber: boolean = false) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         this.setState({
-            [key]: e.target.value
+            [key]: isNumber ? Number.parseInt(e.target.value) : e.target.value
         });
     };
     handleContentChange = (editorState: any) => {
@@ -158,7 +166,6 @@ class Post extends React.PureComponent<Props> {
             message: editorState.toHTML()
         });
     };
-
     showSnackbar = ({ code, message }: IGeneralResponse) => {
         const { enqueueSnackbar, router } = this.props;
         const optTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
@@ -171,8 +178,8 @@ class Post extends React.PureComponent<Props> {
     };
 
     createThread = async () => {
-        const { fid, subject, message, attach } = this.state;
-        const res = await requestCreateThread(fid, subject, message, attach);
+        const { fid, subject, message, attach, creditsType, credits } = this.state;
+        const res = await requestCreateThread(fid, subject, message, attach, creditsType, credits);
         const { code, message: responseMsg } = res;
 
         this.showSnackbar(res);
@@ -181,8 +188,8 @@ class Post extends React.PureComponent<Props> {
         const { router } = this.props;
         const tid = router.query["tid"] as string;
 
-        const { fid, subject, message, attach } = this.state;
-        const res = await requestEditThread(tid, fid, subject, message, attach);
+        const { fid, subject, message, attach, creditsType, credits } = this.state;
+        const res = await requestEditThread(tid, fid, subject, message, attach, creditsType, credits);
         const { code, message: responseMsg } = res;
 
         this.showSnackbar(res);
@@ -226,7 +233,6 @@ class Post extends React.PureComponent<Props> {
                 break;
         }
     };
-
     renderEditor = () => {
         const { classes } = this.props;
         const { editorState } = this.state;
@@ -242,7 +248,6 @@ class Post extends React.PureComponent<Props> {
             />
         );
     };
-
     renderAttach = () => {
         const handleRemove = async (item: IThreadAttach) => {
             const {
@@ -273,6 +278,46 @@ class Post extends React.PureComponent<Props> {
 
         const { attach } = this.state;
         return <Upload fileList={attach} onRemove={handleRemove} onChange={handleChange} onInsertImage={handleInsertImage} />;
+    };
+    renderSeller = () => {
+        const { classes } = this.props;
+        const { creditsType, credits } = this.state;
+
+        return (
+            <div className={classes["charge-container"]}>
+                <TextField
+                    select
+                    label="帖子收费"
+                    className={classes["charge-field"]}
+                    value={creditsType}
+                    onChange={this.handleChange("creditsType", true)}
+                    SelectProps={{
+                        MenuProps: {
+                            className: classes.menu
+                        }
+                    }}
+                    margin="dense"
+                    variant="outlined"
+                >
+                    {ICreditsTypeMapper.map(item => (
+                        <MenuItem key={item.id} value={item.id}>
+                            {item.text}
+                        </MenuItem>
+                    ))}
+                </TextField>
+                {creditsType !== 0 && (
+                    <TextField
+                        label="收费价格"
+                        value={credits}
+                        onChange={this.handleChange("credits", true)}
+                        type="number"
+                        className={classes["charge-field"]}
+                        margin="dense"
+                        variant="outlined"
+                    />
+                )}
+            </div>
+        );
     };
 
     render() {
@@ -329,6 +374,7 @@ class Post extends React.PureComponent<Props> {
                     )}
                     <div className={classes["content-container"]}>{this.renderEditor()}</div>
                     {!isPost && this.renderAttach()}
+                    {!isPost && this.renderSeller()}
                     <div className={classes["btn-container"]}>
                         <Fab variant="extended" size="medium" color="primary" aria-label="add" className={classes.button} onClick={this.handleSubmitClick}>
                             <MessageIcon className={classes["btn-icon"]} />

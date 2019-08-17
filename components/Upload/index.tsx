@@ -189,7 +189,7 @@ class UserPostList extends React.Component<Props> {
         }
         const suffix = splitedArr[splitedArr.length - 1].toLowerCase();
 
-        if (splitedArr.length >= 2 && SUPPORT_IMAGE_PREVIEW_SUFFIX.includes(suffix)) {
+        if (splitedArr.length >= 2 && SUPPORT_IMAGE_PREVIEW_SUFFIX.includes(suffix) && item.credits === 0 && item.creditsType === 0) {
             return (
                 <Button variant="contained" color="primary" className={classes.button} size="medium" onClick={this.handleInsertImage(item.aid)}>
                     插入

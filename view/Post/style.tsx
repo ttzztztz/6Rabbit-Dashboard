@@ -42,6 +42,13 @@ const styles = (theme: Theme) =>
         "title-container": {
             display: "flex",
             flexFlow: "row nowrap"
+        },
+        "charge-container": {
+            flexGrow: 1
+        },
+        "charge-field": {
+            width: "200px",
+            marginRight: "6px"
         }
     });
 

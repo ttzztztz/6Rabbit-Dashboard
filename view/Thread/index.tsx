@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { OptionsObject } from "notistack";
 
 import { WithStyles, withStyles } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -17,6 +18,11 @@ import Fab from "@material-ui/core/Fab";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import MessageIcon from "@material-ui/icons/Message";
 import LockIcon from "@material-ui/icons/Lock";
@@ -40,21 +46,24 @@ import PaginationComponent from "../../components/Pagination";
 import ThreadAdminPanel from "../../containers/ThreadAdminPanel";
 import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
 import { TITLE_SUFFIX } from "../../consts";
-import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach } from "../../typings";
+import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach, IAttachPrefetchInfo } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
-import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD } from "../../consts/backend";
+import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD, FETCH_THREAD_PAY, FETCH_ATTACH_PAY, FETCH_ATTACH_INFO } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
+import getCreditsNameById from "../../model/CreditsName";
 
 interface Props extends WithStyles {
     router: NextRouter;
 
     tid: string;
     isAdmin: boolean;
+    needBuy: boolean;
+
     thread: IThreadListItem;
     firstPost: IPostListItem;
-    needBuy: boolean;
     attachList: Array<IThreadAttach>;
+
     uid: string;
     isLogin: boolean;
 
@@ -72,8 +81,15 @@ class Thread extends React.Component<Props> {
         const state$ = new StateObservable(new Subject(), store.getState());
         const { payload } = await Epics(of(getThreadInfoStart(tid, page)) as ActionsObservable<IGetThreadInfoStart>, state$, {}).toPromise();
 
-        return { defaultPage: page, tid, ...payload, defaultRes: payload.postList };
+        return { defaultPage: Number.parseInt(page), tid, ...payload, defaultRes: payload.postList };
     }
+
+    componentDidMount() {
+        const { defaultRes } = this.props;
+        this.patchPostList(defaultRes);
+    }
+
+    refetchInfo = async () => {};
 
     state = {
         reply: "",
@@ -82,7 +98,19 @@ class Thread extends React.Component<Props> {
         postList: [] as Array<IPostListItem>,
         page: this.props.defaultPage,
 
-        attachExpanded: false as boolean | string
+        attachExpanded: false as boolean | string,
+        payDialog: {
+            open: false,
+            type: "thread" as "thread" | "attach",
+            data: "1",
+            title: "",
+            creditsType: 0,
+            credits: 0
+        },
+
+        thread: this.props.thread,
+        attachList: this.props.attachList,
+        firstPost: this.props.firstPost
     };
 
     handleChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -129,25 +157,58 @@ class Thread extends React.Component<Props> {
         }
     };
 
-    componentDidMount() {
-        const { defaultRes } = this.props;
-        this.patchPostList(defaultRes);
-    }
-
     handleExpandPanel = (panel: string) => (_e: React.ChangeEvent<{}>, isExpanded: boolean) => {
         this.setState({
             attachExpanded: isExpanded ? panel : false
         });
     };
 
-    handleDownload = (aid: string) => () => {
-        const { isLogin, enqueueSnackbar } = this.props;
+    handleDownload = (item: IThreadAttach) => async () => {
+        const attachNeedBuyPrefetch = async (aid: string) => {
+            const { enqueueSnackbar } = this.props;
+
+            const {
+                data: { code, message }
+            } = await FrontendRequest({
+                url: FETCH_ATTACH_INFO(aid),
+                method: "GET"
+            }).toPromise();
+
+            if (code === 200) {
+                const { needBuy, attach } = message as IAttachPrefetchInfo;
+                this.setState({
+                    payDialog: {
+                        open: true,
+                        type: "attach",
+                        title: item.originalName,
+                        data: attach.aid,
+                        creditsType: attach.creditsType,
+                        credits: attach.credits
+                    }
+                });
+                return needBuy;
+            } else {
+                enqueueSnackbar(message, { variant: "error" });
+            }
+            return false;
+        };
+
+        const { isLogin, enqueueSnackbar, uid } = this.props;
+        const { thread } = this.state;
+        const { aid } = item;
         const token = localStorage.getItem("token");
         if (!isLogin || !token) {
             enqueueSnackbar("请先登录！", { variant: "error" });
             return;
         }
 
+        if (item.credits === 0 || item.creditsType === 0 || uid === thread.user.uid || !(await attachNeedBuyPrefetch(aid))) {
+            this.startDownload(item.aid);
+        }
+    };
+
+    startDownload = (aid: string) => {
+        const token = localStorage.getItem("token");
         const tempForm = document.createElement("form");
         tempForm.action = POST_FILE_DOWNLOAD(aid);
         tempForm.target = "_blank";
@@ -164,9 +225,79 @@ class Thread extends React.Component<Props> {
         tempForm.remove();
     };
 
+    renderPayDialog = () => {
+        const {
+            payDialog: { open, type, data, creditsType, credits, title }
+        } = this.state;
+
+        const handleDialogClose = () => {
+            this.setState({
+                payDialog: {
+                    ...this.state.payDialog,
+                    open: false
+                }
+            });
+        };
+        const handleConirmBtnClick = async () => {
+            handleDialogClose();
+
+            const { enqueueSnackbar } = this.props;
+            const url = type === "thread" ? FETCH_THREAD_PAY(data) : FETCH_ATTACH_PAY(data);
+            const {
+                data: { code, message }
+            } = await FrontendRequest({
+                url,
+                method: "GET"
+            }).toPromise();
+
+            if (code === 200) {
+                enqueueSnackbar("购买成功！", { variant: "success" });
+                if (type === "attach") {
+                    this.startDownload(data);
+                }
+            } else {
+                enqueueSnackbar(message, { variant: "warning" });
+            }
+        };
+
+        return (
+            <Dialog open={open} onClose={handleDialogClose}>
+                <DialogTitle>操作确认</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        请您先购买{type === "thread" ? "主题" : "附件"}：【{title}】，您需要支付{credits}
+                        {getCreditsNameById(creditsType)}。
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleConirmBtnClick} color="primary">
+                        确认购买
+                    </Button>
+                    <Button onClick={handleDialogClose} color="primary">
+                        取消购买
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
+
+    renderBuyThread = () => {
+        const { classes } = this.props;
+        const {
+            thread: { credits, creditsType }
+        } = this.state;
+        return (
+            <div className={classes["purchase-container"]}>
+                该主题为付费主题，您需要先支付{credits}
+                {getCreditsNameById(creditsType)}后才能查看哦！
+            </div>
+        );
+    };
+
     render() {
-        const { classes, thread, firstPost, isAdmin, uid, attachList } = this.props;
-        const { postList, reply, page, attachExpanded } = this.state;
+        const { classes, isAdmin, uid, needBuy } = this.props;
+        const { postList, reply, page, attachExpanded, thread, firstPost, attachList } = this.state;
+
         return (
             <>
                 <Head>
@@ -177,8 +308,8 @@ class Thread extends React.Component<Props> {
                 </Head>
                 <Paper className={clsx(classes.paperRoot, classes["title-bar"])}>
                     <div className={classes["thread-avatar"]}>
-                        <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
-                            <Avatar src={FETCH_AVATAR(uid)} width={48} />
+                        <Link href={USER_PROFILE_RAW} as={USER_PROFILE(thread.user.uid)} passHref>
+                            <Avatar src={FETCH_AVATAR(thread.user.uid)} width={48} />
                         </Link>
                     </div>
                     <div>
@@ -189,7 +320,7 @@ class Thread extends React.Component<Props> {
                             {thread.subject}
                         </Typography>
                         <Typography variant="body1" className={classes["second-info"]}>
-                            <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
+                            <Link href={USER_PROFILE_RAW} as={USER_PROFILE(thread.user.uid)} passHref>
                                 <span className={classes["author-username"]}>{thread.user.username}</span>
                             </Link>
                             <span>{new Date(thread.createDate).toLocaleString()}</span>
@@ -197,13 +328,11 @@ class Thread extends React.Component<Props> {
                     </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>
-                    <div id="content-container" className="braft-output-content" dangerouslySetInnerHTML={{ __html: firstPost.message }} />
-                    {(isAdmin || uid === thread.user.uid) && (
-                        <>
-                            <ThreadAdminPanel target={[thread.tid]} />
-                        </>
-                    )}
+                    {!needBuy && <div id="content-container" className="braft-output-content" dangerouslySetInnerHTML={{ __html: firstPost.message }} />}
+                    {needBuy && this.renderBuyThread()}
+                    {(isAdmin || uid === thread.user.uid) && <ThreadAdminPanel target={[thread.tid]} />}
                 </Paper>
+                {(attachList.length > 0 || needBuy) && this.renderPayDialog()}
                 {attachList.length > 0 && (
                     <div className={classes["attach-list-container"]}>
                         {attachList.map(item => (
@@ -222,13 +351,7 @@ class Thread extends React.Component<Props> {
                                         上传时间：{new Date(item.createDate).toLocaleString()}
                                     </div>
                                     <div className={classes["btn-container"]}>
-                                        <Fab
-                                            variant="extended"
-                                            size="medium"
-                                            color="primary"
-                                            className={classes.button}
-                                            onClick={this.handleDownload(item.aid)}
-                                        >
+                                        <Fab variant="extended" size="medium" color="primary" className={classes.button} onClick={this.handleDownload(item)}>
                                             <ArrowDownwardIcon className={classes["icon"]} />
                                             下载
                                         </Fab>

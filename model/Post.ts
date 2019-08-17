@@ -8,13 +8,36 @@ export const requestReply = async (tid: string, message: string, quotepid: strin
     return data as IGeneralResponse;
 };
 
-export const requestCreateThread = async (fid: string, subject: string, message: string, attachList: Array<IThreadAttachForm>) => {
-    const { data } = await FrontendRequest({ url: POST_THREAD_CREATE, data: { fid, subject, message, attach: attachList }, method: "POST" }).toPromise();
+export const requestCreateThread = async (
+    fid: string,
+    subject: string,
+    message: string,
+    attachList: Array<IThreadAttachForm>,
+    creditsType: number,
+    credits: number
+) => {
+    const { data } = await FrontendRequest({
+        url: POST_THREAD_CREATE,
+        data: { fid, subject, message, attach: attachList, creditsType, credits },
+        method: "POST"
+    }).toPromise();
     return data as IGeneralResponse;
 };
 
-export const requestEditThread = async (tid: string, fid: string, subject: string, message: string, attachList: Array<IThreadAttachForm>) => {
-    const { data } = await FrontendRequest({ url: OPTIONS_THREAD(tid), data: { fid, subject, message, attach: attachList }, method: "PUT" }).toPromise();
+export const requestEditThread = async (
+    tid: string,
+    fid: string,
+    subject: string,
+    message: string,
+    attachList: Array<IThreadAttachForm>,
+    creditsType: number,
+    credits: number
+) => {
+    const { data } = await FrontendRequest({
+        url: OPTIONS_THREAD(tid),
+        data: { fid, subject, message, attach: attachList, creditsType, credits },
+        method: "PUT"
+    }).toPromise();
     return data as IGeneralResponse;
 };
 

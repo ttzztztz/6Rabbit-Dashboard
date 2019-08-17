@@ -56,6 +56,8 @@ export interface IThreadAttach {
     creditsType: 0 | 1 | 2 | 3;
     credits: number;
     createDate: Date;
+
+    needBuy?: boolean;
 }
 
 export const ICreditsTypeMapper = [
@@ -244,4 +246,9 @@ export interface IUploadingItem {
     file: File;
     progress: number;
     tempId: string;
+}
+
+export interface IAttachPrefetchInfo {
+    attach: IThreadAttach;
+    needBuy: boolean;
 }
