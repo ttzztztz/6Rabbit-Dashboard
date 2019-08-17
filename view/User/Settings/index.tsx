@@ -20,7 +20,7 @@ import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import { OptionsObject } from "notistack";
 import { NextRouter, withRouter } from "next/dist/client/router";
 
-import FrontendRequest from "../../../model/FrontendRequest";
+import FrontendRequestObservable from "../../../model/FrontendRequestObservable";
 import { FETCH_MY_INFO, FETCH_OAUTH_LIST, FETCH_OAUTH_REDIRECT, DELETE_OAUTH_BIND, FETCH_AVATAR, POST_AVATAR_UPLOAD } from "../../../consts/backend";
 import { IUpdateProfileForm, IUpdatePasswordForm, IOAuth } from "../../../typings";
 import { MAX_UPLOAD_AVATAR_SIZE } from "../../../consts";
@@ -68,7 +68,7 @@ class Settings extends React.Component<Props> {
         const { enqueueSnackbar } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequest({ url: FETCH_MY_INFO, method: "GET" }).toPromise();
+        } = await FrontendRequestObservable({ url: FETCH_MY_INFO, method: "GET" }).toPromise();
 
         if (code === 200) {
             this.setState({
@@ -84,7 +84,7 @@ class Settings extends React.Component<Props> {
         const { enqueueSnackbar } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequest({ url: FETCH_OAUTH_LIST, method: "GET" }).toPromise();
+        } = await FrontendRequestObservable({ url: FETCH_OAUTH_LIST, method: "GET" }).toPromise();
 
         if (code === 200) {
             this.setState({
@@ -121,7 +121,7 @@ class Settings extends React.Component<Props> {
             const handleUnbind = async () => {
                 const {
                     data: { code, message }
-                } = await FrontendRequest({
+                } = await FrontendRequestObservable({
                     url: DELETE_OAUTH_BIND(platform),
                     method: "DELETE"
                 }).toPromise();

@@ -9,7 +9,8 @@ import { OptionsObject } from "notistack";
 const mapStateToProps = ({ basic: { forum } }: StoreState) => ({ forum });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options))
+    enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),
+    dispatch
 });
 
 export default connect(

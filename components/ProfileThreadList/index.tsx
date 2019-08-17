@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./style";
+import { Dispatch } from "redux";
 
 import { OptionsObject } from "notistack";
 
@@ -12,8 +13,8 @@ import Typography from "@material-ui/core/Typography";
 import ThreadList from "../../containers/ThreadList";
 import UserPostList from "../UserPostList";
 import { IThreadListItem, IUserPostItem } from "../../typings";
-import FrontendRequest from "../../model/FrontendRequest";
 import { FETCH_USER_THREAD_LIST, FETCH_USER_POST_LIST, FETCH_AGGREGATE_PURCHASED_LIST } from "../../consts/backend";
+import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 
 interface Props extends WithStyles {
     showPurchased: boolean;
@@ -21,6 +22,7 @@ interface Props extends WithStyles {
     uid: string;
 
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
+    dispatch: Dispatch;
 }
 
 enum ActivePage {
@@ -43,10 +45,10 @@ class ProfileThreadList extends React.PureComponent<Props> {
         total: 0
     };
     fetchThreadList = async (page: number) => {
-        const { uid, enqueueSnackbar } = this.props;
+        const { uid, enqueueSnackbar, dispatch } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequest({ url: FETCH_USER_THREAD_LIST(uid, page.toString()) }).toPromise();
+        } = await FrontendRequestPromise({ url: FETCH_USER_THREAD_LIST(uid, page.toString()) }, dispatch);
         if (code === 200) {
             this.setState({
                 total: message.threads,
@@ -57,10 +59,10 @@ class ProfileThreadList extends React.PureComponent<Props> {
         }
     };
     fetchPostList = async (page: number) => {
-        const { uid, enqueueSnackbar } = this.props;
+        const { uid, enqueueSnackbar, dispatch } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequest({ url: FETCH_USER_POST_LIST(uid, page.toString()) }).toPromise();
+        } = await FrontendRequestPromise({ url: FETCH_USER_POST_LIST(uid, page.toString()) }, dispatch);
         if (code === 200) {
             this.setState({
                 total: message.posts,
@@ -71,10 +73,10 @@ class ProfileThreadList extends React.PureComponent<Props> {
         }
     };
     fetchPurchasedList = async (page: number) => {
-        const { enqueueSnackbar } = this.props;
+        const { enqueueSnackbar, dispatch } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequest({ url: FETCH_AGGREGATE_PURCHASED_LIST(page.toString()) }).toPromise();
+        } = await FrontendRequestPromise({ url: FETCH_AGGREGATE_PURCHASED_LIST(page.toString()) }, dispatch);
         if (code === 200) {
             this.setState({
                 total: message.count,

@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { from } from "rxjs";
 
-const FrontendRequest = (options: AxiosRequestConfig) => {
+const FrontendRequestObservable = (options: AxiosRequestConfig) => {
     const token: string = localStorage.getItem("token") || "";
     if (options.headers) {
         return from(
@@ -25,4 +25,4 @@ const FrontendRequest = (options: AxiosRequestConfig) => {
     }
 };
 
-export default FrontendRequest;
+export default FrontendRequestObservable;

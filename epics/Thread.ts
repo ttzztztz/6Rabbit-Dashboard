@@ -1,10 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
-
 import { from, of } from "rxjs";
 import { ofType } from "redux-observable";
-import { mergeMap, map } from "rxjs/operators";
+import { mergeMap, map, startWith, catchError } from "rxjs/operators";
 
-import { Epic } from "./index";
+import { Epic, errHandler } from "./index";
 import {
     GET_THREAD_INFO_START,
     IGetThreadInfoStart,
@@ -19,8 +18,8 @@ import {
     SET_DIAMOND_THREAD_START
 } from "../actions/async";
 import { FETCH_THREAD, DELETE_MANY_THREADS, OPTIONS_THREAD, POST_THREAD_CLOSE, POST_THREAD_TOP, POST_THREAD_DIAMOND } from "../consts/backend";
-import FrontendRequest from "../model/FrontendRequest";
-import { enqueueSnackbar } from "../actions";
+import FrontendRequestObservable from "../model/FrontendRequestObservable";
+import { enqueueSnackbar, toggleProgress } from "../actions";
 
 const fetchThreadInfo: Epic<IGetThreadInfoStart> = action$ =>
     action$.pipe(
@@ -37,76 +36,88 @@ const deleteThread: Epic<IDeleteThreadStart> = action$ =>
                 method: "DELETE",
                 data: payload
             };
-            return FrontendRequest(requestOptions).pipe(
+            return FrontendRequestObservable(requestOptions).pipe(
                 mergeMap(({ data: { code, message } }) => {
                     if (code === 200) {
-                        return of(enqueueSnackbar("删除成功！", { variant: "success" }));
+                        return of(enqueueSnackbar("删除成功！", { variant: "success" }), toggleProgress());
                     } else {
-                        return of(enqueueSnackbar(message, { variant: "error" }));
+                        return of(enqueueSnackbar(message, { variant: "error" }), toggleProgress());
                     }
-                })
+                }),
+                startWith(toggleProgress(true)),
+                catchError(err => errHandler(err))
             );
-        })
+        }),
+        catchError(err => errHandler(err))
     );
 
 const setCloseThread: Epic<ISetCloseThreadStart> = action$ =>
     action$.pipe(
         ofType(SET_CLOSE_THREAD_START),
         mergeMap(({ payload }) =>
-            FrontendRequest({
+            FrontendRequestObservable({
                 url: POST_THREAD_CLOSE,
                 method: "POST",
                 data: payload
             }).pipe(
                 mergeMap(({ data: { code, message } }) => {
                     if (code === 200) {
-                        return of(enqueueSnackbar("设置成功！", { variant: "success" }));
+                        return of(enqueueSnackbar("设置成功！", { variant: "success" }), toggleProgress());
                     } else {
-                        return of(enqueueSnackbar(message, { variant: "error" }));
+                        return of(enqueueSnackbar(message, { variant: "error" }), toggleProgress());
                     }
-                })
+                }),
+                startWith(toggleProgress(true)),
+                catchError(err => errHandler(err))
             )
-        )
+        ),
+        catchError(err => errHandler(err))
     );
 
 const setTopThread: Epic<ISetTopThreadStart> = action$ =>
     action$.pipe(
         ofType(SET_TOP_THREAD_START),
         mergeMap(({ payload }) =>
-            FrontendRequest({
+            FrontendRequestObservable({
                 url: POST_THREAD_TOP,
                 method: "POST",
                 data: payload
             }).pipe(
                 mergeMap(({ data: { code, message } }) => {
                     if (code === 200) {
-                        return of(enqueueSnackbar("设置成功！", { variant: "success" }));
+                        return of(enqueueSnackbar("设置成功！", { variant: "success" }), toggleProgress());
                     } else {
-                        return of(enqueueSnackbar(message, { variant: "error" }));
+                        return of(enqueueSnackbar(message, { variant: "error" }), toggleProgress());
                     }
-                })
+                }),
+                startWith(toggleProgress(true)),
+                catchError(err => errHandler(err))
             )
-        )
+        ),
+        catchError(err => errHandler(err))
     );
 
 const setDiamondThread: Epic<ISetDiamondThreadStart> = action$ =>
     action$.pipe(
         ofType(SET_DIAMOND_THREAD_START),
         mergeMap(({ payload }) =>
-            FrontendRequest({
+            FrontendRequestObservable({
                 url: POST_THREAD_DIAMOND,
                 method: "POST",
                 data: payload
             }).pipe(
                 mergeMap(({ data: { code, message } }) => {
                     if (code === 200) {
-                        return of(enqueueSnackbar("设置成功！", { variant: "success" }));
+                        return of(enqueueSnackbar("设置成功！", { variant: "success" }), toggleProgress());
                     } else {
-                        return of(enqueueSnackbar(message, { variant: "error" }));
+                        return of(enqueueSnackbar(message, { variant: "error" }), toggleProgress());
                     }
-                })
+                }),
+                startWith(toggleProgress(true)),
+                catchError(err => errHandler(err))
             )
-        )
+        ),
+        catchError(err => errHandler(err))
     );
 
 export default [fetchThreadInfo, deleteThread, setCloseThread, setTopThread, setDiamondThread];

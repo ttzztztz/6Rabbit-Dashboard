@@ -1,8 +1,8 @@
-import { Epic } from "./index";
+import { Epic, errHandler } from "./index";
 
 import { ofType } from "redux-observable";
 import { from, of } from "rxjs";
-import { mergeMap, map } from "rxjs/operators";
+import { mergeMap, map, startWith, catchError } from "rxjs/operators";
 import axios from "axios";
 
 import {
@@ -17,8 +17,8 @@ import {
 } from "../actions/async";
 import { FETCH_THREAD_LIST, FETCH_FORUM_LIST, FETCH_FORUM_INFO } from "../consts/backend";
 import { IThreadListItem, IForumItem } from "../typings";
-import FrontendRequest from "../model/FrontendRequest";
-import { enqueueSnackbar, changeForum } from "../actions";
+import FrontendRequestObservable from "../model/FrontendRequestObservable";
+import { enqueueSnackbar, changeForum, toggleProgress } from "../actions";
 
 const fetchThreadList: Epic<IGetThreadListStart> = action$ =>
     action$.pipe(
@@ -51,16 +51,19 @@ const fetchForumList: Epic<IGetForumListStart> = action$ =>
     action$.pipe(
         ofType(GET_FORUM_LIST_START),
         mergeMap(() =>
-            FrontendRequest({ url: FETCH_FORUM_LIST, method: "GET" }).pipe(
+            FrontendRequestObservable({ url: FETCH_FORUM_LIST, method: "GET" }).pipe(
                 mergeMap(({ data: { code, message } }) => {
                     if (code === 200) {
-                        return of(changeForum(message));
+                        return of(toggleProgress(), changeForum(message));
                     } else {
-                        return of(enqueueSnackbar(message, { variant: "error" }));
+                        return of(enqueueSnackbar(message, { variant: "error" }), toggleProgress());
                     }
-                })
+                }),
+                startWith(toggleProgress(true)),
+                catchError(err => errHandler(err))
             )
-        )
+        ),
+        catchError(err => errHandler(err))
     );
 
 export default [fetchThreadList, fetchForumList, fetchForumInfo];

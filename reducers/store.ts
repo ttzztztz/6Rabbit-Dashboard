@@ -13,4 +13,5 @@ const initStore = () => {
 
     return store;
 };
+
 export default initStore;

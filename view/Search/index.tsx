@@ -11,7 +11,7 @@ import { OptionsObject } from "notistack";
 import { withRouter, NextRouter } from "next/dist/client/router";
 import Head from "next/head";
 
-import FrontendRequest from "../../model/FrontendRequest";
+import FrontendRequestObservable from "../../model/FrontendRequestObservable";
 import { POST_THREAD_SEARCH } from "../../consts/backend";
 import UserPostList from "../../components/UserPostList";
 import { ISearchItem, ISearchResponse } from "../../typings";
@@ -36,7 +36,7 @@ class Search extends React.PureComponent<Props> {
     fetchData = async (keywords: string, page: string) => {
         const {
             data: { code, message }
-        } = await FrontendRequest({
+        } = await FrontendRequestObservable({
             url: POST_THREAD_SEARCH(page),
             method: "POST",
             data: {

@@ -19,7 +19,7 @@ type Action =
 
 const initState: BasicStore = {
     title: "酷兔网",
-    loading: false,
+    loading: true,
     isLogin: false,
     snackbars: [],
     forum: []

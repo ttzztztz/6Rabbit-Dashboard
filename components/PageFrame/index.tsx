@@ -288,7 +288,6 @@ class Bar extends React.PureComponent<Props> {
                         <Toolbar>
                             <IconButton
                                 color="inherit"
-                                aria-label="Open drawer"
                                 onClick={this.handleDrawerOpen}
                                 edge="start"
                                 className={clsx(classes.menuButton, {
@@ -339,7 +338,7 @@ class Bar extends React.PureComponent<Props> {
                         <div className={classes["content-children-container"]}>{this.props.children}</div>
                         <Footer />
                     </main>
-                    {loading && <LinearProgress className={classes.progess} color="secondary" />}
+                    {loading && <LinearProgress className={classes.progess} color="primary" />}
                     {isLogin && (
                         <Link href="/thread/create">
                             <div className={classes["post-btn-container"]}>

@@ -39,7 +39,7 @@ import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 
-import FrontendRequest from "../../model/FrontendRequest";
+import FrontendRequestObservable from "../../model/FrontendRequestObservable";
 import Avatar from "../../components/Avatar";
 import PostListItem from "../../containers/PostListItem";
 import PaginationComponent from "../../components/Pagination";
@@ -52,6 +52,8 @@ import { Epics } from "../../epics";
 import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD, FETCH_ATTACH_PAY, FETCH_ATTACH_INFO } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
 import getCreditsNameById from "../../model/CreditsName";
+import { Dispatch } from "redux";
+import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 
 interface Props extends WithStyles {
     router: NextRouter;
@@ -71,6 +73,7 @@ interface Props extends WithStyles {
     defaultRes: Array<IPostListItem>;
 
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
+    dispatch: Dispatch;
 }
 
 class Thread extends React.Component<Props> {
@@ -89,8 +92,6 @@ class Thread extends React.Component<Props> {
         this.patchPostList(defaultRes);
     }
 
-    refetchInfo = async () => {};
-
     state = {
         reply: "",
         quotepid: "0",
@@ -105,11 +106,9 @@ class Thread extends React.Component<Props> {
             title: "",
             creditsType: 0,
             credits: 0
-        }
+        },
 
-        // thread: this.props.thread,
-        // attachList: this.props.attachList,
-        // firstPost: this.props.firstPost
+        activePostBtn: true
     };
 
     handleChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -119,8 +118,7 @@ class Thread extends React.Component<Props> {
     };
 
     onPageChange = async (page: number) => {
-        const { router } = this.props;
-
+        const { router, dispatch } = this.props;
         const tid = router.query["tid"] as string;
         const url = THREAD_INFO_RAW;
         const as = THREAD_INFO(tid, page.toString());
@@ -133,7 +131,7 @@ class Thread extends React.Component<Props> {
 
         const {
             data: { message }
-        } = await FrontendRequest({ url: FETCH_THREAD(tid, page.toString()) }).toPromise();
+        } = await FrontendRequestPromise({ url: FETCH_THREAD(tid, page.toString()) }, dispatch);
         this.patchPostList(message.postList);
     };
 
@@ -144,15 +142,27 @@ class Thread extends React.Component<Props> {
     };
 
     handleReply = async () => {
-        const { tid, enqueueSnackbar } = this.props;
+        const { tid, enqueueSnackbar, dispatch } = this.props;
         const { reply, quotepid, page } = this.state;
-
-        const { code, message } = await requestReply(tid, reply, quotepid);
-        if (code === 200) {
-            enqueueSnackbar("回帖成功！", { variant: "success" });
-            this.onPageChange(page);
-        } else {
-            enqueueSnackbar(message, { variant: "error" });
+        this.setState({
+            activePostBtn: false
+        });
+        try {
+            const { code, message } = await requestReply(tid, reply, quotepid, dispatch);
+            if (code === 200) {
+                enqueueSnackbar("回帖成功！", { variant: "success" });
+                this.onPageChange(page);
+                this.setState({
+                    reply: "",
+                    quotepid: "0"
+                });
+            } else {
+                enqueueSnackbar(message, { variant: "error" });
+            }
+        } finally {
+            this.setState({
+                activePostBtn: true
+            });
         }
     };
 
@@ -164,14 +174,16 @@ class Thread extends React.Component<Props> {
 
     handleDownload = (item: IThreadAttach) => async () => {
         const attachNeedBuyPrefetch = async (aid: string) => {
-            const { enqueueSnackbar } = this.props;
-
+            const { enqueueSnackbar, dispatch } = this.props;
             const {
                 data: { code, message }
-            } = await FrontendRequest({
-                url: FETCH_ATTACH_INFO(aid),
-                method: "GET"
-            }).toPromise();
+            } = await FrontendRequestPromise(
+                {
+                    url: FETCH_ATTACH_INFO(aid),
+                    method: "GET"
+                },
+                dispatch
+            );
 
             if (code === 200) {
                 const { needBuy, attach } = message as IAttachPrefetchInfo;
@@ -238,14 +250,18 @@ class Thread extends React.Component<Props> {
         const handleConirmBtnClick = async () => {
             handleDialogClose();
 
-            const { enqueueSnackbar } = this.props;
+            const { enqueueSnackbar, dispatch } = this.props;
             const url = FETCH_ATTACH_PAY(data);
+
             const {
                 data: { code, message }
-            } = await FrontendRequest({
-                url,
-                method: "GET"
-            }).toPromise();
+            } = await FrontendRequestPromise(
+                {
+                    url,
+                    method: "GET"
+                },
+                dispatch
+            );
 
             if (code === 200) {
                 enqueueSnackbar("购买成功！", { variant: "success" });
@@ -292,7 +308,7 @@ class Thread extends React.Component<Props> {
 
     render() {
         const { classes, isAdmin, uid, needBuy, thread, firstPost, attachList } = this.props;
-        const { postList, reply, page, attachExpanded } = this.state;
+        const { postList, reply, page, attachExpanded, activePostBtn } = this.state;
 
         return (
             <>
@@ -390,7 +406,7 @@ class Thread extends React.Component<Props> {
                         variant="outlined"
                     />
                     <div className={classes["reply-container"]}>
-                        <Fab variant="extended" size="medium" color="primary" className={classes.button} onClick={this.handleReply}>
+                        <Fab variant="extended" size="medium" color="primary" className={classes.button} onClick={this.handleReply} disabled={!activePostBtn}>
                             <MessageIcon className={classes["icon"]} />
                             回复
                         </Fab>

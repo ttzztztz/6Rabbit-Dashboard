@@ -18,9 +18,11 @@ import { NextRouter, withRouter } from "next/dist/client/router";
 import { IPostPageType, IForumItem, IGeneralResponse, IThreadAttach } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { requestCreateThread, requestEditReply, requestEditThread, requestReply } from "../../model/Post";
-import FrontendRequest from "../../model/FrontendRequest";
+import FrontendRequestObservable from "../../model/FrontendRequestObservable";
+import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 import { FETCH_THREAD, FETCH_POST, FETCH_UNUSED_ATTACH, DELETE_ATTACH, FETCH_PICTURE_ATTACH } from "../../consts/backend";
 import Upload from "../../containers/Upload";
+import { Dispatch } from "redux";
 
 interface IMapRouteToPageType {
     [key: string]: number;
@@ -48,6 +50,8 @@ interface Props extends WithStyles {
     forum: Array<IForumItem>;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     isAdmin: boolean;
+
+    dispatch: Dispatch;
 }
 
 class Post extends React.PureComponent<Props> {
@@ -82,7 +86,7 @@ class Post extends React.PureComponent<Props> {
                 },
                 attach
             ] = await Promise.all([
-                FrontendRequest({
+                FrontendRequestObservable({
                     url: FETCH_THREAD(tid, "1"),
                     method: "GET"
                 }).toPromise(),
@@ -105,7 +109,7 @@ class Post extends React.PureComponent<Props> {
                 data: {
                     message: { message: currentMessage }
                 }
-            } = await FrontendRequest({
+            } = await FrontendRequestObservable({
                 url: FETCH_POST(pid),
                 method: "GET"
             }).toPromise();
@@ -123,12 +127,16 @@ class Post extends React.PureComponent<Props> {
     }
 
     fetchUnusedAttach = async () => {
+        const { dispatch } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequest({
-            url: FETCH_UNUSED_ATTACH,
-            method: "GET"
-        }).toPromise();
+        } = await FrontendRequestPromise(
+            {
+                url: FETCH_UNUSED_ATTACH,
+                method: "GET"
+            },
+            dispatch
+        );
 
         if (code === 200) {
             return message as Array<IThreadAttach>;
@@ -172,39 +180,40 @@ class Post extends React.PureComponent<Props> {
     };
 
     createThread = async () => {
+        const { dispatch } = this.props;
         const { fid, subject, message, attach } = this.state;
-        const res = await requestCreateThread(fid, subject, message, attach);
+        const res = await requestCreateThread(fid, subject, message, attach, dispatch);
         const { code, message: responseMsg } = res;
 
         this.showSnackbar(res);
     };
     editThread = async () => {
-        const { router } = this.props;
+        const { router, dispatch } = this.props;
         const tid = router.query["tid"] as string;
 
         const { fid, subject, message, attach } = this.state;
-        const res = await requestEditThread(tid, fid, subject, message, attach);
+        const res = await requestEditThread(tid, fid, subject, message, attach, dispatch);
         const { code, message: responseMsg } = res;
 
         this.showSnackbar(res);
     };
     createReply = async () => {
-        const { router } = this.props;
+        const { router, dispatch } = this.props;
         const tid = router.query["tid"] as string;
         const quotepid = router.query["quotepid"] as string;
         const { message } = this.state;
 
-        const res = await requestReply(tid, message, quotepid);
+        const res = await requestReply(tid, message, quotepid, dispatch);
         const { code, message: responseMsg } = res;
 
         this.showSnackbar(res);
     };
     editReply = async () => {
-        const { router } = this.props;
+        const { router, dispatch } = this.props;
         const pid = router.query["pid"] as string;
         const { message } = this.state;
 
-        const res = await requestEditReply(pid, message);
+        const res = await requestEditReply(pid, message, dispatch);
         const { code, message: responseMsg } = res;
 
         this.showSnackbar(res);
@@ -244,12 +253,17 @@ class Post extends React.PureComponent<Props> {
     };
     renderAttach = () => {
         const handleRemove = async (item: IThreadAttach) => {
+            const { dispatch } = this.props;
+
             const {
                 data: { code, message }
-            } = await FrontendRequest({
-                url: DELETE_ATTACH(item.aid),
-                method: "DELETE"
-            }).toPromise();
+            } = await FrontendRequestPromise(
+                {
+                    url: DELETE_ATTACH(item.aid),
+                    method: "DELETE"
+                },
+                dispatch
+            );
             if (code !== 200) {
                 const { enqueueSnackbar } = this.props;
                 enqueueSnackbar(message, { variant: "error" });
