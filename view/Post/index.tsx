@@ -23,6 +23,7 @@ import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 import { FETCH_THREAD, FETCH_POST, FETCH_UNUSED_ATTACH, DELETE_ATTACH, FETCH_PICTURE_ATTACH } from "../../consts/backend";
 import Upload from "../../containers/Upload";
 import { Dispatch } from "redux";
+import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
 
 interface IMapRouteToPageType {
     [key: string]: number;
@@ -180,12 +181,17 @@ class Post extends React.PureComponent<Props> {
     };
 
     createThread = async () => {
-        const { dispatch } = this.props;
+        const { dispatch, router } = this.props;
         const { fid, subject, message, attach } = this.state;
         const res = await requestCreateThread(fid, subject, message, attach, dispatch);
         const { code, message: responseMsg } = res;
 
         this.showSnackbar(res);
+        if (code === 200) {
+            const url = THREAD_INFO_RAW;
+            const as = THREAD_INFO(responseMsg);
+            router.push(url, as);
+        }
     };
     editThread = async () => {
         const { router, dispatch } = this.props;
@@ -193,9 +199,14 @@ class Post extends React.PureComponent<Props> {
 
         const { fid, subject, message, attach } = this.state;
         const res = await requestEditThread(tid, fid, subject, message, attach, dispatch);
-        const { code, message: responseMsg } = res;
+        const { code } = res;
 
         this.showSnackbar(res);
+        if (code === 200) {
+            const url = THREAD_INFO_RAW;
+            const as = THREAD_INFO(tid);
+            router.push(url, as);
+        }
     };
     createReply = async () => {
         const { router, dispatch } = this.props;
@@ -204,9 +215,14 @@ class Post extends React.PureComponent<Props> {
         const { message } = this.state;
 
         const res = await requestReply(tid, message, quotepid, dispatch);
-        const { code, message: responseMsg } = res;
+        const { code } = res;
 
         this.showSnackbar(res);
+        if (code === 200) {
+            const url = THREAD_INFO_RAW;
+            const as = THREAD_INFO(tid);
+            router.push(url, as);
+        }
     };
     editReply = async () => {
         const { router, dispatch } = this.props;
@@ -217,6 +233,11 @@ class Post extends React.PureComponent<Props> {
         const { code, message: responseMsg } = res;
 
         this.showSnackbar(res);
+        if (code === 200) {
+            const url = THREAD_INFO_RAW;
+            const as = THREAD_INFO(responseMsg);
+            router.push(url, as);
+        }
     };
 
     handleSubmitClick = () => {

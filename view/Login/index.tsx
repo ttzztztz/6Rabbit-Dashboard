@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "./style";
+import { Dispatch } from "redux";
 import clsx from "clsx";
+import { OptionsObject } from "notistack";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
@@ -8,18 +10,21 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-import { TITLE_PREFIX } from "../../consts";
-import { USER_CENTER } from "../../consts/routers";
-import { IRegisterStartPayload } from "../../actions/async";
-
 import Head from "next/head";
 import { withRouter, NextRouter } from "next/dist/client/router";
+
+import { TITLE_PREFIX } from "../../consts";
+import { USER_CENTER, USER_LOGIN, USER_REGISTER } from "../../consts/routers";
+import FrontendRequestPromise from "../../model/FrontendRequestPromise";
+import passwordMD5 from "../../model/PasswordMD5";
+import { POST_REGISTER } from "../../consts/backend";
 
 interface Props extends WithStyles {
     isLogin: boolean;
 
     login: (username: string, password: string) => void;
-    register: (payload: IRegisterStartPayload) => void;
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
+    dispatch: Dispatch;
     router: NextRouter;
 }
 
@@ -51,6 +56,19 @@ class Login extends React.Component<Props> {
                 activePage: ActivePage.Register
             });
         }
+
+        const handleRouteChangeStart = (url: string) => {
+            if (url === USER_LOGIN) {
+                this.setState({
+                    activePage: ActivePage.Login
+                });
+            } else if (url === USER_REGISTER) {
+                this.setState({
+                    activePage: ActivePage.Register
+                });
+            }
+        };
+        router.events.on("routeChangeStart", handleRouteChangeStart);
     }
 
     handleChange = (key: string, method: "login" | "register") => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,15 +85,39 @@ class Login extends React.Component<Props> {
         }
     };
 
-    handleRegisterBtnClick = () => {
+    handleRegisterBtnClick = async () => {
         if (this.state.activePage === ActivePage.Login) {
             this.setState({
                 activePage: ActivePage.Register
             });
         } else {
-            const { register: form } = this.state;
-            const { register } = this.props;
-            register(form);
+            const { enqueueSnackbar } = this.props;
+            const {
+                register: payload,
+                register: { password, password_repeat }
+            } = this.state;
+
+            if (password !== password_repeat) {
+                enqueueSnackbar("两次密码不一致！", { variant: "error" });
+                return;
+            } else {
+                const {
+                    data: { code, message }
+                } = await FrontendRequestPromise({
+                    url: POST_REGISTER,
+                    method: "POST",
+                    data: { ...payload, password: passwordMD5(password), password_repeat: passwordMD5(password_repeat) }
+                });
+
+                if (code === 200) {
+                    enqueueSnackbar("注册成功！", { variant: "success" });
+                    this.setState({
+                        activePage: ActivePage.Login
+                    });
+                } else {
+                    enqueueSnackbar(message, { variant: "error" });
+                }
+            }
         }
     };
     handleLoginBtnClick = () => {
@@ -202,16 +244,14 @@ class Login extends React.Component<Props> {
         );
     };
 
-    componentDidUpdate() {
-        const { isLogin, router } = this.props;
+    render() {
+        const { classes, isLogin, router } = this.props;
+        const { activePage } = this.state;
+
         if (isLogin) {
             router.push(USER_CENTER, USER_CENTER);
+            return <></>;
         }
-    }
-
-    render() {
-        const { classes } = this.props;
-        const { activePage } = this.state;
 
         return (
             <Paper className={classes.root}>

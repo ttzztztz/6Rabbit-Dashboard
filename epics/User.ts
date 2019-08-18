@@ -6,7 +6,6 @@ import axios from "axios";
 
 import {
     POST_LOGIN,
-    POST_REGISTER,
     FETCH_TOKEN,
     FETCH_MY_INFO,
     PUT_UPDATE_PASSWORD,
@@ -19,8 +18,6 @@ import {
 import {
     ILoginStart,
     LOGIN_START,
-    IRegisterStart,
-    REGISTER_START,
     ICheckTokenStart,
     CHECK_TOKEN_START,
     checkTokenOK,
@@ -100,33 +97,6 @@ const logout: Epic<IUserLogoutStart> = action$ =>
             localStorage.removeItem("token");
             return of(userLogoutOK());
         })
-    );
-
-const register: Epic<IRegisterStart> = action$ =>
-    action$.pipe(
-        ofType(REGISTER_START),
-        mergeMap(({ payload, payload: { password, password_repeat } }) => {
-            if (password !== password_repeat) {
-                return of(enqueueSnackbar("两次密码不一致！", { variant: "error" }));
-            } else {
-                return FrontendRequestObservable({
-                    url: POST_REGISTER,
-                    method: "POST",
-                    data: { ...payload, password: passwordMD5(password), password_repeat: passwordMD5(password_repeat) }
-                }).pipe(
-                    mergeMap(({ data: { code, message } }) => {
-                        if (code === 200) {
-                            return of(enqueueSnackbar("注册成功！", { variant: "success" }), toggleProgress());
-                        } else {
-                            return of(enqueueSnackbar(message, { variant: "error" }), toggleProgress());
-                        }
-                    }),
-                    startWith(toggleProgress(true)),
-                    catchError(err => errHandler(err))
-                );
-            }
-        }),
-        catchError(err => errHandler(err))
     );
 
 const checkToken: Epic<ICheckTokenStart> = action$ =>
@@ -313,7 +283,6 @@ export default [
     oauthClearToken,
     checkToken,
     logout,
-    register,
     updateProfile,
     updatePassword,
     getUserProfile

@@ -106,29 +106,6 @@ export const loginOK = (payload: ILoginResponse): ILoginOK => ({
     payload
 });
 
-export type IRegisterStartPayload = IRegisterForm & { password_repeat: string };
-export const REGISTER_START = "REGISTER_START";
-export type REGISTER_START = typeof REGISTER_START;
-export interface IRegisterStart {
-    type: REGISTER_START;
-    payload: IRegisterStartPayload;
-}
-export const registerStart = (payload: IRegisterStartPayload): IRegisterStart => ({
-    type: REGISTER_START,
-    payload
-});
-
-export const REGISTER_OK = "REGISTER_OK";
-export type REGISTER_OK = typeof REGISTER_OK;
-export interface IRegisterOK {
-    type: REGISTER_OK;
-    uid: string;
-}
-export const registerOK = (uid: string): IRegisterOK => ({
-    type: REGISTER_OK,
-    uid
-});
-
 export const CHECK_TOKEN_START = "CHECK_TOKEN_START";
 export type CHECK_TOKEN_START = typeof CHECK_TOKEN_START;
 export interface ICheckTokenStart {

@@ -11,7 +11,7 @@ import SettingsComponent from "../../containers/Settings";
 import NotificationsComponent from "../../containers/Notifications";
 import ProfileThreadListComponent from "../../containers/ProfileThreadList";
 import { TITLE_PREFIX } from "../../consts";
-import { USER_LOGIN } from "../../consts/routers";
+import { USER_LOGIN, USER_NOTIFICATION_CENTER } from "../../consts/routers";
 
 import Head from "next/head";
 import { NextRouter, withRouter } from "next/dist/client/router";
@@ -49,6 +49,15 @@ class User extends React.PureComponent<Props> {
                 activeTab: ActiveTab.Notification
             });
         }
+
+        const handleRouteChangeStart = (url: string) => {
+            if (url === USER_NOTIFICATION_CENTER) {
+                this.setState({
+                    activeTab: ActiveTab.Notification
+                });
+            }
+        };
+        router.events.on("routeChangeStart", handleRouteChangeStart);
     }
 
     componentDidUpdate() {

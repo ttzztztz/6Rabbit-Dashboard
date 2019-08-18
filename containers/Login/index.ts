@@ -3,7 +3,9 @@ import { Dispatch } from "redux";
 
 import LoginView from "../../view/Login";
 import { StoreState } from "../../reducers";
-import { loginStart, IRegisterStartPayload, registerStart } from "../../actions/async";
+import { loginStart } from "../../actions/async";
+import { OptionsObject } from "notistack";
+import { enqueueSnackbar } from "../../actions";
 
 const mapStateToProps = ({ basic: { isLogin } }: StoreState) => ({
     isLogin
@@ -11,7 +13,8 @@ const mapStateToProps = ({ basic: { isLogin } }: StoreState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     login: (username: string, password: string) => dispatch(loginStart(username, password)),
-    register: (payload: IRegisterStartPayload) => dispatch(registerStart(payload))
+    enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),
+    dispatch
 });
 
 export default connect(
