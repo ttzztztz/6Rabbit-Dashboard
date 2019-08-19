@@ -1,4 +1,5 @@
 import React from "react";
+import { Dispatch } from "redux";
 import styles from "./style";
 
 import { WithStyles, withStyles } from "@material-ui/core";
@@ -12,27 +13,25 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 
-import RoomIcon from "@material-ui/icons/Room";
-import WorkIcon from "@material-ui/icons/Work";
-import BeachAccessIcon from "@material-ui/icons/BeachAccess";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-
 import { OptionsObject } from "notistack";
 import { NextRouter, withRouter } from "next/dist/client/router";
 
-import FrontendRequestObservable from "../../../model/FrontendRequestObservable";
-import { FETCH_MY_INFO, FETCH_OAUTH_LIST, FETCH_OAUTH_REDIRECT, DELETE_OAUTH_BIND, FETCH_AVATAR, POST_AVATAR_UPLOAD } from "../../../consts/backend";
-import { IUpdateProfileForm, IUpdatePasswordForm, IOAuth } from "../../../typings";
+import UserCreditsBoard from "../../../containers/UserCreditsBoard";
+import { OPTIONS_MY_INFO, FETCH_OAUTH_LIST, FETCH_OAUTH_REDIRECT, DELETE_OAUTH_BIND, FETCH_AVATAR, POST_AVATAR_UPLOAD } from "../../../consts/backend";
+import { IUpdateProfileForm, IUpdatePasswordForm, IOAuth, IMyUserInfoResponse } from "../../../typings";
 import { MAX_UPLOAD_AVATAR_SIZE } from "../../../consts";
 import { upload } from "../../../model/Upload";
+import FrontendRequestPromise from "../../../model/FrontendRequestPromise";
 
 interface Props extends WithStyles {
     router: NextRouter;
     uid: string;
 
+    dispatch: Dispatch;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     updateProfile: (payload: IUpdateProfileForm) => void;
     updatePassword: (payload: IUpdatePasswordForm) => void;
+    changeUserCreditsAndGroup: (payload: IMyUserInfoResponse) => void;
 }
 
 class Settings extends React.Component<Props> {
@@ -49,15 +48,7 @@ class Settings extends React.Component<Props> {
             wechat: "",
             gender: 0,
             email: "",
-            mobile: "",
-            usergroup: {
-                gid: "1",
-                name: "",
-                isAdmin: false
-            },
-            credits: 0,
-            golds: 0,
-            rmbs: 0
+            mobile: ""
         },
         oauthList: [] as Array<IOAuth>
     };
@@ -65,10 +56,10 @@ class Settings extends React.Component<Props> {
         await Promise.all([this.fetchInfo(), this.fetchOAuthList()]);
     }
     fetchInfo = async () => {
-        const { enqueueSnackbar } = this.props;
+        const { enqueueSnackbar, dispatch, changeUserCreditsAndGroup } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequestObservable({ url: FETCH_MY_INFO, method: "GET" }).toPromise();
+        } = await FrontendRequestPromise({ url: OPTIONS_MY_INFO, method: "GET" }, dispatch);
 
         if (code === 200) {
             this.setState({
@@ -76,15 +67,16 @@ class Settings extends React.Component<Props> {
                     ...message
                 }
             });
+            changeUserCreditsAndGroup(message);
         } else {
             enqueueSnackbar(message, { variant: "error" });
         }
     };
     fetchOAuthList = async () => {
-        const { enqueueSnackbar } = this.props;
+        const { enqueueSnackbar, dispatch } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequestObservable({ url: FETCH_OAUTH_LIST, method: "GET" }).toPromise();
+        } = await FrontendRequestPromise({ url: FETCH_OAUTH_LIST, method: "GET" }, dispatch);
 
         if (code === 200) {
             this.setState({
@@ -114,17 +106,20 @@ class Settings extends React.Component<Props> {
     };
 
     renderButton = (platform: string) => {
-        const { enqueueSnackbar } = this.props;
+        const { enqueueSnackbar, dispatch } = this.props;
         const { oauthList } = this.state;
 
         if (oauthList.some(item => item.platform === platform)) {
             const handleUnbind = async () => {
                 const {
                     data: { code, message }
-                } = await FrontendRequestObservable({
-                    url: DELETE_OAUTH_BIND(platform),
-                    method: "DELETE"
-                }).toPromise();
+                } = await FrontendRequestPromise(
+                    {
+                        url: DELETE_OAUTH_BIND(platform),
+                        method: "DELETE"
+                    },
+                    dispatch
+                );
 
                 if (code === 200) {
                     this.setState({
@@ -207,46 +202,13 @@ class Settings extends React.Component<Props> {
         const { classes, uid } = this.props;
         const {
             password: { oldPassword, newPassword, newPasswordRepeat },
-            profile: { realname, signature, qq, wechat, gender, email, mobile, credits, golds, rmbs, usergroup }
+            profile: { realname, signature, qq, wechat, gender, email, mobile }
         } = this.state;
 
         return (
             <>
                 <section>
-                    <List className={classes["list-root"]}>
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <RoomIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="用户组" secondary={usergroup.name} />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <WorkIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="经验" secondary={credits.toString()} />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <BeachAccessIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="金币" secondary={golds.toString()} />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <AttachMoneyIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="人民币" secondary={rmbs.toFixed(2)} />
-                        </ListItem>
-                    </List>
+                    <UserCreditsBoard />
                 </section>
                 <section>
                     <Typography variant="h5" className={classes["setting-title"]}>

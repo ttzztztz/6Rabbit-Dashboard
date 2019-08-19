@@ -7,7 +7,7 @@ import axios from "axios";
 import {
     POST_LOGIN,
     FETCH_TOKEN,
-    FETCH_MY_INFO,
+    OPTIONS_MY_INFO,
     PUT_UPDATE_PASSWORD,
     FETCH_USER_INFO_PROFILE,
     FETCH_OAUTH_INFO,
@@ -41,9 +41,20 @@ import {
     IOAuthBindUserStart,
     OAUTH_BIND_USER_START,
     OAUTH_CLEAR_TOKEN_START,
-    IOAuthClearTokenStart
+    IOAuthClearTokenStart,
+    IGetUserCreditsAndUsergroupStart,
+    GET_USER_CREDITS_AND_USERGROUP_START
 } from "../actions/async";
-import { enqueueSnackbar, userLoginOK, changeUserInfo, userLogoutOK, setOAuthInfo, clearOAuthStore, toggleProgress } from "../actions";
+import {
+    enqueueSnackbar,
+    userLoginOK,
+    changeUserInfo,
+    userLogoutOK,
+    setOAuthInfo,
+    clearOAuthStore,
+    toggleProgress,
+    changeUserCreditsAndGroup
+} from "../actions";
 import FrontendRequestObservable from "../model/FrontendRequestObservable";
 import passwordMD5 from "../model/PasswordMD5";
 import { USER_CENTER } from "../consts/routers";
@@ -129,10 +140,29 @@ const updateProfile: Epic<IUserUpdateProfileStart> = action$ =>
     action$.pipe(
         ofType(USER_UPDATE_PROFILE_START),
         mergeMap(({ payload }) =>
-            FrontendRequestObservable({ url: FETCH_MY_INFO, method: "PUT", data: payload }).pipe(
+            FrontendRequestObservable({ url: OPTIONS_MY_INFO, method: "PUT", data: payload }).pipe(
                 mergeMap(({ data: { code, message } }) => {
                     if (code === 200) {
                         return of(enqueueSnackbar("修改资料成功！", { variant: "success" }), toggleProgress());
+                    } else {
+                        return of(enqueueSnackbar(message, { variant: "error" }), toggleProgress());
+                    }
+                }),
+                startWith(toggleProgress(true)),
+                catchError(err => errHandler(err))
+            )
+        ),
+        catchError(err => errHandler(err))
+    );
+
+const updateCreditsAndGroup: Epic<IGetUserCreditsAndUsergroupStart> = action$ =>
+    action$.pipe(
+        ofType(GET_USER_CREDITS_AND_USERGROUP_START),
+        mergeMap(() =>
+            FrontendRequestObservable({ url: OPTIONS_MY_INFO, method: "GET" }).pipe(
+                mergeMap(({ data: { code, message } }) => {
+                    if (code === 200) {
+                        return of(changeUserCreditsAndGroup(message), toggleProgress());
                     } else {
                         return of(enqueueSnackbar(message, { variant: "error" }), toggleProgress());
                     }
@@ -282,6 +312,7 @@ export default [
     oauthFetchInfo,
     oauthClearToken,
     checkToken,
+    updateCreditsAndGroup,
     logout,
     updateProfile,
     updatePassword,

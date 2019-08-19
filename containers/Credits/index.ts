@@ -1,24 +1,20 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-
-import PostView from "../../view/Post";
-import { StoreState } from "../../reducers";
-import { enqueueSnackbar } from "../../actions";
 import { OptionsObject } from "notistack";
 
-const mapStateToProps = ({
-    basic: { forum },
-    user: {
-        usergroup: { isAdmin }
-    }
-}: StoreState) => ({ forum, isAdmin });
+import CreditsView from "../../view/User/Credits";
+import { StoreState } from "../../reducers";
+import { enqueueSnackbar } from "../../actions";
+
+const mapStateToProps = ({ user: { uid } }: StoreState) => ({ uid });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),
+
     dispatch
 });
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(PostView);
+)(CreditsView);

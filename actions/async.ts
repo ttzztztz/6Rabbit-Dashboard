@@ -259,6 +259,15 @@ export const getUserProfileOK = (payload: IOtherUser): IGetUserProfileOK => ({
     payload
 });
 
+export const GET_USER_CREDITS_AND_USERGROUP_START = "GET_USER_CREDITS_AND_USERGROUP_START";
+export type GET_USER_CREDITS_AND_USERGROUP_START = typeof GET_USER_CREDITS_AND_USERGROUP_START;
+export interface IGetUserCreditsAndUsergroupStart {
+    type: GET_USER_CREDITS_AND_USERGROUP_START;
+}
+export const getUserCreditsAndUsergroupStart = (): IGetUserCreditsAndUsergroupStart => ({
+    type: GET_USER_CREDITS_AND_USERGROUP_START
+});
+
 export const DELETE_THREAD_START = "DELETE_THREAD_START";
 export type DELETE_THREAD_START = typeof DELETE_THREAD_START;
 export interface IDeleteThreadStart {

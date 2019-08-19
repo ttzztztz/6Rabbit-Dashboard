@@ -5,7 +5,11 @@ import ThreadAdminPanelComponent from "../../components/ThreadAdminPanel";
 import { StoreState } from "../../reducers";
 import { deleteThreadStart, setCloseThreadStart, setDiamondThreadStart, setTopThreadStart } from "../../actions/async";
 
-const mapStateToProps = ({ user: { isAdmin } }: StoreState) => ({ isAdmin });
+const mapStateToProps = ({
+    user: {
+        usergroup: { isAdmin }
+    }
+}: StoreState) => ({ isAdmin });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     deleteThreadStart: (list: Array<string>) => dispatch(deleteThreadStart(list)),

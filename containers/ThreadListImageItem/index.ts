@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-import ThreadListComponent from "../../components/ThreadList";
+import ThreadListImageItemComponent from "../../components/ThreadListImageItem";
 import { StoreState } from "../../reducers";
 
 const mapStateToProps = ({
@@ -15,4 +15,4 @@ const mapDispatchToProps = (_: Dispatch) => ({});
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ThreadListComponent);
+)(ThreadListImageItemComponent);

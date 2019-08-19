@@ -4,7 +4,6 @@ import { Dispatch } from "redux";
 
 const FrontendRequestPromise = async (options: AxiosRequestConfig, dispatch?: Dispatch) => {
     try {
-        console.log(1, dispatch);
         dispatch && dispatch(toggleProgress(true));
 
         const token: string = localStorage.getItem("token") || "";

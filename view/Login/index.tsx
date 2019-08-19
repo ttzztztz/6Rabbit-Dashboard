@@ -91,7 +91,7 @@ class Login extends React.Component<Props> {
                 activePage: ActivePage.Register
             });
         } else {
-            const { enqueueSnackbar } = this.props;
+            const { enqueueSnackbar, dispatch } = this.props;
             const {
                 register: payload,
                 register: { password, password_repeat }
@@ -103,11 +103,14 @@ class Login extends React.Component<Props> {
             } else {
                 const {
                     data: { code, message }
-                } = await FrontendRequestPromise({
-                    url: POST_REGISTER,
-                    method: "POST",
-                    data: { ...payload, password: passwordMD5(password), password_repeat: passwordMD5(password_repeat) }
-                });
+                } = await FrontendRequestPromise(
+                    {
+                        url: POST_REGISTER,
+                        method: "POST",
+                        data: { ...payload, password: passwordMD5(password), password_repeat: passwordMD5(password_repeat) }
+                    },
+                    dispatch
+                );
 
                 if (code === 200) {
                     enqueueSnackbar("注册成功！", { variant: "success" });

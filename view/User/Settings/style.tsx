@@ -25,19 +25,6 @@ const styles = (theme: Theme) =>
             textAlign: "center",
             width: "100%"
         },
-        "list-root": {
-            width: "100%",
-            display: "flex",
-            "& li": {
-                flexGrow: 1,
-                [theme.breakpoints.up("md")]: {
-                    width: "25% !important"
-                }
-            },
-            [theme.breakpoints.down("md")]: {
-                flexWrap: "wrap"
-            }
-        },
         "oauth-list-root": {
             display: "flex",
             justifyContent: "center"

@@ -7,7 +7,6 @@ export const FETCH_POST = (pid: string) => `${BACKEND_ROOT}/post/${pid}`;
 export const FETCH_TOKEN = `${BACKEND_ROOT}/user/token`;
 export const FETCH_FORUM_LIST = `${BACKEND_ROOT}/forum/list`;
 export const FETCH_FORUM_INFO = (fid: string) => `${BACKEND_ROOT}/forum/info/${fid}`;
-export const FETCH_MY_INFO = `${BACKEND_ROOT}/user/info/my`;
 export const FETCH_NOTIFICATION_LIST = (page: string) => `${BACKEND_ROOT}/notification/all/${page}`;
 export const FETCH_AGGREGATE_PURCHASED_LIST = (page: string) => `${BACKEND_ROOT}/user/purchased/aggregate/${page}`;
 export const FETCH_USER_THREAD_LIST = (uid: string, page: string) => `${BACKEND_ROOT}/user/thread/${uid}/${page}`;
@@ -22,11 +21,13 @@ export const FETCH_UNUSED_ATTACH = `${BACKEND_ROOT}/attach/unused`;
 export const FETCH_PICTURE_ATTACH = (aid: string) => `${BACKEND_ROOT}/file/picture/${aid}`;
 export const FETCH_ATTACH_PAY = (aid: string) => `${BACKEND_ROOT}/attach/pay/${aid}`;
 export const FETCH_ATTACH_INFO = (aid: string) => `${BACKEND_ROOT}/attach/info/${aid}`;
+export const FETCH_CREDITS_LOG = (page: string) => `${BACKEND_ROOT}/user/credits/log/${page}`;
 
 export const OPTIONS_NOTIFICATION_ALL = `${BACKEND_ROOT}/notification/all`;
 export const OPTIONS_NOTIFICATION_ITEM = (nid: string) => `${BACKEND_ROOT}/notification/item/${nid}`;
 export const OPTIONS_THREAD = (tid: string) => `${BACKEND_ROOT}/thread/${tid}`;
 export const OPTIONS_POST = (pid: string) => `${BACKEND_ROOT}/post/${pid}`;
+export const OPTIONS_MY_INFO = `${BACKEND_ROOT}/user/info/my`;
 
 export const POST_REPLY_THREAD = (tid: string) => `${BACKEND_ROOT}/thread/reply/${tid}`;
 export const POST_THREAD_CREATE = `${BACKEND_ROOT}/thread/create`;
@@ -39,6 +40,7 @@ export const POST_THREAD_SEARCH = (page: string) => `${BACKEND_ROOT}/thread/sear
 export const POST_AVATAR_UPLOAD = `${BACKEND_ROOT}/file/avatar`;
 export const POST_FILE_UPLOAD = `${BACKEND_ROOT}/file/upload`;
 export const POST_FILE_DOWNLOAD = (aid: string) => `${BACKEND_ROOT}/file/download/${aid}`;
+export const POST_PAY = `${BACKEND_ROOT}/deposit/pay`;
 
 export const PUT_UPDATE_PASSWORD = `${BACKEND_ROOT}/user/info/password`;
 

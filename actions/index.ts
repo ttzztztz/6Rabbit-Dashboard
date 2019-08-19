@@ -1,5 +1,5 @@
 import { OptionsObject } from "notistack";
-import { ILoginResponse, IForumItem, INotificationListResponse } from "../typings";
+import { ILoginResponse, IForumItem, INotificationListResponse, IGroup, IMyUserInfoResponse, IMyUserMiniInfo } from "../typings";
 import { FETCH_AVATAR } from "../consts/backend";
 
 export const USER_LOGIN_OK = "USER_LOGIN_OK";
@@ -26,20 +26,31 @@ export const CHANGE_USER_INFO = "CHANGE_USER_INFO";
 export type CHANGE_USER_INFO = typeof CHANGE_USER_INFO;
 export interface IChangeUserInfo {
     type: CHANGE_USER_INFO;
-    username: string;
-    avatar: string;
-    isAdmin: boolean;
-    uid: string;
+    payload: ILoginResponse & { avatar: string };
 }
-export const changeUserInfo = ({ username, isAdmin, uid }: ILoginResponse): IChangeUserInfo => {
-    return {
-        type: CHANGE_USER_INFO,
-        username,
-        avatar: FETCH_AVATAR(uid),
-        isAdmin,
-        uid
-    };
-};
+export const changeUserInfo = (payload: ILoginResponse): IChangeUserInfo => ({
+    type: CHANGE_USER_INFO,
+    payload: {
+        ...payload,
+        avatar: FETCH_AVATAR(payload.uid)
+    }
+});
+
+export const CHANGE_USER_CREDITS_AND_GROUP = "CHANGE_USER_CREDITS_AND_GROUP";
+export type CHANGE_USER_CREDITS_AND_GROUP = typeof CHANGE_USER_CREDITS_AND_GROUP;
+export interface IChangeUserCreditsAndGroup {
+    type: CHANGE_USER_CREDITS_AND_GROUP;
+    payload: IMyUserMiniInfo;
+}
+export const changeUserCreditsAndGroup = (payload: IMyUserInfoResponse): IChangeUserCreditsAndGroup => ({
+    type: CHANGE_USER_CREDITS_AND_GROUP,
+    payload: {
+        usergroup: payload.usergroup,
+        credits: payload.credits,
+        golds: payload.golds,
+        rmbs: payload.rmbs
+    }
+});
 
 export const ENQUEUE_SNACKBAR = "ENQUEUE_SNACKBAR";
 export type ENQUEUE_SNACKBAR = typeof ENQUEUE_SNACKBAR;

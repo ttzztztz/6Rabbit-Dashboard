@@ -119,11 +119,17 @@ export interface IExtendedNextPageContext extends NextPageContext {
     store: Store;
 }
 
-export interface ILoginResponse {
+export interface IMyUserMiniInfo {
+    usergroup: IGroup;
+    credits: number;
+    golds: number;
+    rmbs: number;
+}
+
+export interface ILoginResponse extends IMyUserMiniInfo {
     token: string;
     username: string;
     uid: string;
-    isAdmin: boolean;
 }
 
 export interface IRegisterForm {
@@ -250,4 +256,31 @@ export interface IUploadingItem {
 export interface IAttachPrefetchInfo {
     attach: IThreadAttach;
     needBuy: boolean;
+}
+
+export interface IMyUserInfoResponse {
+    uid: string;
+    usergroup: IGroup;
+    username: string;
+    gender: number;
+    realname: string;
+    email: string;
+    mobile: string;
+    qq: string;
+    wechat: string;
+    signature: string;
+    credits: number;
+    golds: number;
+    rmbs: number;
+}
+
+export interface ICreditsLog {
+    cid: string;
+    user: IOtherUser;
+    status: -1 | 0 | 1;
+    type: string;
+    description: string;
+    creditsType: 0 | 1 | 2 | 3;
+    credits: number;
+    createDate: Date;
 }

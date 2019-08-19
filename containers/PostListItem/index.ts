@@ -6,7 +6,12 @@ import { StoreState } from "../../reducers";
 
 import { deletePostStart } from "../../actions/async";
 
-const mapStateToProps = ({ user: { uid, isAdmin } }: StoreState) => ({ uid, isAdmin });
+const mapStateToProps = ({
+    user: {
+        uid,
+        usergroup: { isAdmin }
+    }
+}: StoreState) => ({ uid, isAdmin });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     deletePost: (pid: string) => dispatch(deletePostStart(pid))
