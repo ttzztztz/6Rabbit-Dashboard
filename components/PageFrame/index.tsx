@@ -334,9 +334,11 @@ class Bar extends React.PureComponent<Props> {
                         <List>{this.renderNavList()}</List>
                     </Drawer>
                     <main className={classes.content}>
-                        <div className={classes.toolbar} />
-                        <div className={classes["content-children-container"]}>{this.props.children}</div>
-                        <Footer />
+                        <div className={classes["content-container"]}>
+                            <div className={classes.toolbar} />
+                            <div className={classes["content-children-container"]}>{this.props.children}</div>
+                            <Footer />
+                        </div>
                     </main>
                     {loading && <LinearProgress className={classes.progess} color="primary" />}
                     {isLogin && (

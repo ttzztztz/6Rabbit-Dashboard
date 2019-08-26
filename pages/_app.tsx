@@ -2,7 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import { Store, AnyAction } from "redux";
 
-import App, { Container, AppContext } from "next/app";
+import App, { AppContext } from "next/app";
 import Head from "next/head";
 import withRedux from "next-redux-wrapper";
 
@@ -38,7 +38,7 @@ class RabbitApp extends App<AppProps> {
         const { Component, pageProps, store } = this.props;
 
         return (
-            <Container>
+            <>
                 <Head>
                     <title>酷兔网</title>
                 </Head>
@@ -50,7 +50,7 @@ class RabbitApp extends App<AppProps> {
                         </PageFrame>
                     </ThemeProvider>
                 </Provider>
-            </Container>
+            </>
         );
     }
 }

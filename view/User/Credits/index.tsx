@@ -73,19 +73,32 @@ class Credits extends React.Component<Props> {
         });
     };
     handleSubmitPay = async () => {
-        const { enqueueSnackbar } = this.props;
+        const { enqueueSnackbar, dispatch } = this.props;
         const { payMethod, description: _description, credits } = this.state;
         const description = `[${payMethod}] ${_description}`;
+
+        if (credits <= 10) {
+            enqueueSnackbar("单次充值至少10元！", { variant: "error" });
+            return;
+        }
+        if (credits > 10000) {
+            enqueueSnackbar("单次充值至多10000元！", { variant: "error" });
+            return;
+        }
+
         const {
             data: { code, message }
-        } = await FrontendRequestPromise({
-            url: POST_PAY,
-            method: "POST",
-            data: {
-                credits: credits * 100,
-                description
-            }
-        });
+        } = await FrontendRequestPromise(
+            {
+                url: POST_PAY,
+                method: "POST",
+                data: {
+                    credits: credits * 100,
+                    description
+                }
+            },
+            dispatch
+        );
 
         if (code === 200) {
             enqueueSnackbar("提交成功，审核后到账！", { variant: "success" });
