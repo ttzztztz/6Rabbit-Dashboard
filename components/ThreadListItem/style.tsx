@@ -27,6 +27,10 @@ const styles = (theme: Theme) =>
         "thread-icon-container": {
             display: "flex",
             alignItems: "center"
+        },
+        "thread-pic": {
+            marginRight: "16px",
+            cursor: "pointer"
         }
     });
 

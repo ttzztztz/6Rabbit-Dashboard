@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./style";
 import clsx from "clsx";
+import { Dispatch } from "redux";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
@@ -12,12 +13,12 @@ import Paper from "@material-ui/core/Paper";
 
 import ThreadListItem from "../../containers/ThreadListItem";
 import PaginationComponent from "../Pagination";
-import { IThreadListItem } from "../../typings";
+import { IThreadListImageItem, ForumType } from "../../typings";
 import ThreadAdminPanel from "../../containers/ThreadAdminPanel";
 
 interface Props extends WithStyles {
-    threadList: Array<IThreadListItem>;
-    showAvatar?: boolean;
+    threadList: Array<IThreadListImageItem>;
+    type: ForumType;
     showOutline?: boolean;
     isAdmin: boolean;
     canAdmin: boolean;
@@ -45,9 +46,8 @@ class ThreadList extends React.Component<Props> {
     };
 
     render() {
-        const { classes, threadList, total, page, onPageChange, isAdmin } = this.props;
+        const { classes, threadList, total, page, onPageChange, isAdmin, type } = this.props;
         const { checkedList } = this.state;
-        const showAvatar = this.props.showAvatar === undefined ? true : this.props.showAvatar;
         const showOutline = this.props.showOutline === undefined ? true : this.props.showOutline;
         const canAdmin = this.props.canAdmin === undefined ? false : this.props.canAdmin;
 
@@ -58,7 +58,7 @@ class ThreadList extends React.Component<Props> {
                         {threadList.map(item => (
                             <TableRow key={item.tid}>
                                 <TableCell component="th" scope="row">
-                                    <ThreadListItem {...item} showAvatar={showAvatar} canAdmin={canAdmin} onChange={this.handleCheckedChange} />
+                                    <ThreadListItem {...item} type={type} canAdmin={canAdmin} onChange={this.handleCheckedChange} />
                                 </TableCell>
                             </TableRow>
                         ))}

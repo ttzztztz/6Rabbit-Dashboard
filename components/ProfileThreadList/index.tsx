@@ -96,7 +96,15 @@ class ProfileThreadList extends React.PureComponent<Props> {
         };
         return (
             <>
-                <ThreadList page={page} total={total} onPageChange={handlePageChange} threadList={threadList} showOutline={false} canAdmin={false} />
+                <ThreadList
+                    page={page}
+                    total={total}
+                    onPageChange={handlePageChange}
+                    threadList={threadList}
+                    showOutline={false}
+                    canAdmin={false}
+                    type="normal"
+                />
             </>
         );
     };
@@ -124,7 +132,15 @@ class ProfileThreadList extends React.PureComponent<Props> {
         };
         return (
             <>
-                <ThreadList page={page} total={total} onPageChange={handlePageChange} threadList={purchasedList} showOutline={false} canAdmin={false} />
+                <ThreadList
+                    page={page}
+                    total={total}
+                    onPageChange={handlePageChange}
+                    threadList={purchasedList}
+                    showOutline={false}
+                    canAdmin={false}
+                    type="normal"
+                />
             </>
         );
     };

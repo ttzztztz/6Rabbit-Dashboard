@@ -12,13 +12,13 @@ import GradeIcon from "@material-ui/icons/Grade";
 
 import Avatar from "../Avatar";
 import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
-import { IThreadListItem } from "../../typings";
+import { ForumType, IThreadListImageItem } from "../../typings";
 import { FETCH_AVATAR } from "../../consts/backend";
 
 import Link from "next/link";
 
-interface Props extends WithStyles, IThreadListItem {
-    showAvatar: boolean;
+interface Props extends WithStyles, IThreadListImageItem {
+    type: ForumType;
 
     canAdmin: boolean;
     isAdmin: boolean;
@@ -36,12 +36,45 @@ class ThreadListItem extends React.Component<Props> {
         });
         onChange(tid, event.target.checked);
     };
+
+    renderImage = () => {
+        const {
+            type,
+            classes,
+            user: { uid },
+            tid,
+            image: picture
+        } = this.props;
+
+        if (type === "blog") {
+            return <></>;
+        } else if (type === "normal") {
+            const userAvatar = FETCH_AVATAR(uid);
+            return (
+                <div className={classes["thread-avatar"]}>
+                    <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
+                        <Avatar src={userAvatar} width={48} />
+                    </Link>
+                </div>
+            );
+        } else if (type === "image") {
+            const showPicture = picture || FETCH_AVATAR(uid);
+
+            return (
+                <div className={classes["thread-pic"]}>
+                    <Link href={THREAD_INFO_RAW} as={THREAD_INFO(tid)} passHref>
+                        <Avatar src={showPicture} width={48} />
+                    </Link>
+                </div>
+            );
+        }
+    };
+
     render() {
         const {
             classes,
             subject,
             createDate,
-            showAvatar,
             diamond,
             isTop,
             isClosed,
@@ -51,17 +84,10 @@ class ThreadListItem extends React.Component<Props> {
             isAdmin
         } = this.props;
         const { checked } = this.state;
-        const userAvatar = FETCH_AVATAR(uid);
 
         return (
             <div className={classes["thread-list-item-container"]}>
-                {showAvatar && (
-                    <div className={classes["thread-avatar"]}>
-                        <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
-                            <Avatar src={userAvatar} width={48} />
-                        </Link>
-                    </div>
-                )}
+                {this.renderImage()}
                 <div>
                     <Typography variant="h6" component="h6" className={clsx(classes["thread-list-item-title"], classes["thread-icon-container"])}>
                         {canAdmin && isAdmin && <Checkbox checked={checked} onChange={this.handleCheckStateChange} value="checkedA" />}
@@ -73,11 +99,9 @@ class ThreadListItem extends React.Component<Props> {
                         </Link>
                     </Typography>
                     <Typography variant="body1" className={classes["second-info"]}>
-                        {showAvatar && (
-                            <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
-                                <span className={classes["author-username"]}>{username}</span>
-                            </Link>
-                        )}
+                        <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
+                            <span className={classes["author-username"]}>{username}</span>
+                        </Link>
                         <span>{new Date(createDate).toLocaleString()}</span>
                     </Typography>
                 </div>

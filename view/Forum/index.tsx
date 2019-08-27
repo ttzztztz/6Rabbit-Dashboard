@@ -33,8 +33,7 @@ class Forum extends React.PureComponent<Props> {
 
         const state$ = new StateObservable(new Subject(), store.getState());
         const {
-            payload: { list, forum },
-            payload
+            payload: { list, forum }
         } = await Epics(of(getThreadListStart(fid, page)) as ActionsObservable<IGetThreadListStart>, state$, {}).toPromise();
 
         return { threadList: list, page: Number.parseInt(page), total: forum.threads, fid, forum };
@@ -57,19 +56,7 @@ class Forum extends React.PureComponent<Props> {
                         {forum.name}
                     </title>
                 </Head>
-                {forum.type === "normal" && (
-                    <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} canAdmin={true} />
-                )}
-                {forum.type === "blog" && (
-                    <ThreadListComponent
-                        threadList={threadList}
-                        total={total}
-                        page={page}
-                        onPageChange={this.handlePageChange}
-                        showAvatar={false}
-                        canAdmin={true}
-                    />
-                )}
+                <ThreadListComponent threadList={threadList} total={total} page={page} onPageChange={this.handlePageChange} type={forum.type} canAdmin={true} />
             </>
         );
     }

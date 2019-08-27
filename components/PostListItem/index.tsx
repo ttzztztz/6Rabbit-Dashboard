@@ -71,7 +71,7 @@ class PostListItem extends React.PureComponent<Props> {
             pid,
             createDate,
             message,
-            user: { username, uid },
+            user: { username, uid, signature },
             isAdmin,
             uid: readerUid
         } = this.props;
@@ -92,17 +92,20 @@ class PostListItem extends React.PureComponent<Props> {
                         <span>{new Date(createDate).toLocaleString()}</span>
                     </div>
                     <div className={clsx("content-container", "braft-output-content")} dangerouslySetInnerHTML={{ __html: message }} />
-                    {(isAdmin || readerUid === uid) && (
-                        <div className={classes["post-list-item-info"]}>
-                            <Link href={POST_UPDATE_RAW} as={POST_UPDATE(pid)}>
-                                <span className={classes["action-btn"]}>编辑</span>
-                            </Link>
-                            <span className={classes["action-btn"]} onClick={this.handleDialogOpen}>
-                                删除
-                            </span>
-                            {this.renderDialog()}
-                        </div>
-                    )}
+                    <div className={classes["post-list-item-info"]}>
+                        {signature && <div className={classes["post-list-user-signature"]}>{signature}</div>}
+                        {(isAdmin || readerUid === uid) && (
+                            <>
+                                <Link href={POST_UPDATE_RAW} as={POST_UPDATE(pid)}>
+                                    <span className={classes["action-btn"]}>编辑</span>
+                                </Link>
+                                <span className={classes["action-btn"]} onClick={this.handleDialogOpen}>
+                                    删除
+                                </span>
+                                {this.renderDialog()}
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         );

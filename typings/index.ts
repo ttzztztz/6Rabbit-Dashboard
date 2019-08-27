@@ -40,6 +40,10 @@ export interface IThreadListItem extends IThreadAbstract {
     fid: string;
 }
 
+export interface IThreadListImageItem extends IThreadListItem {
+    image?: string;
+}
+
 export interface IUserPostItem {
     pid: string;
     thread: IThreadListItem;
@@ -143,12 +147,14 @@ export interface IReplyForm {
     message: string;
 }
 
+export type ForumType = "blog" | "image" | "normal";
+
 export interface IForumItem {
     fid: string;
     name: string;
     description: string;
     threads: number;
-    type: "blog" | "image" | "normal";
+    type: ForumType;
     adminPost: boolean;
 }
 
@@ -283,4 +289,9 @@ export interface ICreditsLog {
     creditsType: 0 | 1 | 2 | 3;
     credits: number;
     createDate: Date;
+}
+
+export interface IThreadImageItem {
+    tid: string;
+    picture: string;
 }
