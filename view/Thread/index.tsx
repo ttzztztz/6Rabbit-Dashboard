@@ -4,6 +4,9 @@ import React from "react";
 import styles from "./style";
 import clsx from "clsx";
 import { OptionsObject } from "notistack";
+import { of, Subject } from "rxjs";
+import { Dispatch } from "redux";
+import { StateObservable, ActionsObservable } from "redux-observable";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -32,14 +35,10 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 
-import { of, Subject } from "rxjs";
-import { StateObservable, ActionsObservable } from "redux-observable";
-
 import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 
-import FrontendRequestObservable from "../../model/FrontendRequestObservable";
 import Avatar from "../../components/Avatar";
 import PostListItem from "../../containers/PostListItem";
 import PaginationComponent from "../../components/Pagination";
@@ -52,8 +51,8 @@ import { Epics } from "../../epics";
 import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD, FETCH_ATTACH_PAY, FETCH_ATTACH_INFO } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
 import getCreditsNameById from "../../model/CreditsName";
-import { Dispatch } from "redux";
 import FrontendRequestPromise from "../../model/FrontendRequestPromise";
+import Vaptcha from "../../components/Vaptcha";
 
 interface Props extends WithStyles {
     router: NextRouter;
@@ -108,7 +107,9 @@ class Thread extends React.Component<Props> {
             credits: 0
         },
 
-        activePostBtn: true
+        activePostBtn: true,
+        timestamp: new Date().getTime(),
+        token: ""
     };
 
     handleChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -143,12 +144,12 @@ class Thread extends React.Component<Props> {
 
     handleReply = async () => {
         const { tid, enqueueSnackbar, dispatch } = this.props;
-        const { reply, quotepid, page } = this.state;
+        const { reply, quotepid, page, token } = this.state;
         this.setState({
             activePostBtn: false
         });
         try {
-            const { code, message } = await requestReply(tid, reply, quotepid, dispatch);
+            const { code, message } = await requestReply(tid, reply, quotepid, token, dispatch);
             if (code === 200) {
                 enqueueSnackbar("回帖成功！", { variant: "success" });
                 this.onPageChange(page);
@@ -161,7 +162,8 @@ class Thread extends React.Component<Props> {
             }
         } finally {
             this.setState({
-                activePostBtn: true
+                activePostBtn: true,
+                timestamp: new Date().getTime()
             });
         }
     };
@@ -306,9 +308,51 @@ class Thread extends React.Component<Props> {
         );
     };
 
+    renderReplyComponent = () => {
+        const {
+            isLogin,
+            isAdmin,
+            thread: { isClosed },
+            classes
+        } = this.props;
+        const { reply, timestamp, activePostBtn } = this.state;
+
+        const handleChangeToken = (token: string) => {
+            this.setState({
+                token
+            });
+        };
+
+        if (!isLogin || (isLogin && isClosed && !isAdmin)) {
+            return <></>;
+        } else {
+            return (
+                <Paper className={classes.paperRoot}>
+                    <TextField
+                        id="reply-content"
+                        label="发表回复"
+                        multiline
+                        fullWidth
+                        value={reply}
+                        onChange={this.handleChangeReply}
+                        margin="dense"
+                        variant="outlined"
+                    />
+                    <div className={classes["reply-container"]}>
+                        <Vaptcha onChangeToken={handleChangeToken} timestamp={timestamp} />
+                        <Fab variant="extended" size="medium" color="primary" className={classes.button} onClick={this.handleReply} disabled={!activePostBtn}>
+                            <MessageIcon className={classes["icon"]} />
+                            回复
+                        </Fab>
+                    </div>
+                </Paper>
+            );
+        }
+    };
+
     render() {
         const { classes, isAdmin, uid, needBuy, thread, firstPost, attachList } = this.props;
-        const { postList, reply, page, attachExpanded, activePostBtn } = this.state;
+        const { postList, page, attachExpanded } = this.state;
 
         return (
             <>
@@ -394,24 +438,7 @@ class Thread extends React.Component<Props> {
                         </div>
                     </Paper>
                 )}
-                <Paper className={classes.paperRoot}>
-                    <TextField
-                        id="reply-content"
-                        label="发表回复"
-                        multiline
-                        fullWidth
-                        value={reply}
-                        onChange={this.handleChangeReply}
-                        margin="dense"
-                        variant="outlined"
-                    />
-                    <div className={classes["reply-container"]}>
-                        <Fab variant="extended" size="medium" color="primary" className={classes.button} onClick={this.handleReply} disabled={!activePostBtn}>
-                            <MessageIcon className={classes["icon"]} />
-                            回复
-                        </Fab>
-                    </div>
-                </Paper>
+                {this.renderReplyComponent()}
             </>
         );
     }

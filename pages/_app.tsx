@@ -21,7 +21,6 @@ interface AppProps {
 class RabbitApp extends App<AppProps> {
     static async getInitialProps({ Component, ctx }: AppContext) {
         const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-
         return { pageProps };
     }
 

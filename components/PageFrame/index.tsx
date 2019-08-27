@@ -68,20 +68,20 @@ interface Props extends WithStyles {
 
 class Bar extends React.PureComponent<Props> {
     state = {
-        open: false,
+        openSidebar: false,
         anchorEl: null as null | HTMLElement,
         searchBoxInput: ""
     };
 
     handleDrawerOpen = () => {
         this.setState({
-            open: true
+            openSidebar: true
         });
     };
 
     handleDrawerClose = () => {
         this.setState({
-            open: false
+            openSidebar: false
         });
     };
 
@@ -265,7 +265,7 @@ class Bar extends React.PureComponent<Props> {
             avatar,
             router: { pathname }
         } = this.props;
-        const { open } = this.state;
+        const { openSidebar } = this.state;
         return (
             <SnackbarProvider
                 maxSnack={5}
@@ -282,7 +282,7 @@ class Bar extends React.PureComponent<Props> {
                     <AppBar
                         position="fixed"
                         className={clsx(classes.appBar, {
-                            [classes.appBarShift]: open
+                            [classes.appBarShift]: openSidebar
                         })}
                     >
                         <Toolbar>
@@ -291,7 +291,7 @@ class Bar extends React.PureComponent<Props> {
                                 onClick={this.handleDrawerOpen}
                                 edge="start"
                                 className={clsx(classes.menuButton, {
-                                    [classes.hide]: open
+                                    [classes.hide]: openSidebar
                                 })}
                             >
                                 <MenuIcon />
@@ -299,7 +299,7 @@ class Bar extends React.PureComponent<Props> {
                             <Typography variant="h6" noWrap className={classes.title}>
                                 {title}
                             </Typography>
-                            {isLogin && pathname !== SEARCH_RAW && this.renderSearchBar()}
+                            {isLogin && pathname !== SEARCH_RAW && !openSidebar && this.renderSearchBar()}
                             <div className={classes.grow} />
                             <div>
                                 <IconButton edge="end" color="inherit" onClick={this.handleMenuOpen}>
@@ -314,16 +314,16 @@ class Bar extends React.PureComponent<Props> {
                     <Drawer
                         variant="permanent"
                         className={clsx(classes.drawer, {
-                            [classes.drawerOpen]: open,
-                            [classes.drawerClose]: !open
+                            [classes.drawerOpen]: openSidebar,
+                            [classes.drawerClose]: !openSidebar
                         })}
                         classes={{
                             paper: clsx({
-                                [classes.drawerOpen]: open,
-                                [classes.drawerClose]: !open
+                                [classes.drawerOpen]: openSidebar,
+                                [classes.drawerClose]: !openSidebar
                             })
                         }}
-                        open={open}
+                        open={openSidebar}
                     >
                         <div className={classes.toolbar}>
                             <IconButton onClick={this.handleDrawerClose}>

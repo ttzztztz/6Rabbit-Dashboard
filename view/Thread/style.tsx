@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
         },
         "reply-container": {
             display: "flex",
-            justifyContent: "flex-end"
+            justifyContent: "space-between"
         },
         "post-list-container": {
             margin: theme.spacing(1)

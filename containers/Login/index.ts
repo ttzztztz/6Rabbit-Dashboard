@@ -12,7 +12,7 @@ const mapStateToProps = ({ basic: { isLogin } }: StoreState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    login: (username: string, password: string) => dispatch(loginStart(username, password)),
+    login: (username: string, password: string, token: string) => dispatch(loginStart(username, password, token)),
     enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),
     dispatch
 });

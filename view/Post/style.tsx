@@ -15,7 +15,7 @@ const styles = (theme: Theme) =>
         },
         "btn-container": {
             display: "flex",
-            justifyContent: "flex-end"
+            justifyContent: "space-between"
         },
         "content-container": {
             display: "flex"

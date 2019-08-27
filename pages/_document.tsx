@@ -33,10 +33,7 @@ class MyDocument extends Document {
             <html lang="cn">
                 <Head>
                     <meta charSet="utf-8" />
-                    <meta
-                        name="viewport"
-                        content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-                    />
+                    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
                     <meta name="theme-color" content={theme.palette.primary.main} />
                     <link rel="shortcut icon" href="/static/favicon.ico" />
                     <link rel="manifest" href="/static/manifest.json" />
@@ -46,6 +43,7 @@ class MyDocument extends Document {
                     <Main />
                     <NextScript />
                 </body>
+                <script src="https://cdn.vaptcha.com/v2.js"></script>
             </html>
         );
     }

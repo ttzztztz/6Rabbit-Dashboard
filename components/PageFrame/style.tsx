@@ -64,7 +64,8 @@ const styles = (theme: Theme) =>
         content: {
             flexGrow: 1,
             padding: theme.spacing(3),
-            maxWidth: "100%"
+            maxWidth: "100%",
+            position: "relative"
         },
         "content-children-container": {
             minHeight: "600px"
@@ -72,8 +73,13 @@ const styles = (theme: Theme) =>
         progess: {
             width: "100%",
             position: "fixed",
-            top: "64px",
-            zIndex: 1200
+            zIndex: 1200,
+            [theme.breakpoints.up("xs")]: {
+                top: "64px"
+            },
+            [theme.breakpoints.down("xs")]: {
+                top: "56px"
+            }
         },
         "post-btn": {
             transition:

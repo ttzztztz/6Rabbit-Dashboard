@@ -18,11 +18,12 @@ import { USER_CENTER, USER_LOGIN, USER_REGISTER } from "../../consts/routers";
 import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 import passwordMD5 from "../../model/PasswordMD5";
 import { POST_REGISTER } from "../../consts/backend";
+import Vaptcha from "../../components/Vaptcha";
 
 interface Props extends WithStyles {
     isLogin: boolean;
 
-    login: (username: string, password: string) => void;
+    login: (username: string, password: string, token: string) => void;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     dispatch: Dispatch;
     router: NextRouter;
@@ -45,7 +46,10 @@ class Login extends React.Component<Props> {
             password: "",
             password_repeat: "",
             email: ""
-        }
+        },
+
+        timestamp: new Date().getTime(),
+        token: ""
     };
 
     componentDidMount() {
@@ -94,32 +98,38 @@ class Login extends React.Component<Props> {
             const { enqueueSnackbar, dispatch } = this.props;
             const {
                 register: payload,
-                register: { password, password_repeat }
+                register: { password, password_repeat },
+                token
             } = this.state;
-
-            if (password !== password_repeat) {
-                enqueueSnackbar("两次密码不一致！", { variant: "error" });
-                return;
-            } else {
-                const {
-                    data: { code, message }
-                } = await FrontendRequestPromise(
-                    {
-                        url: POST_REGISTER,
-                        method: "POST",
-                        data: { ...payload, password: passwordMD5(password), password_repeat: passwordMD5(password_repeat) }
-                    },
-                    dispatch
-                );
-
-                if (code === 200) {
-                    enqueueSnackbar("注册成功！", { variant: "success" });
-                    this.setState({
-                        activePage: ActivePage.Login
-                    });
+            try {
+                if (password !== password_repeat) {
+                    enqueueSnackbar("两次密码不一致！", { variant: "error" });
+                    return;
                 } else {
-                    enqueueSnackbar(message, { variant: "error" });
+                    const {
+                        data: { code, message }
+                    } = await FrontendRequestPromise(
+                        {
+                            url: POST_REGISTER,
+                            method: "POST",
+                            data: { ...payload, password: passwordMD5(password), password_repeat: passwordMD5(password_repeat), token }
+                        },
+                        dispatch
+                    );
+
+                    if (code === 200) {
+                        enqueueSnackbar("注册成功！", { variant: "success" });
+                        this.setState({
+                            activePage: ActivePage.Login
+                        });
+                    } else {
+                        enqueueSnackbar(message, { variant: "error" });
+                    }
                 }
+            } finally {
+                this.setState({
+                    timestamp: new Date().getTime()
+                });
             }
         }
     };
@@ -129,15 +139,27 @@ class Login extends React.Component<Props> {
                 activePage: ActivePage.Login
             });
         } else {
-            const { login: form } = this.state;
+            const { login: form, token } = this.state;
             const { login } = this.props;
-            login(form.username, form.password);
+            login(form.username, form.password, token);
+            this.setState({
+                timestamp: new Date().getTime()
+            });
         }
+    };
+
+    handleChangeToken = (token: string) => {
+        this.setState({
+            token
+        });
     };
 
     renderLogin = () => {
         const { classes } = this.props;
-        const { username, password } = this.state.login;
+        const {
+            login: { username, password },
+            timestamp
+        } = this.state;
         return (
             <>
                 <Head>
@@ -167,6 +189,7 @@ class Login extends React.Component<Props> {
                         variant="outlined"
                         type="password"
                     />
+                    <Vaptcha className={classes["textField"]} onChangeToken={this.handleChangeToken} timestamp={timestamp} />
                 </div>
                 <div className={classes["btn-container"]}>
                     <Button color="primary" variant="contained" className={clsx(classes.button, classes.activeButton)} onClick={this.handleLoginBtnClick}>
@@ -183,7 +206,10 @@ class Login extends React.Component<Props> {
     };
     renderRegister = () => {
         const { classes } = this.props;
-        const { username, password, password_repeat, email } = this.state.register;
+        const {
+            register: { username, password, password_repeat, email },
+            timestamp
+        } = this.state;
         return (
             <>
                 <Head>
@@ -232,6 +258,7 @@ class Login extends React.Component<Props> {
                         variant="outlined"
                         type="password"
                     />
+                    <Vaptcha className={classes["textField"]} onChangeToken={this.handleChangeToken} timestamp={timestamp} />
                 </div>
                 <div className={classes["btn-container"]}>
                     <Button color="primary" variant="contained" className={clsx(classes.button, classes.activeButton)} onClick={this.handleRegisterBtnClick}>

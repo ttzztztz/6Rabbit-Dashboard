@@ -88,11 +88,13 @@ export interface ILoginStart {
     type: LOGIN_START;
     username: string;
     password: string;
+    token: string;
 }
-export const loginStart = (username: string, password: string): ILoginStart => ({
+export const loginStart = (username: string, password: string, token: string): ILoginStart => ({
     type: LOGIN_START,
     username,
-    password
+    password,
+    token
 });
 
 export const LOGIN_OK = "LOGIN_OK";

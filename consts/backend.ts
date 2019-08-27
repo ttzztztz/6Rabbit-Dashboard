@@ -1,3 +1,6 @@
+export const CLIENT_BACKEND = "https://www.6rabbit.com/api";
+export const SERVER_BACKEND = "http://backend";
+
 export const BACKEND_ROOT = "http://localhost:8000";
 
 export const FETCH_THREAD_LIST = (fid: string, page: string) => `${BACKEND_ROOT}/thread/list/${fid}/${page}`;

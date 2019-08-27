@@ -24,6 +24,7 @@ import { FETCH_THREAD, FETCH_POST, FETCH_UNUSED_ATTACH, DELETE_ATTACH, FETCH_PIC
 import Upload from "../../containers/Upload";
 import { Dispatch } from "redux";
 import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
+import Vaptcha from "../../components/Vaptcha";
 
 interface IMapRouteToPageType {
     [key: string]: number;
@@ -155,7 +156,10 @@ class Post extends React.PureComponent<Props> {
         message: "",
         attach: [] as Array<IThreadAttach>,
         editorState: BraftEditor.createEditorState("<p>Hello <b>World!</b></p>"),
-        isPost: false
+        isPost: false,
+
+        timestamp: new Date().getTime(),
+        token: ""
     };
 
     handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -182,61 +186,85 @@ class Post extends React.PureComponent<Props> {
 
     createThread = async () => {
         const { dispatch, router } = this.props;
-        const { fid, subject, message, attach } = this.state;
-        const res = await requestCreateThread(fid, subject, message, attach, dispatch);
-        const { code, message: responseMsg } = res;
+        const { fid, subject, message, attach, token } = this.state;
+        try {
+            const res = await requestCreateThread(fid, subject, message, attach, token, dispatch);
+            const { code, message: responseMsg } = res;
 
-        this.showSnackbar(res);
-        if (code === 200) {
-            const url = THREAD_INFO_RAW;
-            const as = THREAD_INFO(responseMsg);
-            router.push(url, as);
+            this.showSnackbar(res);
+            if (code === 200) {
+                const url = THREAD_INFO_RAW;
+                const as = THREAD_INFO(responseMsg);
+                router.push(url, as);
+            }
+        } finally {
+            this.setState({
+                timestamp: new Date().getTime()
+            });
         }
     };
     editThread = async () => {
         const { router, dispatch } = this.props;
         const tid = router.query["tid"] as string;
 
-        const { fid, subject, message, attach } = this.state;
-        const res = await requestEditThread(tid, fid, subject, message, attach, dispatch);
-        const { code } = res;
+        const { fid, subject, message, attach, token } = this.state;
 
-        this.showSnackbar(res);
-        if (code === 200) {
-            const url = THREAD_INFO_RAW;
-            const as = THREAD_INFO(tid);
-            router.push(url, as);
+        try {
+            const res = await requestEditThread(tid, fid, subject, message, attach, token, dispatch);
+            const { code } = res;
+
+            this.showSnackbar(res);
+            if (code === 200) {
+                const url = THREAD_INFO_RAW;
+                const as = THREAD_INFO(tid);
+                router.push(url, as);
+            }
+        } finally {
+            this.setState({
+                timestamp: new Date().getTime()
+            });
         }
     };
     createReply = async () => {
         const { router, dispatch } = this.props;
         const tid = router.query["tid"] as string;
         const quotepid = router.query["quotepid"] as string;
-        const { message } = this.state;
+        const { message, token } = this.state;
+        try {
+            const res = await requestReply(tid, message, quotepid, token, dispatch);
+            const { code } = res;
 
-        const res = await requestReply(tid, message, quotepid, dispatch);
-        const { code } = res;
-
-        this.showSnackbar(res);
-        if (code === 200) {
-            const url = THREAD_INFO_RAW;
-            const as = THREAD_INFO(tid);
-            router.push(url, as);
+            this.showSnackbar(res);
+            if (code === 200) {
+                const url = THREAD_INFO_RAW;
+                const as = THREAD_INFO(tid);
+                router.push(url, as);
+            }
+        } finally {
+            this.setState({
+                timestamp: new Date().getTime()
+            });
         }
     };
     editReply = async () => {
         const { router, dispatch } = this.props;
         const pid = router.query["pid"] as string;
-        const { message } = this.state;
+        const { message, token } = this.state;
+        try {
+            const res = await requestEditReply(pid, message, token, dispatch);
+            const { code, message: responseMsg } = res;
 
-        const res = await requestEditReply(pid, message, dispatch);
-        const { code, message: responseMsg } = res;
+            this.showSnackbar(res);
 
-        this.showSnackbar(res);
-        if (code === 200) {
-            const url = THREAD_INFO_RAW;
-            const as = THREAD_INFO(responseMsg);
-            router.push(url, as);
+            if (code === 200) {
+                const url = THREAD_INFO_RAW;
+                const as = THREAD_INFO(responseMsg);
+                router.push(url, as);
+            }
+        } finally {
+            this.setState({
+                timestamp: new Date().getTime()
+            });
         }
     };
 
@@ -309,9 +337,15 @@ class Post extends React.PureComponent<Props> {
         return <Upload fileList={attach} onRemove={handleRemove} onChange={handleChange} onInsertImage={handleInsertImage} />;
     };
 
+    handleChangeToken = (token: string) => {
+        this.setState({
+            token
+        });
+    };
+
     render() {
         const { classes, router, forum, isAdmin } = this.props;
-        const { fid, subject: title, isPost } = this.state;
+        const { fid, subject: title, isPost, timestamp } = this.state;
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
         const renderForum = forum.filter(item => (!isAdmin && !item.adminPost) || isAdmin);
@@ -364,6 +398,7 @@ class Post extends React.PureComponent<Props> {
                     <div className={classes["content-container"]}>{this.renderEditor()}</div>
                     {!isPost && this.renderAttach()}
                     <div className={classes["btn-container"]}>
+                        <Vaptcha onChangeToken={this.handleChangeToken} timestamp={timestamp} />
                         <Fab variant="extended" size="medium" color="primary" aria-label="add" className={classes.button} onClick={this.handleSubmitClick}>
                             <MessageIcon className={classes["btn-icon"]} />
                             {showTitle}

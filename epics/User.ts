@@ -63,13 +63,14 @@ import { IOAuthInfoResponse } from "../typings";
 const login: Epic<ILoginStart> = action$ =>
     action$.pipe(
         ofType(LOGIN_START),
-        mergeMap(({ username, password }) =>
+        mergeMap(({ username, password, token }) =>
             FrontendRequestObservable({
                 url: POST_LOGIN,
                 method: "POST",
                 data: {
                     username,
-                    password: passwordMD5(password)
+                    password: passwordMD5(password),
+                    token
                 }
             }).pipe(
                 mergeMap(({ data: { code, message } }) => {
