@@ -13,7 +13,8 @@ import {
     getThreadListOK,
     IGetForumInfoStart,
     GET_FORUM_INFO_START,
-    getForumOK
+    getForumOK,
+    getNewThreadListOK
 } from "../actions/async";
 import { FETCH_THREAD_LIST, FETCH_FORUM_LIST, FETCH_FORUM_INFO } from "../consts/backend";
 import { IThreadListItem, IForumItem } from "../typings";
@@ -27,9 +28,15 @@ const fetchThreadList: Epic<IGetThreadListStart> = action$ =>
             from(axios({ url: FETCH_THREAD_LIST(fid, page), method: "GET" })).pipe(
                 map(({ data: { message } }) => {
                     const list: Array<IThreadListItem> = message.list as Array<IThreadListItem>;
-                    const forum: IForumItem = message.forum;
+                    if (fid === "new") {
+                        const total: number = message.total;
 
-                    return getThreadListOK(list, forum);
+                        return getNewThreadListOK(list, total);
+                    } else {
+                        const forum: IForumItem = message.forum;
+
+                        return getThreadListOK(list, forum);
+                    }
                 })
             )
         )

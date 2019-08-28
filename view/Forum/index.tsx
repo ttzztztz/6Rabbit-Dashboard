@@ -11,7 +11,7 @@ import { IThreadListItem, IExtendedNextPageContext, IForumItem } from "../../typ
 import { TITLE_PREFIX } from "../../consts";
 import { THREAD_LIST, THREAD_LIST_RAW } from "../../consts/routers";
 import { Epics } from "../../epics";
-import { getThreadListStart, IGetThreadListStart, getForumInfoStart, IGetForumInfoStart } from "../../actions/async";
+import { getThreadListStart, IGetThreadListStart } from "../../actions/async";
 
 import { withRouter, NextRouter } from "next/dist/client/router";
 import Head from "next/head";
@@ -40,8 +40,9 @@ class Forum extends React.PureComponent<Props> {
     }
 
     handlePageChange = (page: number) => {
+        const { fid } = this.props;
         const url = THREAD_LIST_RAW;
-        const as = THREAD_LIST(page.toString());
+        const as = THREAD_LIST(fid, page.toString());
         this.props.router.push(url, as);
     };
 

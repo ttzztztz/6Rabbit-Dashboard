@@ -25,7 +25,7 @@ interface Props extends WithStyles {
 
     total: number;
     page: number;
-    onPageChange: (page: number) => void;
+    onPageChange?: (page: number) => void;
 }
 
 class ThreadList extends React.Component<Props> {
@@ -71,11 +71,13 @@ class ThreadList extends React.Component<Props> {
                                 </TableCell>
                             </TableRow>
                         )}
-                        <TableRow>
-                            <TableCell component="th" scope="row" className={classes["no-border-cell"]}>
-                                <PaginationComponent total={total} page={page} onPageChange={onPageChange} />
-                            </TableCell>
-                        </TableRow>
+                        {onPageChange && (
+                            <TableRow>
+                                <TableCell component="th" scope="row" className={classes["no-border-cell"]}>
+                                    <PaginationComponent total={total} page={page} onPageChange={onPageChange} />
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableFooter>
                 </Table>
             </Paper>

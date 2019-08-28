@@ -1,6 +1,7 @@
 import "braft-editor/dist/index.css";
 import React from "react";
 import styles from "./style";
+import { Dispatch } from "redux";
 
 import { OptionsObject } from "notistack";
 import BraftEditor from "braft-editor";
@@ -22,7 +23,6 @@ import FrontendRequestObservable from "../../model/FrontendRequestObservable";
 import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 import { FETCH_THREAD, FETCH_POST, FETCH_UNUSED_ATTACH, DELETE_ATTACH, FETCH_PICTURE_ATTACH } from "../../consts/backend";
 import Upload from "../../containers/Upload";
-import { Dispatch } from "redux";
 import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
 import Vaptcha from "../../components/Vaptcha";
 
@@ -267,7 +267,11 @@ class Post extends React.PureComponent<Props> {
             });
         }
     };
-
+    handleChangeToken = (token: string) => {
+        this.setState({
+            token
+        });
+    };
     handleSubmitClick = () => {
         const { router } = this.props;
         switch (mapRouteToPageType[router.pathname]) {
@@ -334,13 +338,12 @@ class Post extends React.PureComponent<Props> {
         };
 
         const { attach } = this.state;
-        return <Upload fileList={attach} onRemove={handleRemove} onChange={handleChange} onInsertImage={handleInsertImage} />;
-    };
-
-    handleChangeToken = (token: string) => {
-        this.setState({
-            token
-        });
+        const { classes } = this.props;
+        return (
+            <div className={classes["attach-container"]}>
+                <Upload fileList={attach} onRemove={handleRemove} onChange={handleChange} onInsertImage={handleInsertImage} />
+            </div>
+        );
     };
 
     render() {

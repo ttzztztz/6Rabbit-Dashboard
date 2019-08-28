@@ -36,6 +36,17 @@ export const getThreadListOK = (list: Array<IThreadListItem>, forum: IForumItem)
     payload: { list, forum }
 });
 
+export const GET_NEW_THREAD_LIST_OK = "GET_NEW_THREAD_LIST_OK";
+export type GET_NEW_THREAD_LIST_OK = typeof GET_NEW_THREAD_LIST_OK;
+export interface IGetNewThreadListOK {
+    type: GET_NEW_THREAD_LIST_OK;
+    payload: { list: Array<IThreadListItem>; total: number };
+}
+export const getNewThreadListOK = (list: Array<IThreadListItem>, total: number): IGetNewThreadListOK => ({
+    type: GET_NEW_THREAD_LIST_OK,
+    payload: { list, total }
+});
+
 export const GET_POST_INFO_START = "GET_POST_INFO_START";
 export type GET_POST_INFO_START = typeof GET_POST_INFO_START;
 export interface IGetPostInfoStart {

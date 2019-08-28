@@ -295,3 +295,8 @@ export interface IThreadImageItem {
     tid: string;
     picture: string;
 }
+
+export interface IThreadListNewResponse {
+    total: number;
+    list: Array<IThreadListItem>;
+}

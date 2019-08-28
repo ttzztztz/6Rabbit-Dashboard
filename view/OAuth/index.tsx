@@ -10,7 +10,7 @@ import Head from "next/head";
 import { NextRouter, withRouter } from "next/dist/client/router";
 
 import { TITLE_PREFIX } from "../../consts";
-import { HOMEPAGE, USER_CENTER, USER_REGISTER, USER_LOGIN } from "../../consts/routers";
+import { HOMEPAGE, USER_REGISTER, USER_LOGIN } from "../../consts/routers";
 import { IOAuthActionPayload } from "../../typings";
 import AvatarBoard from "../../components/AvatarBoard";
 

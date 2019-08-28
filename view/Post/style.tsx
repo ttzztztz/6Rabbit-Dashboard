@@ -49,6 +49,9 @@ const styles = (theme: Theme) =>
         "charge-field": {
             width: "200px",
             marginRight: "6px"
+        },
+        "attach-container": {
+            margin: theme.spacing(3, 0)
         }
     });
 
