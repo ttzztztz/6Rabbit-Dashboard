@@ -57,6 +57,25 @@ interface Props extends WithStyles {
 }
 
 class Post extends React.PureComponent<Props> {
+    processAttachForRender = (attachList: Array<IThreadAttach>) => {
+        attachList.forEach(item => {
+            if (item.creditsType === 3) {
+                item.credits = item.credits / 100.0;
+            }
+            return item;
+        });
+        return attachList;
+    };
+    processAttachForServer = (attachList: Array<IThreadAttach>) => {
+        attachList.forEach(item => {
+            if (item.creditsType === 3) {
+                item.credits = item.credits * 100.0;
+            }
+            return item;
+        });
+        return attachList;
+    };
+
     async componentDidMount() {
         const {
             router: { pathname, query }
@@ -67,7 +86,7 @@ class Post extends React.PureComponent<Props> {
             subject = "";
 
         if (pathname === "/thread/create") {
-            const attach = await this.fetchUnusedAttach();
+            const attach = this.processAttachForRender(await this.fetchUnusedAttach());
             this.setState({
                 attach
             });
@@ -95,8 +114,9 @@ class Post extends React.PureComponent<Props> {
                 this.fetchUnusedAttach()
             ]);
 
+            const newAttachList = this.processAttachForRender([...attach, ...(attachList as Array<IThreadAttach>)]);
             this.setState({
-                attach: [...attach, ...attachList]
+                attach: newAttachList
             });
 
             [subject, fid, message] = [currentSubject, currentFid, currentMessage];
@@ -188,7 +208,7 @@ class Post extends React.PureComponent<Props> {
         const { dispatch, router } = this.props;
         const { fid, subject, message, attach, token } = this.state;
         try {
-            const res = await requestCreateThread(fid, subject, message, attach, token, dispatch);
+            const res = await requestCreateThread(fid, subject, message, this.processAttachForServer(attach), token, dispatch);
             const { code, message: responseMsg } = res;
 
             this.showSnackbar(res);
@@ -210,7 +230,7 @@ class Post extends React.PureComponent<Props> {
         const { fid, subject, message, attach, token } = this.state;
 
         try {
-            const res = await requestEditThread(tid, fid, subject, message, attach, token, dispatch);
+            const res = await requestEditThread(tid, fid, subject, message, this.processAttachForServer(attach), token, dispatch);
             const { code } = res;
 
             this.showSnackbar(res);

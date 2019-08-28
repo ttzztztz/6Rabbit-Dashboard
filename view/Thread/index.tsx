@@ -50,9 +50,9 @@ import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
 import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD, FETCH_ATTACH_PAY, FETCH_ATTACH_INFO } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
-import getCreditsNameById from "../../model/CreditsName";
 import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 import Vaptcha from "../../components/Vaptcha";
+import renderCredits from "../../model/RenderCredits";
 
 interface Props extends WithStyles {
     router: NextRouter;
@@ -280,8 +280,7 @@ class Thread extends React.Component<Props> {
                 <DialogTitle>操作确认</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        请您先购买附件：【{title}】，您需要支付{credits}
-                        {getCreditsNameById(creditsType)}。
+                        请您先购买附件：【{title}】，您需要支付{renderCredits(creditsType, credits)}。
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

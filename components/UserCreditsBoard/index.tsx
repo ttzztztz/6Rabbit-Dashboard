@@ -68,7 +68,7 @@ class UserCreditsBoard extends React.PureComponent<Props> {
                             <AttachMoneyIcon />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary="人民币" secondary={rmbs.toFixed(2)} />
+                    <ListItemText primary="人民币" secondary={(rmbs / 100.0).toFixed(2)} />
                 </ListItem>
             </List>
         );

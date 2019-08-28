@@ -31,6 +31,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import PersonIcon from "@material-ui/icons/Person";
 import SearchIcon from "@material-ui/icons/Search";
+import ToggleOnIcon from "@material-ui/icons/ToggleOn";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { WithStyles, withStyles } from "@material-ui/core";
 
@@ -45,7 +46,8 @@ import {
     USER_REGISTER,
     USER_NOTIFICATION_CENTER,
     SEARCH_RAW,
-    SEARCH
+    SEARCH,
+    ADMIN
 } from "../../consts/routers";
 
 import Link from "next/link";
@@ -57,6 +59,7 @@ interface Props extends WithStyles {
 
     loading: boolean;
     isLogin: boolean;
+    isAdmin: boolean;
     username: string;
     uid: string;
     avatar: string;
@@ -86,43 +89,56 @@ class Bar extends React.PureComponent<Props> {
     };
 
     renderNavList = () => {
-        const { isLogin } = this.props;
+        const { isLogin, isAdmin } = this.props;
         const navItemList = [
             {
                 icon: <HomeIcon />,
                 title: "首页",
                 router: HOMEPAGE,
-                as: HOMEPAGE
+                as: HOMEPAGE,
+                requireAdmin: false
             },
             {
                 icon: <SubjectIcon />,
                 title: "博客",
                 router: THREAD_LIST_RAW,
-                as: THREAD_LIST("1")
+                as: THREAD_LIST("1"),
+                requireAdmin: false
             },
             {
                 icon: <MessageIcon />,
                 title: "讨论",
                 router: THREAD_LIST_RAW,
-                as: THREAD_LIST("2")
+                as: THREAD_LIST("2"),
+                requireAdmin: false
             },
             {
                 icon: <ShoppingCartIcon />,
                 title: "商城",
                 router: THREAD_LIST_RAW,
-                as: THREAD_LIST("3")
+                as: THREAD_LIST("3"),
+                requireAdmin: false
             },
             {
                 icon: <PersonIcon />,
                 title: "用户",
                 router: isLogin ? USER_CENTER : USER_LOGIN,
-                as: isLogin ? USER_CENTER : USER_LOGIN
+                as: isLogin ? USER_CENTER : USER_LOGIN,
+                requireAdmin: false
+            },
+            {
+                icon: <ToggleOnIcon />,
+                title: "管理",
+                router: ADMIN,
+                as: ADMIN,
+                requireAdmin: true
             }
         ];
 
+        const renderedItemList = navItemList.filter(item => isAdmin || (!isAdmin && !item.requireAdmin));
         return (
             <>
-                {navItemList.map((item, key) => (
+                {renderedItemList.map((item, key) => (
                     <Link key={key} href={item.router} as={item.as}>
                         <ListItem button>
                             <ListItemIcon>{item.icon}</ListItemIcon>

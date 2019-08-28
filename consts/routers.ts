@@ -4,6 +4,7 @@ export const USER_CENTER = `/user`;
 export const USER_NOTIFICATION_CENTER = `/user?state=notification`;
 export const USER_CREDITS = `/user?state=credits`;
 export const HOMEPAGE = `/`;
+export const ADMIN = `/admin`;
 
 export const USER_PROFILE_RAW = `/profile/[uid]`;
 export const THREAD_INFO_RAW = `/thread/[tid]/[page]`;

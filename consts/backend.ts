@@ -1,5 +1,7 @@
-export const CLIENT_BACKEND = process.env.NODE_ENV === "production" ? "https://www.6rabbit.com/api" : "http://localhost:8000";
-export const SERVER_BACKEND = process.env.NODE_ENV === "production" ? "http://backend" : "http://localhost:8000";
+const MODE: string = "dev";
+
+export const CLIENT_BACKEND = MODE === "prod" ? "https://www.6rabbit.com/api" : "http://localhost:8000";
+export const SERVER_BACKEND = MODE === "prod" ? "http://backend" : "http://localhost:8000";
 
 export const BACKEND_ROOT = () => (process.browser ? CLIENT_BACKEND : SERVER_BACKEND);
 
@@ -26,6 +28,7 @@ export const FETCH_ATTACH_PAY = (aid: string) => `${BACKEND_ROOT()}/attach/pay/$
 export const FETCH_ATTACH_INFO = (aid: string) => `${BACKEND_ROOT()}/attach/info/${aid}`;
 export const FETCH_CREDITS_LOG = (page: string) => `${BACKEND_ROOT()}/user/credits/log/${page}`;
 
+export const OPTIONS_DEPOSIT_ADMIN = `${BACKEND_ROOT()}/deposit/admin`;
 export const OPTIONS_NOTIFICATION_ALL = `${BACKEND_ROOT()}/notification/all`;
 export const OPTIONS_NOTIFICATION_ITEM = (nid: string) => `${BACKEND_ROOT()}/notification/item/${nid}`;
 export const OPTIONS_THREAD = (tid: string) => `${BACKEND_ROOT()}/thread/${tid}`;

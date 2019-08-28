@@ -5,14 +5,24 @@ import PageFrame from "../../components/PageFrame";
 import { StoreState } from "../../reducers";
 import { initStart, userLogoutStart } from "../../actions/async";
 
-const mapStateToProps = ({ basic: { title, loading, isLogin }, user: { username, avatar, uid }, notification: { unread } }: StoreState) => ({
+const mapStateToProps = ({
+    basic: { title, loading, isLogin },
+    user: {
+        username,
+        avatar,
+        uid,
+        usergroup: { isAdmin }
+    },
+    notification: { unread }
+}: StoreState) => ({
     title,
     loading,
     isLogin,
     username,
     avatar,
     uid,
-    unread
+    unread,
+    isAdmin
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

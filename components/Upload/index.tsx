@@ -47,7 +47,7 @@ class UserPostList extends React.Component<Props> {
             expanded: isExpanded ? panel : false
         });
     };
-    handleChangeNumber = (aid: string, key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleChangeNumber = (aid: string, key: "credits" | "creditsType") => (event: React.ChangeEvent<HTMLInputElement>) => {
         const { onChange, fileList } = this.props;
 
         const [newFileList, [changedItem]] = fileList.reduce(
@@ -62,6 +62,7 @@ class UserPostList extends React.Component<Props> {
                 } else {
                     p[0].push(item);
                 }
+
                 return p;
             },
             [[], []] as [Array<IThreadAttach>, Array<IThreadAttach>]
@@ -97,6 +98,7 @@ class UserPostList extends React.Component<Props> {
                 enqueueSnackbar("每次最多只能上传" + MAX_UPLOAD_PER_REQUEST + "个文件！", { variant: "error" });
                 return;
             }
+
             for (let i = 0; i < files.length; i++) {
                 if (files[i].size > MAX_UPLOAD_FILE_SIZE) {
                     const { enqueueSnackbar } = this.props;
@@ -113,6 +115,7 @@ class UserPostList extends React.Component<Props> {
             this.setState({
                 uploadingList: [...this.state.uploadingList, ...addedItem]
             });
+
             for (let i = 0; i < addedItem.length; i++) {
                 const { file, tempId } = addedItem[i];
                 const formData = new FormData();
@@ -180,7 +183,6 @@ class UserPostList extends React.Component<Props> {
         const { onInsertImage } = this.props;
         onInsertImage(aid);
     };
-
     renderInsertImage = (item: IThreadAttach) => {
         const { classes } = this.props;
         const splitedArr = item.originalName.split(".");
