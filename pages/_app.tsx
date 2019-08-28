@@ -36,17 +36,23 @@ class RabbitApp extends App<AppProps> {
                 <Head>
                     <title>酷兔网</title>
                 </Head>
-                <Provider store={store}>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline />
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <Provider store={store}>
                         <PageFrame>
                             <Component {...pageProps} />
                         </PageFrame>
-                    </ThemeProvider>
-                </Provider>
+                    </Provider>
+                </ThemeProvider>
             </>
         );
     }
 }
+
+RabbitApp.getInitialProps = async ({ Component, ctx }: AppContext) => {
+    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+
+    return { pageProps };
+};
 
 export default withRedux(initStore)(RabbitApp);

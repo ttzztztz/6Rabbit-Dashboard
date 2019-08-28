@@ -1,5 +1,3 @@
-import "braft-editor/dist/output.css";
-
 import React from "react";
 import styles from "./style";
 import clsx from "clsx";

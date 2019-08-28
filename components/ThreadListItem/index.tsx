@@ -2,6 +2,9 @@ import React from "react";
 import styles from "./style";
 import clsx from "clsx";
 
+import Link from "next/link";
+import { NextRouter, withRouter } from "next/dist/client/router";
+
 import { WithStyles, withStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -15,10 +18,9 @@ import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "..
 import { ForumType, IThreadListImageItem, IForumItem } from "../../typings";
 import { FETCH_AVATAR } from "../../consts/backend";
 
-import Link from "next/link";
-
 interface Props extends WithStyles, IThreadListImageItem {
     type: ForumType;
+    router: NextRouter;
 
     canAdmin: boolean;
     isAdmin: boolean;
@@ -105,12 +107,12 @@ class ThreadListItem extends React.Component<Props> {
                         {diamond > 0 && <GradeIcon className={classes["thread-icon"]} />}
                         {isTop && <ArrowUpwardIcon className={classes["thread-icon"]} />}
                         {isClosed && <LockIcon className={classes["thread-icon"]} />}
-                        <Link href={THREAD_INFO_RAW} as={THREAD_INFO(tid)} passHref>
+                        <Link href={THREAD_INFO_RAW} as={THREAD_INFO(tid)}>
                             <a>{subject}</a>
                         </Link>
                     </Typography>
                     <Typography variant="body1" className={classes["second-info"]}>
-                        <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
+                        <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)}>
                             <span className={clsx(classes["author-username"], classes["second-info-margin"])}>{username}</span>
                         </Link>
                         <span className={classes["second-info-margin"]}>{new Date(createDate).toLocaleString()}</span>
@@ -122,4 +124,4 @@ class ThreadListItem extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles)(ThreadListItem);
+export default withRouter(withStyles(styles)(ThreadListItem));

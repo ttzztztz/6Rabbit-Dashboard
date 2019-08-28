@@ -7,26 +7,26 @@ import { ServerStyleSheets } from "@material-ui/styles";
 import theme from "../styles/Theme";
 
 class MyDocument extends Document {
-    static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
-        const sheets = new ServerStyleSheets();
-        const originalRenderPage = ctx.renderPage;
+    // static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
+    //     const sheets = new ServerStyleSheets();
+    //     const originalRenderPage = ctx.renderPage;
 
-        ctx.renderPage = () =>
-            originalRenderPage({
-                enhanceApp: App => props => sheets.collect(<App {...props} />)
-            });
-        const initialProps = await Document.getInitialProps(ctx);
+    //     ctx.renderPage = () =>
+    //         originalRenderPage({
+    //             enhanceApp: App => props => sheets.collect(<App {...props} />)
+    //         });
+    //     const initialProps = await Document.getInitialProps(ctx);
 
-        return {
-            ...initialProps,
-            styles: [
-                <React.Fragment key="styles">
-                    {initialProps.styles}
-                    {sheets.getStyleElement()}
-                </React.Fragment>
-            ]
-        };
-    }
+    //     return {
+    //         ...initialProps,
+    //         styles: [
+    //             <React.Fragment key="styles">
+    //                 {initialProps.styles}
+    //                 {sheets.getStyleElement()}
+    //             </React.Fragment>
+    //         ]
+    //     };
+    // }
 
     render() {
         return (
@@ -37,7 +37,8 @@ class MyDocument extends Document {
                     <meta name="theme-color" content={theme.palette.primary.main} />
                     <link rel="shortcut icon" href="/static/favicon.ico" />
                     <link rel="manifest" href="/static/manifest.json" />
-                    <link rel="stylesheet" href="/static/global.css" />
+                    <link rel="stylesheet" href="/static/css/global.css" />
+                    <link rel="stylesheet" href="/static/css/output.css" />
                 </Head>
                 <body>
                     <Main />
@@ -48,5 +49,27 @@ class MyDocument extends Document {
         );
     }
 }
+
+MyDocument.getInitialProps = async (ctx: DocumentContext) => {
+    const sheets = new ServerStyleSheets();
+    const originalRenderPage = ctx.renderPage;
+
+    ctx.renderPage = () =>
+        originalRenderPage({
+            enhanceApp: App => props => sheets.collect(<App {...props} />)
+        });
+
+    const initialProps = await Document.getInitialProps(ctx);
+
+    return {
+        ...initialProps,
+        styles: [
+            <React.Fragment key="styles">
+                {initialProps.styles}
+                {sheets.getStyleElement()}
+            </React.Fragment>
+        ]
+    };
+};
 
 export default MyDocument;

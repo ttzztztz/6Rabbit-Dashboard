@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./style";
 import clsx from "clsx";
-import { Dispatch } from "redux";
+
+import { withRouter, NextRouter } from "next/dist/client/router";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
@@ -17,6 +18,8 @@ import { IThreadListImageItem, ForumType } from "../../typings";
 import ThreadAdminPanel from "../../containers/ThreadAdminPanel";
 
 interface Props extends WithStyles {
+    router: NextRouter;
+
     threadList: Array<IThreadListImageItem>;
     type: ForumType;
     showOutline?: boolean;
@@ -92,4 +95,4 @@ class ThreadList extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles)(ThreadList);
+export default withRouter(withStyles(styles)(ThreadList));
