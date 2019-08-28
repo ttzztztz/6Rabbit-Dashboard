@@ -104,6 +104,7 @@ class ProfileThreadList extends React.PureComponent<Props> {
                     showOutline={false}
                     canAdmin={false}
                     type="normal"
+                    showForumName={true}
                 />
             </>
         );

@@ -20,6 +20,7 @@ interface Props extends WithStyles {
     threadList: Array<IThreadListImageItem>;
     type: ForumType;
     showOutline?: boolean;
+    showForumName?: boolean;
     isAdmin: boolean;
     canAdmin: boolean;
 
@@ -46,7 +47,7 @@ class ThreadList extends React.Component<Props> {
     };
 
     render() {
-        const { classes, threadList, total, page, onPageChange, isAdmin, type } = this.props;
+        const { classes, threadList, total, page, onPageChange, isAdmin, type, showForumName } = this.props;
         const { checkedList } = this.state;
         const showOutline = this.props.showOutline === undefined ? true : this.props.showOutline;
         const canAdmin = this.props.canAdmin === undefined ? false : this.props.canAdmin;
@@ -58,7 +59,13 @@ class ThreadList extends React.Component<Props> {
                         {threadList.map(item => (
                             <TableRow key={item.tid}>
                                 <TableCell component="th" scope="row">
-                                    <ThreadListItem {...item} type={type} canAdmin={canAdmin} onChange={this.handleCheckedChange} />
+                                    <ThreadListItem
+                                        {...item}
+                                        type={type}
+                                        canAdmin={canAdmin}
+                                        onChange={this.handleCheckedChange}
+                                        showForumName={showForumName}
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}

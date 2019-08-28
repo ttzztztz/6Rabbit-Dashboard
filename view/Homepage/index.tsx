@@ -39,7 +39,7 @@ class Homepage extends React.PureComponent<Props> {
                 <Head>
                     <title>{TITLE_PREFIX}首页</title>
                 </Head>
-                <ThreadListComponent threadList={threadList} total={total} page={page} type="normal" canAdmin={true} />
+                <ThreadListComponent threadList={threadList} total={total} page={page} type="normal" canAdmin={true} showForumName={true} />
             </>
         );
     }

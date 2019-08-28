@@ -1,3 +1,5 @@
+import "braft-editor/dist/output.css";
+
 import React from "react";
 import styles from "./style";
 import clsx from "clsx";
@@ -5,7 +7,7 @@ import { WithStyles, withStyles } from "@material-ui/core";
 
 import Avatar from "../Avatar";
 import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
-import { IUserPostItem } from "../../typings";
+import { IUserPostItem, IForumItem } from "../../typings";
 
 import Typography from "@material-ui/core/Typography";
 import Link from "next/link";
@@ -13,9 +15,24 @@ import { FETCH_AVATAR } from "../../consts/backend";
 
 interface Props extends WithStyles, IUserPostItem {
     showAvatar: boolean;
+
+    forum: Array<IForumItem>;
 }
 
 class UserPostListItem extends React.Component<Props> {
+    renderForumName = () => {
+        const {
+            thread: { fid },
+            forum
+        } = this.props;
+        const result = forum.filter(item => item.fid === fid);
+        if (result.length === 1) {
+            return <span>{result[0].name}</span>;
+        } else {
+            return <></>;
+        }
+    };
+
     render() {
         const {
             classes,
@@ -39,7 +56,7 @@ class UserPostListItem extends React.Component<Props> {
                         </Link>
                     </div>
                 )}
-                <div>
+                <div className={classes["thread-content"]}>
                     <Link href={THREAD_INFO_RAW} as={THREAD_INFO(tid)} passHref>
                         <Typography variant="body1" component="a" className={classes["thread-list-item-title"]}>
                             {subject}
@@ -51,10 +68,11 @@ class UserPostListItem extends React.Component<Props> {
                     <Typography variant="body1" className={classes["second-info"]}>
                         {showAvatar && (
                             <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
-                                <span className={classes["author-username"]}>{username}</span>
+                                <span className={clsx(classes["author-username"], classes["second-info-margin"])}>{username}</span>
                             </Link>
                         )}
-                        <span>{new Date(createDate).toLocaleString()}</span>
+                        <span className={classes["second-info-margin"]}>{new Date(createDate).toLocaleString()}</span>
+                        {this.renderForumName()}
                     </Typography>
                 </div>
             </div>

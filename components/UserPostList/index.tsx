@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./style";
 import { WithStyles, withStyles } from "@material-ui/core";
 
-import UserPostListItem from "../UserPostListItem";
+import UserPostListItem from "../../containers/UserPostListItem";
 import PaginationComponent from "../Pagination";
 import { IUserPostItem } from "../../typings";
 

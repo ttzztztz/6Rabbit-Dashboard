@@ -1,19 +1,14 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-import ThreadListItemComponent from "../../components/ThreadListItem";
+import UserPostListItemComponent from "../../components/UserPostListItem";
 import { StoreState } from "../../reducers";
 
-const mapStateToProps = ({
-    user: {
-        usergroup: { isAdmin }
-    },
-    basic: { forum }
-}: StoreState) => ({ isAdmin, forum });
+const mapStateToProps = ({ basic: { forum } }: StoreState) => ({ forum });
 
 const mapDispatchToProps = (_: Dispatch) => ({});
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ThreadListItemComponent);
+)(UserPostListItemComponent);

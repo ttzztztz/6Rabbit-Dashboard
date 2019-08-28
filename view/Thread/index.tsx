@@ -45,7 +45,7 @@ import PaginationComponent from "../../components/Pagination";
 import ThreadAdminPanel from "../../containers/ThreadAdminPanel";
 import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
 import { TITLE_SUFFIX } from "../../consts";
-import { IPostListItem, IExtendedNextPageContext, IThreadListItem, IThreadAttach, IAttachPrefetchInfo } from "../../typings";
+import { IPostListItem, IExtendedNextPageContext, IThreadAttach, IAttachPrefetchInfo, IForumItem, IThreadItem } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
 import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD, FETCH_ATTACH_PAY, FETCH_ATTACH_INFO } from "../../consts/backend";
@@ -59,9 +59,8 @@ interface Props extends WithStyles {
 
     tid: string;
     isAdmin: boolean;
-    needBuy: boolean;
 
-    thread: IThreadListItem;
+    thread: IThreadItem;
     firstPost: IPostListItem;
     attachList: Array<IThreadAttach>;
 
@@ -71,6 +70,7 @@ interface Props extends WithStyles {
     defaultPage: number;
     defaultRes: Array<IPostListItem>;
 
+    forum: Array<IForumItem>;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     dispatch: Dispatch;
 }
@@ -189,15 +189,17 @@ class Thread extends React.Component<Props> {
 
             if (code === 200) {
                 const { needBuy, attach } = message as IAttachPrefetchInfo;
-                this.setState({
-                    payDialog: {
-                        open: true,
-                        title: item.originalName,
-                        data: attach.aid,
-                        creditsType: attach.creditsType,
-                        credits: attach.credits
-                    }
-                });
+                if (needBuy) {
+                    this.setState({
+                        payDialog: {
+                            open: true,
+                            title: item.originalName,
+                            data: attach.aid,
+                            creditsType: attach.creditsType,
+                            credits: attach.credits
+                        }
+                    });
+                }
                 return needBuy;
             } else {
                 enqueueSnackbar(message, { variant: "error" });
@@ -294,20 +296,6 @@ class Thread extends React.Component<Props> {
         );
     };
 
-    renderBuyThread = () => {
-        const {
-            classes,
-            thread: { credits, creditsType }
-        } = this.props;
-
-        return (
-            <div className={classes["purchase-container"]}>
-                该主题为付费主题，您需要先支付{credits}
-                {getCreditsNameById(creditsType)}后才能查看哦！
-            </div>
-        );
-    };
-
     renderReplyComponent = () => {
         const {
             isLogin,
@@ -350,8 +338,23 @@ class Thread extends React.Component<Props> {
         }
     };
 
+    renderForumName = () => {
+        const {
+            thread: {
+                forum: { fid }
+            },
+            forum
+        } = this.props;
+        const result = forum.filter(item => item.fid === fid);
+        if (result.length === 1) {
+            return <span>{result[0].name}</span>;
+        } else {
+            return <></>;
+        }
+    };
+
     render() {
-        const { classes, isAdmin, uid, needBuy, thread, firstPost, attachList } = this.props;
+        const { classes, isAdmin, uid, thread, firstPost, attachList } = this.props;
         const { postList, page, attachExpanded } = this.state;
 
         return (
@@ -377,18 +380,18 @@ class Thread extends React.Component<Props> {
                         </Typography>
                         <Typography variant="body1" className={classes["second-info"]}>
                             <Link href={USER_PROFILE_RAW} as={USER_PROFILE(thread.user.uid)} passHref>
-                                <span className={classes["author-username"]}>{thread.user.username}</span>
+                                <span className={clsx(classes["author-username"], classes["second-info-margin"])}>{thread.user.username}</span>
                             </Link>
-                            <span>{new Date(thread.createDate).toLocaleString()}</span>
+                            <span className={classes["second-info-margin"]}>{new Date(thread.createDate).toLocaleString()}</span>
+                            {this.renderForumName()}
                         </Typography>
                     </div>
                 </Paper>
                 <Paper className={classes.paperRoot}>
-                    {!needBuy && <div id="content-container" className="braft-output-content" dangerouslySetInnerHTML={{ __html: firstPost.message }} />}
-                    {needBuy && this.renderBuyThread()}
+                    <div id="content-container" className="braft-output-content" dangerouslySetInnerHTML={{ __html: firstPost.message }} />
                     {(isAdmin || uid === thread.user.uid) && <ThreadAdminPanel target={[thread.tid]} />}
                 </Paper>
-                {(attachList.length > 0 || needBuy) && this.renderPayDialog()}
+                {attachList.length > 0 && this.renderPayDialog()}
                 {attachList.length > 0 && (
                     <div className={classes["attach-list-container"]}>
                         {attachList.map(item => (

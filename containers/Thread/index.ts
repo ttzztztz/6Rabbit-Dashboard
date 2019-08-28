@@ -11,8 +11,8 @@ const mapStateToProps = ({
         usergroup: { isAdmin },
         uid
     },
-    basic: { isLogin }
-}: StoreState) => ({ isAdmin, uid, isLogin });
+    basic: { isLogin, forum }
+}: StoreState) => ({ isAdmin, uid, isLogin, forum });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),

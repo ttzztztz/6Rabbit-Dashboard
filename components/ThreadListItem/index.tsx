@@ -12,7 +12,7 @@ import GradeIcon from "@material-ui/icons/Grade";
 
 import Avatar from "../Avatar";
 import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
-import { ForumType, IThreadListImageItem } from "../../typings";
+import { ForumType, IThreadListImageItem, IForumItem } from "../../typings";
 import { FETCH_AVATAR } from "../../consts/backend";
 
 import Link from "next/link";
@@ -23,6 +23,8 @@ interface Props extends WithStyles, IThreadListImageItem {
     canAdmin: boolean;
     isAdmin: boolean;
     onChange: (tid: string, checked: boolean) => void;
+    showForumName?: boolean;
+    forum: Array<IForumItem>;
 }
 
 class ThreadListItem extends React.Component<Props> {
@@ -61,7 +63,7 @@ class ThreadListItem extends React.Component<Props> {
             const showPicture = picture || FETCH_AVATAR(uid);
 
             return (
-                <div className={classes["thread-pic"]}>
+                <div className={clsx(classes["thread-pic"], classes["second-info-margin"])}>
                     <Link href={THREAD_INFO_RAW} as={THREAD_INFO(tid)} passHref>
                         <Avatar src={showPicture} width={48} />
                     </Link>
@@ -69,7 +71,15 @@ class ThreadListItem extends React.Component<Props> {
             );
         }
     };
-
+    renderForumName = () => {
+        const { fid, forum } = this.props;
+        const result = forum.filter(item => item.fid === fid);
+        if (result.length === 1) {
+            return <span>{result[0].name}</span>;
+        } else {
+            return <></>;
+        }
+    };
     render() {
         const {
             classes,
@@ -81,7 +91,8 @@ class ThreadListItem extends React.Component<Props> {
             tid,
             user: { username, uid },
             canAdmin,
-            isAdmin
+            isAdmin,
+            showForumName
         } = this.props;
         const { checked } = this.state;
 
@@ -100,9 +111,10 @@ class ThreadListItem extends React.Component<Props> {
                     </Typography>
                     <Typography variant="body1" className={classes["second-info"]}>
                         <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
-                            <span className={classes["author-username"]}>{username}</span>
+                            <span className={clsx(classes["author-username"], classes["second-info-margin"])}>{username}</span>
                         </Link>
-                        <span>{new Date(createDate).toLocaleString()}</span>
+                        <span className={classes["second-info-margin"]}>{new Date(createDate).toLocaleString()}</span>
+                        {!!showForumName && this.renderForumName()}
                     </Typography>
                 </div>
             </div>

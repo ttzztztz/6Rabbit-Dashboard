@@ -14,8 +14,10 @@ const styles = (theme: Theme) =>
             cursor: "pointer"
         },
         "author-username": {
-            marginRight: "12px",
             cursor: "pointer"
+        },
+        "second-info-margin": {
+            marginRight: "12px"
         },
         "second-info": {
             color: "rgba(134, 142, 150, 0.8)",

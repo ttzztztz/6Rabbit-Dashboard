@@ -40,6 +40,10 @@ export interface IThreadListItem extends IThreadAbstract {
     fid: string;
 }
 
+export interface IThreadItem extends IThreadAbstract {
+    forum: IForumItem;
+}
+
 export interface IThreadListImageItem extends IThreadListItem {
     image?: string;
 }

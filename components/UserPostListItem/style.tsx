@@ -14,8 +14,10 @@ const styles = (_theme: Theme) =>
             cursor: "pointer"
         },
         "author-username": {
-            marginRight: "12px",
             cursor: "pointer"
+        },
+        "second-info-margin": {
+            marginRight: "12px"
         },
         "second-info": {
             color: "rgba(134, 142, 150, 0.8)",
@@ -31,8 +33,12 @@ const styles = (_theme: Theme) =>
                 bottom: "0",
                 height: "70px",
                 position: "absolute",
-                width: "100%"
+                width: "100%",
+                pointerEvents: "none"
             }
+        },
+        "thread-content": {
+            flexGrow: 1
         }
     });
 
