@@ -1,3 +1,5 @@
-import LoginView from "../../containers/Login";
+import dynamic from "next/dynamic";
 
-export default LoginView;
+export default dynamic(import("../../containers/Login"), {
+    ssr: false
+});

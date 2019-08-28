@@ -1,3 +1,5 @@
-import AdminView from "../containers/Admin";
+import dynamic from "next/dynamic";
 
-export default AdminView;
+export default dynamic(import("../containers/Admin"), {
+    ssr: false
+});

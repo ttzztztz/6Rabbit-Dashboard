@@ -1,3 +1,5 @@
-import OAuthView from "../../containers/OAuth";
+import dynamic from "next/dynamic";
 
-export default OAuthView;
+export default dynamic(import("../../containers/OAuth"), {
+    ssr: false
+});

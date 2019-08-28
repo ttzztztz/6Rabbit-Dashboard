@@ -1,3 +1,5 @@
-import SearchView from "../../../containers/Search";
+import dynamic from "next/dynamic";
 
-export default SearchView;
+export default dynamic(import("../../../containers/Search"), {
+    ssr: false
+});
