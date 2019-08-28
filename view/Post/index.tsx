@@ -1,4 +1,3 @@
-import "braft-editor/dist/index.css";
 import React from "react";
 import styles from "./style";
 import { Dispatch } from "redux";
@@ -379,6 +378,7 @@ class Post extends React.PureComponent<Props> {
                         {TITLE_PREFIX}
                         {showTitle}
                     </title>
+                    <link rel="stylesheet" href="/static/css/editor.css" />
                 </Head>
                 <Paper className={classes.root}>
                     <Typography variant="h5" component="h3" className={classes["title"]}>
