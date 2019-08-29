@@ -15,11 +15,18 @@ const styles = (theme: Theme) =>
             alignItems: "center"
         },
         secondaryHeading: {
-            color: theme.palette.text.secondary
+            color: theme.palette.text.secondary,
+            [theme.breakpoints.down("md")]: {
+                display: "none"
+            }
         },
         "detail-container": {
             display: "flex",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            [theme.breakpoints.down("sm")]: {
+                flexWrap: "wrap",
+                justifyContent: "center"
+            }
         },
         icon: {
             fontSize: "16px",
