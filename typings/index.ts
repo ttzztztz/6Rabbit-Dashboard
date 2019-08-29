@@ -122,6 +122,8 @@ export interface IPostListItem {
     quote: IQuotePost;
     isFirst: boolean;
     message: string;
+
+    attachList: Array<IThreadAttach>;
     createDate: Date;
 }
 

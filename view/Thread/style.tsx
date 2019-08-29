@@ -51,29 +51,10 @@ const styles = (theme: Theme) =>
             display: "flex",
             alignItems: "center"
         },
-        "attach-list-container": {
-            margin: theme.spacing(2, 0)
-        },
-        heading: {
-            flexGrow: 2,
-            display: "flex",
-            alignItems: "center"
-        },
-        secondaryHeading: {
-            color: theme.palette.text.secondary
-        },
         "btn-container": {
             display: "flex",
             alignItems: "center"
-        },
-        "detail-container": {
-            display: "flex",
-            justifyContent: "space-between"
-        },
-        "attach-icon": {
-            marginRight: theme.spacing(0.5)
-        },
-        "purchase-container": {}
+        }
     });
 
 export default styles;

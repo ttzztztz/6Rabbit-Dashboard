@@ -16,6 +16,7 @@ import Avatar from "../Avatar";
 import { IPostListItem } from "../../typings";
 import { FETCH_AVATAR } from "../../consts/backend";
 import { USER_PROFILE_RAW, USER_PROFILE, POST_UPDATE_RAW, POST_UPDATE } from "../../consts/routers";
+import AttachList from "../../containers/AttachList";
 
 interface Props extends WithStyles, IPostListItem {
     isAdmin: boolean;
@@ -73,7 +74,8 @@ class PostListItem extends React.PureComponent<Props> {
             message,
             user: { username, uid, signature },
             isAdmin,
-            uid: readerUid
+            uid: readerUid,
+            attachList
         } = this.props;
         const userAvatar = FETCH_AVATAR(uid);
 
@@ -84,14 +86,15 @@ class PostListItem extends React.PureComponent<Props> {
                         <Avatar src={userAvatar} width={32} />
                     </Link>
                 </div>
-                <div>
+                <div className={classes["post-content-container"]}>
                     <div className={classes["post-list-item-info"]}>
                         <Link href={USER_PROFILE_RAW} as={USER_PROFILE(uid)} passHref>
                             <span className={classes["action-btn"]}>{username}</span>
                         </Link>
                         <span>{new Date(createDate).toLocaleString()}</span>
                     </div>
-                    <div className={clsx("content-container", "braft-output-content")} dangerouslySetInnerHTML={{ __html: message }} />
+                    <div className={clsx("content-container", "braft-output-content")} dangerouslySetInnerHTML={{ __html: message }}></div>
+                    {attachList.length > 0 && <AttachList attachList={attachList} authorUid={uid} />}
                     <div className={classes["post-list-item-info"]}>
                         {signature && <div className={classes["post-list-user-signature"]}>{signature}</div>}
                         {(isAdmin || readerUid === uid) && (

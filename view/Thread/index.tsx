@@ -7,7 +7,6 @@ import { Dispatch } from "redux";
 import { StateObservable, ActionsObservable } from "redux-observable";
 
 import { WithStyles, withStyles } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -15,23 +14,14 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import Fab from "@material-ui/core/Fab";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 import MessageIcon from "@material-ui/icons/Message";
 import LockIcon from "@material-ui/icons/Lock";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import GradeIcon from "@material-ui/icons/Grade";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AttachmentIcon from "@material-ui/icons/Attachment";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 
 import { NextRouter, withRouter } from "next/dist/client/router";
 import Head from "next/head";
@@ -41,16 +31,16 @@ import Avatar from "../../components/Avatar";
 import PostListItem from "../../containers/PostListItem";
 import PaginationComponent from "../../components/Pagination";
 import ThreadAdminPanel from "../../containers/ThreadAdminPanel";
-import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE } from "../../consts/routers";
+import { THREAD_INFO, THREAD_INFO_RAW, USER_PROFILE_RAW, USER_PROFILE, THREAD_REPLY_RAW, THREAD_REPLY } from "../../consts/routers";
 import { TITLE_SUFFIX } from "../../consts";
-import { IPostListItem, IExtendedNextPageContext, IThreadAttach, IAttachPrefetchInfo, IForumItem, IThreadItem } from "../../typings";
+import { IPostListItem, IExtendedNextPageContext, IThreadAttach, IForumItem, IThreadItem } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
-import { FETCH_THREAD, FETCH_AVATAR, POST_FILE_DOWNLOAD, FETCH_ATTACH_PAY, FETCH_ATTACH_INFO } from "../../consts/backend";
+import { FETCH_THREAD, FETCH_AVATAR } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
 import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 import Vaptcha from "../../components/Vaptcha";
-import renderCredits from "../../model/RenderCredits";
+import AttachList from "../../containers/AttachList";
 
 interface Props extends WithStyles {
     router: NextRouter;
@@ -96,15 +86,6 @@ class Thread extends React.Component<Props> {
         postList: [] as Array<IPostListItem>,
         page: this.props.defaultPage,
 
-        attachExpanded: false as boolean | string,
-        payDialog: {
-            open: false,
-            data: "1",
-            title: "",
-            creditsType: 0,
-            credits: 0
-        },
-
         activePostBtn: true,
         timestamp: new Date().getTime(),
         token: ""
@@ -139,15 +120,22 @@ class Thread extends React.Component<Props> {
             postList: postList
         });
     };
+    handleAdvancedReply = () => {
+        const { router, tid } = this.props;
+        const url = THREAD_REPLY_RAW;
+        const as = THREAD_REPLY(tid);
 
+        router.push(url, as);
+    };
     handleReply = async () => {
         const { tid, enqueueSnackbar, dispatch } = this.props;
         const { reply, quotepid, page, token } = this.state;
         this.setState({
             activePostBtn: false
         });
+
         try {
-            const { code, message } = await requestReply(tid, reply, quotepid, token, dispatch);
+            const { code, message } = await requestReply(tid, reply, [], quotepid, token, dispatch);
             if (code === 200) {
                 enqueueSnackbar("回帖成功！", { variant: "success" });
                 this.onPageChange(page);
@@ -164,133 +152,6 @@ class Thread extends React.Component<Props> {
                 timestamp: new Date().getTime()
             });
         }
-    };
-
-    handleExpandPanel = (panel: string) => (_e: React.ChangeEvent<{}>, isExpanded: boolean) => {
-        this.setState({
-            attachExpanded: isExpanded ? panel : false
-        });
-    };
-
-    handleDownload = (item: IThreadAttach) => async () => {
-        const attachNeedBuyPrefetch = async (aid: string) => {
-            const { enqueueSnackbar, dispatch } = this.props;
-            const {
-                data: { code, message }
-            } = await FrontendRequestPromise(
-                {
-                    url: FETCH_ATTACH_INFO(aid),
-                    method: "GET"
-                },
-                dispatch
-            );
-
-            if (code === 200) {
-                const { needBuy, attach } = message as IAttachPrefetchInfo;
-                if (needBuy) {
-                    this.setState({
-                        payDialog: {
-                            open: true,
-                            title: item.originalName,
-                            data: attach.aid,
-                            creditsType: attach.creditsType,
-                            credits: attach.credits
-                        }
-                    });
-                }
-                return needBuy;
-            } else {
-                enqueueSnackbar(message, { variant: "error" });
-            }
-            return false;
-        };
-
-        const { isLogin, enqueueSnackbar, uid, thread } = this.props;
-        const { aid } = item;
-        const token = localStorage.getItem("token");
-        if (!isLogin || !token) {
-            enqueueSnackbar("请先登录！", { variant: "warning" });
-            return;
-        }
-
-        if (item.credits === 0 || item.creditsType === 0 || uid === thread.user.uid || !(await attachNeedBuyPrefetch(aid))) {
-            this.startDownload(item.aid);
-        }
-    };
-
-    startDownload = (aid: string) => {
-        const token = localStorage.getItem("token");
-        const tempForm = document.createElement("form");
-        tempForm.action = POST_FILE_DOWNLOAD(aid);
-        tempForm.target = "_blank";
-        tempForm.method = "POST";
-        tempForm.style.display = "none";
-
-        const tokenElement = document.createElement("textarea");
-        tokenElement.name = "token";
-        tokenElement.value = token!;
-        tempForm.appendChild(tokenElement);
-
-        document.body.appendChild(tempForm);
-        tempForm.submit();
-        tempForm.remove();
-    };
-
-    renderPayDialog = () => {
-        const {
-            payDialog: { open, data, creditsType, credits, title }
-        } = this.state;
-
-        const handleDialogClose = () => {
-            this.setState({
-                payDialog: {
-                    ...this.state.payDialog,
-                    open: false
-                }
-            });
-        };
-        const handleConirmBtnClick = async () => {
-            handleDialogClose();
-
-            const { enqueueSnackbar, dispatch } = this.props;
-            const url = FETCH_ATTACH_PAY(data);
-
-            const {
-                data: { code, message }
-            } = await FrontendRequestPromise(
-                {
-                    url,
-                    method: "GET"
-                },
-                dispatch
-            );
-
-            if (code === 200) {
-                enqueueSnackbar("购买成功！", { variant: "success" });
-                this.startDownload(data);
-            } else {
-                enqueueSnackbar(message, { variant: "warning" });
-            }
-        };
-
-        return (
-            <Dialog open={open} onClose={handleDialogClose}>
-                <DialogTitle>操作确认</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        请您先购买附件：【{title}】，您需要支付{renderCredits(creditsType, credits)}。
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleConirmBtnClick} color="primary">
-                        确认购买
-                    </Button>
-                    <Button onClick={handleDialogClose} color="primary">
-                        取消购买
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
     };
 
     renderReplyComponent = () => {
@@ -325,10 +186,15 @@ class Thread extends React.Component<Props> {
                     />
                     <div className={classes["reply-container"]}>
                         <Vaptcha onChangeToken={handleChangeToken} timestamp={timestamp} />
-                        <Fab variant="extended" size="medium" color="primary" className={classes.button} onClick={this.handleReply} disabled={!activePostBtn}>
-                            <MessageIcon className={classes["icon"]} />
-                            回复
-                        </Fab>
+                        <ButtonGroup variant="contained" color="primary" className={classes.button}>
+                            <Button onClick={this.handleReply} disabled={!activePostBtn}>
+                                <MessageIcon className={classes["icon"]} />
+                                回复
+                            </Button>
+                            <Button color="primary" size="small" onClick={this.handleAdvancedReply}>
+                                <ArrowDropDownIcon />
+                            </Button>
+                        </ButtonGroup>
                     </div>
                 </Paper>
             );
@@ -352,7 +218,7 @@ class Thread extends React.Component<Props> {
 
     render() {
         const { classes, isAdmin, uid, thread, firstPost, attachList } = this.props;
-        const { postList, page, attachExpanded } = this.state;
+        const { postList, page } = this.state;
 
         return (
             <>
@@ -388,35 +254,7 @@ class Thread extends React.Component<Props> {
                     <div id="content-container" className="braft-output-content" dangerouslySetInnerHTML={{ __html: firstPost.message }} />
                     {(isAdmin || uid === thread.user.uid) && <ThreadAdminPanel target={[thread.tid]} />}
                 </Paper>
-                {attachList.length > 0 && this.renderPayDialog()}
-                {attachList.length > 0 && (
-                    <div className={classes["attach-list-container"]}>
-                        {attachList.map(item => (
-                            <ExpansionPanel expanded={attachExpanded === item.aid} onChange={this.handleExpandPanel(item.aid)} key={item.aid}>
-                                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
-                                    <Typography className={classes.heading}>
-                                        <AttachmentIcon className={classes["attach-icon"]} />
-                                        {item.originalName}
-                                    </Typography>
-                                    <Typography className={classes.secondaryHeading}>{(item.fileSize / 1024).toFixed(2)} KB</Typography>
-                                </ExpansionPanelSummary>
-                                <ExpansionPanelDetails className={classes["detail-container"]}>
-                                    <div className={classes["charge-container"]}>
-                                        下载次数：{item.downloads}
-                                        <br />
-                                        上传时间：{new Date(item.createDate).toLocaleString()}
-                                    </div>
-                                    <div className={classes["btn-container"]}>
-                                        <Fab variant="extended" size="medium" color="primary" className={classes.button} onClick={this.handleDownload(item)}>
-                                            <ArrowDownwardIcon className={classes["icon"]} />
-                                            下载
-                                        </Fab>
-                                    </div>
-                                </ExpansionPanelDetails>
-                            </ExpansionPanel>
-                        ))}
-                    </div>
-                )}
+                {attachList.length > 0 && <AttachList attachList={attachList} authorUid={thread.user.uid} />}
                 {postList.length > 0 && (
                     <Paper className={classes.paperRoot}>
                         <Typography variant="body2" className={classes.strong}>

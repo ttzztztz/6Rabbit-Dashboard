@@ -18,11 +18,10 @@ import { NextRouter, withRouter } from "next/dist/client/router";
 import { IPostPageType, IForumItem, IGeneralResponse, IThreadAttach } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { requestCreateThread, requestEditReply, requestEditThread, requestReply } from "../../model/Post";
-import FrontendRequestObservable from "../../model/FrontendRequestObservable";
 import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 import { FETCH_THREAD, FETCH_POST, FETCH_UNUSED_ATTACH, DELETE_ATTACH, FETCH_PICTURE_ATTACH } from "../../consts/backend";
 import Upload from "../../containers/Upload";
-import { THREAD_INFO, THREAD_INFO_RAW } from "../../consts/routers";
+import { THREAD_INFO, THREAD_INFO_RAW, THREAD_CREATE, THREAD_REPLY_RAW, THREAD_UPDATE_RAW, POST_UPDATE_RAW } from "../../consts/routers";
 import Vaptcha from "../../components/Vaptcha";
 
 interface IMapRouteToPageType {
@@ -39,10 +38,10 @@ const mapPageTypeToTitle: IMapPageTypeToTitle = {
     [IPostPageType.EDIT_REPLY]: "编辑回帖"
 };
 const mapRouteToPageType: IMapRouteToPageType = {
-    "/thread/create": IPostPageType.CREATE_THREAD,
-    "/post/create/[tid]": IPostPageType.CREATE_REPLY,
-    "/thread/update/[tid]": IPostPageType.EDIT_THREAD,
-    "/post/update/[pid]": IPostPageType.EDIT_REPLY
+    [THREAD_CREATE]: IPostPageType.CREATE_THREAD,
+    [THREAD_REPLY_RAW]: IPostPageType.CREATE_REPLY,
+    [THREAD_UPDATE_RAW]: IPostPageType.EDIT_THREAD,
+    [POST_UPDATE_RAW]: IPostPageType.EDIT_REPLY
 };
 
 interface Props extends WithStyles {
@@ -77,19 +76,20 @@ class Post extends React.PureComponent<Props> {
 
     async componentDidMount() {
         const {
-            router: { pathname, query }
+            router: { pathname, query },
+            dispatch
         } = this.props;
 
         let message = "",
             fid = "2",
             subject = "";
 
-        if (pathname === "/thread/create") {
+        if (pathname === THREAD_CREATE) {
             const attach = this.processAttachForRender(await this.fetchUnusedAttach());
             this.setState({
                 attach
             });
-        } else if (pathname === "/thread/update/[tid]") {
+        } else if (pathname === THREAD_UPDATE_RAW) {
             const tid = query["tid"] as string;
             const [
                 {
@@ -106,10 +106,13 @@ class Post extends React.PureComponent<Props> {
                 },
                 attach
             ] = await Promise.all([
-                FrontendRequestObservable({
-                    url: FETCH_THREAD(tid, "1"),
-                    method: "GET"
-                }).toPromise(),
+                FrontendRequestPromise(
+                    {
+                        url: FETCH_THREAD(tid, "1"),
+                        method: "GET"
+                    },
+                    dispatch
+                ),
                 this.fetchUnusedAttach()
             ]);
 
@@ -119,27 +122,46 @@ class Post extends React.PureComponent<Props> {
             });
 
             [subject, fid, message] = [currentSubject, currentFid, currentMessage];
-        } else if (pathname === "/post/create/[tid]") {
+        } else if (pathname === THREAD_REPLY_RAW) {
             const urlMessage = query["message"] as string;
             if (urlMessage && typeof urlMessage === "string" && urlMessage.length >= 1) {
                 message = urlMessage;
             }
-        } else if (pathname === "/post/update/[pid]") {
+            const attach = await this.fetchUnusedAttach();
+            this.setState({
+                attach: this.processAttachForRender(attach)
+            });
+        } else if (pathname === POST_UPDATE_RAW) {
             const pid = query["pid"] as string;
-            const {
-                data: {
-                    message: { message: currentMessage }
-                }
-            } = await FrontendRequestObservable({
-                url: FETCH_POST(pid),
-                method: "GET"
-            }).toPromise();
+            const [
+                {
+                    data: {
+                        message: { message: currentMessage, attachList }
+                    }
+                },
+                attach
+            ] = await Promise.all([
+                FrontendRequestPromise(
+                    {
+                        url: FETCH_POST(pid),
+                        method: "GET"
+                    },
+                    dispatch
+                ),
+                this.fetchUnusedAttach()
+            ]);
+
+            console.log(attach, attachList);
+            const newAttachList = this.processAttachForRender([...attach, ...(attachList as Array<IThreadAttach>)]);
+            this.setState({
+                attach: newAttachList
+            });
 
             message = currentMessage;
         }
 
         this.setState({
-            isPost: pathname === "/post/create/[tid]" || pathname === "/post/update/[pid]",
+            isPost: pathname === THREAD_REPLY_RAW || pathname === POST_UPDATE_RAW,
             message,
             fid,
             subject,
@@ -174,10 +196,11 @@ class Post extends React.PureComponent<Props> {
         subject: "",
         message: "",
         attach: [] as Array<IThreadAttach>,
-        editorState: BraftEditor.createEditorState("<p>Hello <b>World!</b></p>"),
+        editorState: BraftEditor.createEditorState("<div></div>"),
         isPost: false,
 
         timestamp: new Date().getTime(),
+        activeButton: true,
         token: ""
     };
 
@@ -248,9 +271,9 @@ class Post extends React.PureComponent<Props> {
         const { router, dispatch } = this.props;
         const tid = router.query["tid"] as string;
         const quotepid = router.query["quotepid"] as string;
-        const { message, token } = this.state;
+        const { message, token, attach } = this.state;
         try {
-            const res = await requestReply(tid, message, quotepid, token, dispatch);
+            const res = await requestReply(tid, message, this.processAttachForServer(attach), quotepid, token, dispatch);
             const { code } = res;
 
             this.showSnackbar(res);
@@ -268,9 +291,9 @@ class Post extends React.PureComponent<Props> {
     editReply = async () => {
         const { router, dispatch } = this.props;
         const pid = router.query["pid"] as string;
-        const { message, token } = this.state;
+        const { message, token, attach } = this.state;
         try {
-            const res = await requestEditReply(pid, message, token, dispatch);
+            const res = await requestEditReply(pid, message, this.processAttachForServer(attach), token, dispatch);
             const { code, message: responseMsg } = res;
 
             this.showSnackbar(res);
@@ -291,21 +314,31 @@ class Post extends React.PureComponent<Props> {
             token
         });
     };
-    handleSubmitClick = () => {
+    handleSubmitClick = async () => {
         const { router } = this.props;
-        switch (mapRouteToPageType[router.pathname]) {
-            case IPostPageType.CREATE_THREAD:
-                this.createThread();
-                break;
-            case IPostPageType.EDIT_THREAD:
-                this.editThread();
-                break;
-            case IPostPageType.CREATE_REPLY:
-                this.createReply();
-                break;
-            case IPostPageType.EDIT_REPLY:
-                this.editReply();
-                break;
+        this.setState({
+            activeButton: false
+        });
+
+        try {
+            switch (mapRouteToPageType[router.pathname]) {
+                case IPostPageType.CREATE_THREAD:
+                    await this.createThread();
+                    break;
+                case IPostPageType.EDIT_THREAD:
+                    await this.editThread();
+                    break;
+                case IPostPageType.CREATE_REPLY:
+                    await this.createReply();
+                    break;
+                case IPostPageType.EDIT_REPLY:
+                    await this.editReply();
+                    break;
+            }
+        } finally {
+            this.setState({
+                activeButton: true
+            });
         }
     };
     renderEditor = () => {
@@ -367,7 +400,7 @@ class Post extends React.PureComponent<Props> {
 
     render() {
         const { classes, router, forum, isAdmin } = this.props;
-        const { fid, subject: title, isPost, timestamp } = this.state;
+        const { fid, subject: title, isPost, timestamp, activeButton } = this.state;
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
 
         const renderForum = forum.filter(item => (!isAdmin && !item.adminPost) || isAdmin);
@@ -419,10 +452,18 @@ class Post extends React.PureComponent<Props> {
                         </div>
                     )}
                     <div className={classes["content-container"]}>{this.renderEditor()}</div>
-                    {!isPost && this.renderAttach()}
+                    {this.renderAttach()}
                     <div className={classes["btn-container"]}>
                         <Vaptcha onChangeToken={this.handleChangeToken} timestamp={timestamp} />
-                        <Fab variant="extended" size="medium" color="primary" aria-label="add" className={classes.button} onClick={this.handleSubmitClick}>
+                        <Fab
+                            variant="extended"
+                            size="medium"
+                            color="primary"
+                            aria-label="add"
+                            className={classes.button}
+                            onClick={this.handleSubmitClick}
+                            disabled={!activeButton}
+                        >
                             <MessageIcon className={classes["btn-icon"]} />
                             {showTitle}
                         </Fab>

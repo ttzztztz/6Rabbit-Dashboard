@@ -18,6 +18,9 @@ const styles = (_: Theme) =>
         "post-list-item-info": {
             color: "rgba(134, 142, 150, 0.8)",
             fontSize: "12px"
+        },
+        "post-content-container": {
+            flexGrow: 1
         }
     });
 
