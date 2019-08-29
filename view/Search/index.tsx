@@ -97,7 +97,8 @@ class Search extends React.PureComponent<Props> {
         this.fetchData(searchBoxInput, "1");
     };
     handleSearchInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (event.keyCode === 13) {
+        const { searchBoxInput } = this.state;
+        if (event.keyCode === 13 && searchBoxInput.length >= 3) {
             this.handleSearch();
         }
     };

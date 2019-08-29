@@ -22,7 +22,8 @@ const styles = (theme: Theme) =>
             justifyContent: "center"
         },
         "setting-submit-btn-container": {
-            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
             width: "100%"
         },
         "oauth-list-root": {

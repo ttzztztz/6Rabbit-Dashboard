@@ -209,7 +209,7 @@ class Thread extends React.Component<Props> {
         const { aid } = item;
         const token = localStorage.getItem("token");
         if (!isLogin || !token) {
-            enqueueSnackbar("请先登录！", { variant: "error" });
+            enqueueSnackbar("请先登录！", { variant: "warning" });
             return;
         }
 

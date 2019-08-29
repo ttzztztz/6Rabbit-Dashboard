@@ -19,12 +19,19 @@ import { Epics } from "../../epics";
 import ProfileThreadListComponent from "../../containers/ProfileThreadList";
 import AvatarBoard from "../../components/AvatarBoard";
 import { TITLE_PREFIX } from "../../consts";
+import dynamic from "next/dynamic";
 
 interface Props extends WithStyles {
     router: NextRouter;
 
     uid: string;
     info: IOtherUser;
+    isAdmin: boolean;
+}
+
+enum ActiveTab {
+    THREAD,
+    ADMIN
 }
 
 class Profile extends React.PureComponent<Props> {
@@ -33,11 +40,12 @@ class Profile extends React.PureComponent<Props> {
 
         const state$ = new StateObservable(new Subject(), store.getState());
         const { payload } = await Epics(of(getUserProfileStart(uid)) as ActionsObservable<IGetUserProfileStart>, state$, {}).toPromise();
+
         return { uid, info: { ...payload } };
     }
 
     state = {
-        activeTab: 0
+        activeTab: ActiveTab.THREAD
     };
 
     handleTabChange = (_e: React.ChangeEvent<{}>, newValue: number) => {
@@ -46,11 +54,22 @@ class Profile extends React.PureComponent<Props> {
         });
     };
 
+    renderAdminUserComponent = () => {
+        const { uid } = this.props;
+
+        const Component = dynamic(import("../../containers/Admin/User"), {
+            ssr: false
+        });
+
+        return <Component uid={uid} />;
+    };
+
     render() {
         const {
             classes,
             uid,
-            info: { username }
+            info: { username, uid: userUid },
+            isAdmin
         } = this.props;
         const { activeTab } = this.state;
 
@@ -63,9 +82,11 @@ class Profile extends React.PureComponent<Props> {
                 <Paper className={classes["user-infos-container"]}>
                     <Tabs value={activeTab} onChange={this.handleTabChange} indicatorColor="primary" textColor="primary" centered>
                         <Tab label="帖子" />
+                        {isAdmin && <Tab label="管理" />}
                     </Tabs>
                     <div className={classes["user-infos-content-container"]}>
-                        {activeTab === 0 && <ProfileThreadListComponent prefix="Ta的" showPurchased={false} uid={uid} />}
+                        {activeTab === ActiveTab.THREAD && <ProfileThreadListComponent prefix="Ta的" showPurchased={false} uid={uid} />}
+                        {activeTab === ActiveTab.ADMIN && isAdmin && userUid !== "1" && this.renderAdminUserComponent()}
                     </div>
                 </Paper>
             </>

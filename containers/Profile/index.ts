@@ -4,7 +4,11 @@ import { Dispatch } from "redux";
 import ProfileView from "../../view/Profile";
 import { StoreState } from "../../reducers";
 
-const mapStateToProps = (_: StoreState) => ({});
+const mapStateToProps = ({
+    user: {
+        usergroup: { isAdmin }
+    }
+}: StoreState) => ({ isAdmin });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({});
 

@@ -17,6 +17,22 @@ export interface IOtherUser {
     usergroup: IGroup;
 }
 
+export interface IMyUser {
+    uid: string;
+    usergroup: IGroup;
+    username: string;
+    signature: string;
+    gender: number;
+    realname: string;
+    email: string;
+    mobile: string;
+    qq: string;
+    wechat: string;
+    credits: number;
+    golds: number;
+    rmbs: number;
+}
+
 export interface IThreadAbstract {
     tid: string;
     subject: string;

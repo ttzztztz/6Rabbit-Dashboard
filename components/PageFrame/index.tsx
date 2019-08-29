@@ -202,7 +202,8 @@ class Bar extends React.PureComponent<Props> {
         router.push(url, as);
     };
     handleSearchBoxKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (event.keyCode === 13) {
+        const { searchBoxInput } = this.state;
+        if (event.keyCode === 13 && searchBoxInput.length >= 3) {
             this.handleSearch();
         }
     };

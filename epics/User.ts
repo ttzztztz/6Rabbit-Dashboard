@@ -1,6 +1,6 @@
 import { Epic, errHandler } from ".";
 import { ofType } from "redux-observable";
-import { mergeMap, map, startWith, catchError } from "rxjs/operators";
+import { mergeMap, map, startWith, catchError, endWith } from "rxjs/operators";
 import { of, from } from "rxjs";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ import {
     FETCH_TOKEN,
     OPTIONS_MY_INFO,
     PUT_UPDATE_PASSWORD,
-    FETCH_USER_INFO_PROFILE,
+    OPTIONS_USER_INFO_PROFILE,
     FETCH_OAUTH_INFO,
     FETCH_OAUTH_BIND,
     DELETE_OAUTH_TOKEN,
@@ -134,7 +134,10 @@ const checkToken: Epic<ICheckTokenStart> = action$ =>
                 return of(checkTokenOK());
             }
         }),
-        catchError(err => errHandler(err))
+        catchError(err => {
+            localStorage.removeItem("token");
+            return errHandler(err);
+        })
     );
 
 const updateProfile: Epic<IUserUpdateProfileStart> = action$ =>
@@ -208,7 +211,9 @@ const updatePassword: Epic<IUserUpdatePasswordStart> = action$ =>
 const getUserProfile: Epic<IGetUserProfileStart> = action$ =>
     action$.pipe(
         ofType(GET_USER_PROFILE_START),
-        mergeMap(({ uid }) => from(axios({ url: FETCH_USER_INFO_PROFILE(uid), method: "GET" })).pipe(map(({ data: { message } }) => getUserProfileOK(message))))
+        mergeMap(({ uid }) =>
+            from(axios({ url: OPTIONS_USER_INFO_PROFILE(uid), method: "GET" })).pipe(map(({ data: { message } }) => getUserProfileOK(message)))
+        )
     );
 
 const oauthFetchInfo: Epic<IOAuthFetchInfoStart> = action$ =>

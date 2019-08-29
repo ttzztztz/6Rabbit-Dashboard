@@ -1,5 +1,3 @@
-import dynamic from "next/dynamic";
+import ProfileView from "../../containers/Profile";
 
-export default dynamic(import("../../containers/Profile"), {
-    ssr: false
-});
+export default ProfileView;

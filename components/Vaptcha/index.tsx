@@ -61,7 +61,7 @@ class Vaptcha extends React.PureComponent<Props> {
     componentDidMount() {
         const { onChangeToken } = this.props;
 
-        (window as IExtendedWindow)
+        ((window as unknown) as IExtendedWindow)
             .vaptcha({
                 vid: VERIFY_CODE_VID,
                 type: "click",

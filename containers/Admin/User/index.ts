@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-import DepositView from "../../../components/Admin/Deposit";
+import UserAdminComponent from "../../../components/Admin/User";
 import { StoreState } from "../../../reducers";
 import { OptionsObject } from "notistack";
 import { enqueueSnackbar } from "../../../actions";
@@ -17,4 +17,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(DepositView);
+)(UserAdminComponent);
