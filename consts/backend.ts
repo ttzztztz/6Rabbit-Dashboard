@@ -6,7 +6,7 @@ export const SUFFIX_BACKEND = process.env.BUILD === "prod" ? "/api" : DEV_BACKEN
 export const BACKEND_ROOT = () => (process.browser ? CLIENT_BACKEND : SERVER_BACKEND);
 
 export const FETCH_THREAD_LIST = (fid: string, page: string) => `${BACKEND_ROOT()}/thread/list/${fid}/${page}`;
-export const FETCH_AVATAR = (uid: string) => `${BACKEND_ROOT()}/file/avatar/${uid}`;
+export const FETCH_AVATAR = (uid: string) => `${CLIENT_BACKEND}/file/avatar/${uid}`;
 export const FETCH_THREAD = (tid: string, page: string) => `${BACKEND_ROOT()}/thread/${tid}/${page}`;
 export const FETCH_POST = (pid: string) => `${BACKEND_ROOT()}/post/${pid}`;
 export const FETCH_TOKEN = `${BACKEND_ROOT()}/user/token`;
