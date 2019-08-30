@@ -16,7 +16,7 @@ export const FETCH_NOTIFICATION_LIST = (page: string) => `${BACKEND_ROOT()}/noti
 export const FETCH_AGGREGATE_PURCHASED_LIST = (page: string) => `${BACKEND_ROOT()}/user/purchased/aggregate/${page}`;
 export const FETCH_USER_THREAD_LIST = (uid: string, page: string) => `${BACKEND_ROOT()}/user/thread/${uid}/${page}`;
 export const FETCH_USER_POST_LIST = (uid: string, page: string) => `${BACKEND_ROOT()}/user/post/${uid}/${page}`;
-export const FETCH_OAUTH_REDIRECT = (platform: string) => `${BACKEND_ROOT()}/oauth/${platform}`;
+export const FETCH_OAUTH_REDIRECT = (platform: string) => `${CLIENT_BACKEND}/oauth/${platform}`;
 export const FETCH_OAUTH_LIST = `${BACKEND_ROOT()}/oauth/list`;
 export const FETCH_OAUTH_INFO = (platform: string, code: string) => `${BACKEND_ROOT()}/oauth/info/${platform}/${code}`;
 export const FETCH_OAUTH_BIND = (platform: string, code: string) => `${BACKEND_ROOT()}/oauth/bind/${platform}/${code}`;

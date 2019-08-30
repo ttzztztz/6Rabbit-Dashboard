@@ -52,6 +52,7 @@ import {
 
 import Link from "next/link";
 import { NextRouter, withRouter } from "next/dist/client/router";
+import { FETCH_OAUTH_REDIRECT } from "../../consts/backend";
 
 interface Props extends WithStyles {
     router: NextRouter;
@@ -212,6 +213,9 @@ class Bar extends React.PureComponent<Props> {
             searchBoxInput: event.target.value
         });
     };
+    handleOAuthLogin = (key: string) => () => {
+        window && window.location.replace(FETCH_OAUTH_REDIRECT(key));
+    };
 
     renderMenu = () => {
         const { anchorEl } = this.state;
@@ -241,6 +245,12 @@ class Bar extends React.PureComponent<Props> {
                     : [
                           <MenuItem onClick={this.handleLogin} key="user-login">
                               登录账号
+                          </MenuItem>,
+                          <MenuItem onClick={this.handleOAuthLogin("QQ")} key="user-login-qq">
+                              QQ登录
+                          </MenuItem>,
+                          <MenuItem onClick={this.handleOAuthLogin("Github")} key="user-login-github">
+                              Github登录
                           </MenuItem>,
                           <MenuItem onClick={this.handleRegister} key="user-logout">
                               注册账号
