@@ -55,6 +55,8 @@ interface Props extends WithStyles {
 }
 
 class Post extends React.PureComponent<Props> {
+    autoSave: null | NodeJS.Timeout = null;
+
     processAttachForRender = (attachList: Array<IThreadAttach>) => {
         attachList.forEach(item => {
             if (item.creditsType === 3) {
@@ -167,6 +169,15 @@ class Post extends React.PureComponent<Props> {
             subject,
             editorState: BraftEditor.createEditorState(message)
         });
+
+        this.autoSave = setInterval(() => {
+            const { message } = this.state;
+            localStorage && localStorage.setItem("temp", message);
+        }, 5000);
+    }
+    componentWillUnmount() {
+        this.autoSave && clearInterval(this.autoSave);
+        this.autoSave = null;
     }
 
     fetchUnusedAttach = async () => {

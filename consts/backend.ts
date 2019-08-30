@@ -1,6 +1,6 @@
 export const DEV_BACKEND = "http://localhost:8000";
 export const CLIENT_BACKEND = process.env.BUILD === "prod" ? "https://www.6rabbit.com/api" : DEV_BACKEND;
-export const SERVER_BACKEND = process.env.BUILD === "prod" ? "http://backend" : DEV_BACKEND;
+export const SERVER_BACKEND = process.env.BUILD === "prod" ? "http://backend:8000" : DEV_BACKEND;
 export const SUFFIX_BACKEND = process.env.BUILD === "prod" ? "/api" : DEV_BACKEND;
 
 export const BACKEND_ROOT = () => (process.browser ? CLIENT_BACKEND : SERVER_BACKEND);
