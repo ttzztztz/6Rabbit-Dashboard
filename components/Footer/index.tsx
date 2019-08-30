@@ -15,7 +15,14 @@ class Footer extends React.PureComponent<Props> {
             <div className={classes.footer}>
                 <Grid container spacing={3}>
                     <Grid item xs>
-                        Powered By <strong>6Rabbit</strong> {VERSION}
+                        <div>
+                            Powered By <strong>6Rabbit</strong> {VERSION}
+                        </div>
+                        <div>
+                            <a href="https://www.upyun.com/" target="_blank" rel="noopener">
+                                <img src="/static/upaiyun.png" />
+                            </a>
+                        </div>
                     </Grid>
                     <Grid item xs className={classes["footer-right"]}>
                         <div>
