@@ -187,11 +187,11 @@ class Thread extends React.Component<Props> {
                     <div className={classes["reply-container"]}>
                         <Vaptcha onChangeToken={handleChangeToken} timestamp={timestamp} />
                         <ButtonGroup variant="contained" color="primary" className={classes.button}>
-                            <Button onClick={this.handleReply} disabled={!activePostBtn}>
+                            <Button onClick={this.handleReply} disabled={!activePostBtn} className={classes["reply-btn"]}>
                                 <MessageIcon className={classes["icon"]} />
                                 回复
                             </Button>
-                            <Button color="primary" size="small" onClick={this.handleAdvancedReply}>
+                            <Button color="primary" size="small" className={classes["advanced-reply-btn"]} onClick={this.handleAdvancedReply}>
                                 <ArrowDropDownIcon />
                             </Button>
                         </ButtonGroup>

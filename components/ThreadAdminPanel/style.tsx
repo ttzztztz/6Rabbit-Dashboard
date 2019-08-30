@@ -7,6 +7,11 @@ const styles = (theme: Theme) =>
             display: "flex",
             justifyContent: "center",
             margin: theme.spacing(2, 0, 0, 0)
+        },
+        "operation-button": {
+            [theme.breakpoints.down("sm")]: {
+                padding: theme.spacing(0.5, 1)
+            }
         }
     });
 

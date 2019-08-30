@@ -54,6 +54,17 @@ const styles = (theme: Theme) =>
         "btn-container": {
             display: "flex",
             alignItems: "center"
+        },
+        "advanced-reply-btn": {
+            [theme.breakpoints.down("sm")]: {
+                display: "none"
+            }
+        },
+        "reply-btn": {
+            [theme.breakpoints.down("sm")]: {
+                borderRight: "0 !important",
+                borderRadius: "4px !important"
+            }
         }
     });
 

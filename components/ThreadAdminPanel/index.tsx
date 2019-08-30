@@ -59,15 +59,15 @@ class ThreadAdminPanel extends React.Component<Props> {
     };
 
     renderButton = () => {
-        const { isAdmin, target } = this.props;
+        const { isAdmin, target, classes } = this.props;
         const basicOperation = [
-            <Button key="delete" onClick={() => this.handleDialogOpen("删除")}>
+            <Button key="delete" onClick={() => this.handleDialogOpen("删除")} className={classes["operation-button"]}>
                 删帖
             </Button>
         ];
         if (target.length === 1) {
             basicOperation.push(
-                <Button key="edit" onClick={this.handleEdit}>
+                <Button key="edit" onClick={this.handleEdit} className={classes["operation-button"]}>
                     编辑
                 </Button>
             );
@@ -76,13 +76,13 @@ class ThreadAdminPanel extends React.Component<Props> {
         if (isAdmin) {
             return [
                 ...basicOperation,
-                <Button key="close" onClick={() => this.handleDialogOpen("关闭")}>
+                <Button key="close" onClick={() => this.handleDialogOpen("关闭")} className={classes["operation-button"]}>
                     关闭
                 </Button>,
-                <Button key="diamond" onClick={() => this.handleDialogOpen("精华")}>
+                <Button key="diamond" onClick={() => this.handleDialogOpen("精华")} className={classes["operation-button"]}>
                     精华
                 </Button>,
-                <Button key="top" onClick={() => this.handleDialogOpen("置顶")}>
+                <Button key="top" onClick={() => this.handleDialogOpen("置顶")} className={classes["operation-button"]}>
                     置顶
                 </Button>
             ];
