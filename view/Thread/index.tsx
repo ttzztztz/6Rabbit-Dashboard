@@ -16,8 +16,9 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import SnackbarContent from "@material-ui/core/SnackbarContent";
 
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import MessageIcon from "@material-ui/icons/Message";
 import LockIcon from "@material-ui/icons/Lock";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
@@ -82,6 +83,7 @@ class Thread extends React.Component<Props> {
     state = {
         reply: "",
         quotepid: "0",
+        quoteAuthorName: "",
 
         postList: [] as Array<IPostListItem>,
         page: this.props.defaultPage,
@@ -94,6 +96,12 @@ class Thread extends React.Component<Props> {
     handleChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setState({
             reply: e.target.value
+        });
+    };
+    handleQuote = (pid: string, quoteAuthorName: string) => {
+        this.setState({
+            quotepid: pid,
+            quoteAuthorName
         });
     };
 
@@ -120,12 +128,23 @@ class Thread extends React.Component<Props> {
             postList: postList
         });
     };
+    handleCancelQuote = () => {
+        this.setState({
+            quotepid: "0"
+        });
+    };
     handleAdvancedReply = () => {
         const { router, tid } = this.props;
-        const url = THREAD_REPLY_RAW;
-        const as = THREAD_REPLY(tid);
+        const { quotepid } = this.state;
 
-        router.push(url, as);
+        const url = THREAD_REPLY_RAW;
+        const asUrl = THREAD_REPLY(tid);
+
+        if (quotepid !== "0") {
+            router.push(url + "?quotepid=" + quotepid, asUrl + "?quotepid=" + quotepid);
+        } else {
+            router.push(url, asUrl);
+        }
     };
     handleReply = async () => {
         const { tid, enqueueSnackbar, dispatch } = this.props;
@@ -154,6 +173,14 @@ class Thread extends React.Component<Props> {
         }
     };
 
+    renderUndoQuote = () => {
+        return (
+            <Button color="secondary" size="small" onClick={this.handleCancelQuote}>
+                撤销
+            </Button>
+        );
+    };
+
     renderReplyComponent = () => {
         const {
             isLogin,
@@ -161,7 +188,9 @@ class Thread extends React.Component<Props> {
             thread: { isClosed },
             classes
         } = this.props;
-        const { reply, timestamp, activePostBtn } = this.state;
+        const { reply, timestamp, activePostBtn, quotepid, quoteAuthorName } = this.state;
+
+        const quoteNoticeMessage = `您正在引用 ${quoteAuthorName} 的回帖。`;
 
         const handleChangeToken = (token: string) => {
             this.setState({
@@ -174,6 +203,15 @@ class Thread extends React.Component<Props> {
         } else {
             return (
                 <Paper className={classes.paperRoot}>
+                    {quotepid !== "0" && (
+                        <div>
+                            <SnackbarContent
+                                className={clsx(classes.snackbar, classes["snackbar-success"])}
+                                message={quoteNoticeMessage}
+                                action={this.renderUndoQuote()}
+                            />
+                        </div>
+                    )}
                     <TextField
                         id="reply-content"
                         label="发表回复"
@@ -218,7 +256,7 @@ class Thread extends React.Component<Props> {
 
     render() {
         const { classes, isAdmin, uid, thread, firstPost, attachList } = this.props;
-        const { postList, page } = this.state;
+        const { postList, page, quotepid } = this.state;
 
         return (
             <>
@@ -266,7 +304,12 @@ class Thread extends React.Component<Props> {
                                     {postList.map(item => (
                                         <TableRow key={item.pid}>
                                             <TableCell component="th" scope="row">
-                                                <PostListItem {...item} />
+                                                <PostListItem
+                                                    {...item}
+                                                    quotePost={this.handleQuote}
+                                                    activePid={quotepid}
+                                                    cancelQuote={this.handleCancelQuote}
+                                                />
                                             </TableCell>
                                         </TableRow>
                                     ))}

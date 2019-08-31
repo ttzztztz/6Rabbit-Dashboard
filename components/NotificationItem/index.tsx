@@ -23,14 +23,13 @@ class NotificationItem extends React.PureComponent<Props> {
                 <div className={classes["author-avatar"]}>
                     <Avatar src={FETCH_AVATAR(fromUser.uid)} width={32} />
                 </div>
-                <div className={classes["notification-clear"]} onClick={() => handleDelete(nid)}>
-                    <ClearIcon className={classes["clear-icon"]} />
-                    删除
-                </div>
-                <div>
-                    <div className={classes["notification-item-info"]}>
+                <div className={classes["item-container"]}>
+                    <div className={clsx(classes["notification-item-info"], classes["notification-item-info-up"])}>
                         <span className={classes["author-username"]}>{fromUser.username}</span>
-                        <span>{new Date(createDate).toLocaleString()}</span>
+                        <div className={classes["notification-clear"]} onClick={() => handleDelete(nid)}>
+                            <ClearIcon className={classes["clear-icon"]} />
+                            删除
+                        </div>
                     </div>
                     {isRead && <div className={classes["content-container"]} dangerouslySetInnerHTML={{ __html: content }} />}
                     {!isRead && (
@@ -39,6 +38,9 @@ class NotificationItem extends React.PureComponent<Props> {
                             <span dangerouslySetInnerHTML={{ __html: content }} />
                         </div>
                     )}
+                    <div className={classes["notification-item-info"]}>
+                        <span>{new Date(createDate).toLocaleString()}</span>
+                    </div>
                 </div>
             </div>
         );

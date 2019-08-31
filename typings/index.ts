@@ -119,7 +119,8 @@ export interface IPostListItem {
     tid: string;
     user: IOtherUser;
 
-    quote: IQuotePost;
+    quotepid: string;
+    quote: IQuotePost | null;
     isFirst: boolean;
     message: string;
 
@@ -279,6 +280,9 @@ export interface IUploadingItem {
     file: File;
     progress: number;
     tempId: string;
+
+    creditsType: number;
+    credits: number;
 }
 
 export interface IAttachPrefetchInfo {

@@ -36,7 +36,8 @@ const styles = (theme: Theme) =>
         },
         "detail-container": {
             display: "flex",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            flexWrap: "wrap"
         },
         "attach-icon": {
             marginRight: theme.spacing(0.5)

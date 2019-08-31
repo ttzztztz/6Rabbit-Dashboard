@@ -1,7 +1,7 @@
 import { createStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
-const styles = (_: Theme) =>
+const styles = (theme: Theme) =>
     createStyles({
         "post-avatar": {
             marginRight: "16px",
@@ -21,6 +21,20 @@ const styles = (_: Theme) =>
         },
         "post-content-container": {
             flexGrow: 1
+        },
+        "quote-container": {
+            margin: theme.spacing(2, 0)
+        },
+        secondaryHeading: {
+            color: theme.palette.text.secondary,
+            [theme.breakpoints.down("sm")]: {
+                display: "none"
+            }
+        },
+        heading: {
+            flexGrow: 2,
+            display: "flex",
+            alignItems: "center"
         }
     });
 

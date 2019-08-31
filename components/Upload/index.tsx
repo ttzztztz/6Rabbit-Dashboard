@@ -18,7 +18,7 @@ import AttachmentIcon from "@material-ui/icons/Attachment";
 import { IThreadAttach, ICreditsTypeMapper, IUploadingItem } from "../../typings";
 import { MAX_UPLOAD_PER_REQUEST, MAX_UPLOAD_FILE_SIZE, SUPPORT_IMAGE_PREVIEW_SUFFIX } from "../../consts";
 import { upload, abortAll, abortOne } from "../../model/Upload";
-import { POST_FILE_UPLOAD } from "../../consts/backend";
+import { POST_FILE_UPLOAD, POST_FILE_UPLOAD_UPDATE } from "../../consts/backend";
 
 interface Props extends WithStyles {
     fileList: Array<IThreadAttach>;
@@ -108,7 +108,9 @@ class UserPostList extends React.Component<Props> {
                 addedItem.push({
                     tempId: "T" + new Date().getTime().toString() + i.toString(),
                     file: files[i],
-                    progress: 0
+                    progress: 0,
+                    creditsType: 0,
+                    credits: 0
                 });
             }
             // upload logics
@@ -150,7 +152,7 @@ class UserPostList extends React.Component<Props> {
                                 uploadingList: oldList.filter(item => item.tempId !== tempId)
                             });
                             const { onChange, fileList } = this.props;
-                            const attachObj = { ...message, creditsType: 0, credits: 0 };
+                            const attachObj = { ...message };
                             onChange([...fileList, attachObj], attachObj);
                         } else {
                             enqueueSnackbar(message, { variant: "error" });
@@ -170,6 +172,104 @@ class UserPostList extends React.Component<Props> {
     handleUploadBtnClick = () => {
         if (this.uploadElementRef) {
             this.uploadElementRef.click();
+        }
+    };
+    handleUpdate = (aid: string) => () => {
+        this.uploadUpdateAid = aid;
+        if (this.uploadUpdateElementRef) {
+            this.uploadUpdateElementRef.click();
+        }
+    };
+    handleUploadUpdateStart = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>) => {
+        const aid = this.uploadUpdateAid;
+        if (aid && files && files.length === 1) {
+            const file = files[0];
+            const tempId = `Update${aid}`;
+            const { enqueueSnackbar } = this.props;
+
+            if (file.size > MAX_UPLOAD_FILE_SIZE) {
+                enqueueSnackbar("单个文件最大" + MAX_UPLOAD_FILE_SIZE / 1024 / 1024 + "MB！", { variant: "error" });
+                return;
+            }
+
+            const addedItem = {
+                tempId,
+                file,
+                progress: 0,
+                creditsType: 1,
+                credits: 1
+            };
+
+            this.setState({
+                uploadingList: [...this.state.uploadingList, addedItem]
+            });
+
+            const formData = new FormData();
+            formData.append("attach", file);
+            const promise = upload(
+                tempId,
+                POST_FILE_UPLOAD_UPDATE(aid),
+                {
+                    method: "POST",
+                    body: formData
+                },
+                event => {
+                    const { uploadingList: oldList } = this.state;
+                    this.setState({
+                        uploadingList: oldList.map(item => {
+                            if (item.tempId === tempId) {
+                                return { ...item, progress: ((event.loaded / event.total) * 100).toFixed(2) };
+                            } else {
+                                return item;
+                            }
+                        })
+                    });
+                }
+            );
+
+            promise.then(
+                (response: string) => {
+                    const { code, message } = JSON.parse(response);
+                    const { uploadingList: oldList } = this.state;
+                    if (code === 200) {
+                        const [[targetObj], newUploadingList] = oldList.reduce(
+                            (p, cur) => {
+                                if (cur.tempId === tempId) {
+                                    p[0].push(cur);
+                                } else {
+                                    p[1].push(cur);
+                                }
+                                return p;
+                            },
+                            [[] as Array<IUploadingItem>, [] as Array<IUploadingItem>]
+                        );
+
+                        this.setState({
+                            uploadingList: newUploadingList
+                        });
+
+                        const { onChange, fileList } = this.props;
+                        const attachObj = { ...message, creditsType: targetObj.creditsType, credits: targetObj.credits };
+                        onChange(
+                            [
+                                ...fileList.map(item => {
+                                    if (item.aid === attachObj.aid) {
+                                        return attachObj;
+                                    } else {
+                                        return item;
+                                    }
+                                })
+                            ],
+                            attachObj
+                        );
+                    } else {
+                        enqueueSnackbar(message, { variant: "error" });
+                    }
+                },
+                reason => {
+                    enqueueSnackbar(reason.toString(), { variant: "error" });
+                }
+            );
         }
     };
     handleAbort = (tempId: string) => () => {
@@ -202,6 +302,8 @@ class UserPostList extends React.Component<Props> {
         }
     };
     uploadElementRef: HTMLInputElement | null = null;
+    uploadUpdateElementRef: HTMLInputElement | null = null;
+    uploadUpdateAid: string | null = null;
     render() {
         const { classes, fileList } = this.props;
         const { expanded, uploadingList } = this.state;
@@ -217,6 +319,13 @@ class UserPostList extends React.Component<Props> {
                         multiple
                         ref={elem => (this.uploadElementRef = elem)}
                     />
+                    <input
+                        type="file"
+                        onChange={this.handleUploadUpdateStart}
+                        id="fileUpdate"
+                        className={classes.none}
+                        ref={elem => (this.uploadUpdateElementRef = elem)}
+                    />
                     <Button variant="contained" color="primary" className={classes.button} size="small" onClick={this.handleUploadBtnClick}>
                         上传文件
                     </Button>
@@ -224,7 +333,7 @@ class UserPostList extends React.Component<Props> {
                 <div className={classes["upload-list"]}>
                     {fileList.map(item => (
                         <ExpansionPanel expanded={expanded === item.aid} onChange={this.handleExpandPanel(item.aid)} key={item.aid}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography className={classes.heading}>
                                     <AttachmentIcon className={classes["attach-icon"]} />
                                     {item.originalName}
@@ -267,6 +376,9 @@ class UserPostList extends React.Component<Props> {
                                 </div>
                                 <div className={classes["delete-btn-container"]}>
                                     {this.renderInsertImage(item)}
+                                    <Button variant="contained" color="primary" className={classes.button} size="medium" onClick={this.handleUpdate(item.aid)}>
+                                        更新
+                                    </Button>
                                     <Button
                                         variant="contained"
                                         color="secondary"
@@ -284,7 +396,7 @@ class UserPostList extends React.Component<Props> {
                 <div className={classes["uploading-list"]}>
                     {uploadingList.map(item => (
                         <ExpansionPanel expanded={expanded === item.tempId} onChange={this.handleExpandPanel(item.tempId)} key={item.tempId}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography className={classes.heading}>{item.file.name}</Typography>
                                 <Typography className={classes.secondaryHeading}>
                                     {item.progress}%, 共计{(item.file.size / 1024).toFixed(2)} KB
@@ -299,7 +411,7 @@ class UserPostList extends React.Component<Props> {
                                         size="small"
                                         onClick={this.handleAbort(item.tempId)}
                                     >
-                                        终止上传
+                                        终止
                                     </Button>
                                 </div>
                             </ExpansionPanelDetails>

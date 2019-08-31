@@ -46,6 +46,7 @@ export const POST_THREAD_DIAMOND = `${BACKEND_ROOT()}/thread/diamond`;
 export const POST_THREAD_SEARCH = (page: string) => `${BACKEND_ROOT()}/thread/search/${page}`;
 export const POST_AVATAR_UPLOAD = `${BACKEND_ROOT()}/file/avatar`;
 export const POST_FILE_UPLOAD = `${BACKEND_ROOT()}/file/upload`;
+export const POST_FILE_UPLOAD_UPDATE = (aid: string) => `${BACKEND_ROOT()}/file/update/${aid}`;
 export const POST_FILE_DOWNLOAD = (aid: string) => `${BACKEND_ROOT()}/file/download/${aid}`;
 export const POST_PAY = `${BACKEND_ROOT()}/deposit/pay`;
 export const POST_ADMIN_USER_GROUP = `${BACKEND_ROOT()}/user/admin/group`;

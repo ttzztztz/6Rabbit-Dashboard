@@ -4,11 +4,16 @@ import clsx from "clsx";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import Link from "next/link";
 
@@ -23,6 +28,9 @@ interface Props extends WithStyles, IPostListItem {
     uid: string;
 
     deletePost: (pid: string) => void;
+    quotePost: (pid: string, quoteAuthorName: string) => void;
+    cancelQuote: () => void;
+    activePid: string;
 }
 
 class PostListItem extends React.PureComponent<Props> {
@@ -44,6 +52,20 @@ class PostListItem extends React.PureComponent<Props> {
         this.handleDialogClose();
         const { deletePost, pid } = this.props;
         deletePost(pid);
+    };
+    handleQuote = () => {
+        const {
+            cancelQuote,
+            quotePost,
+            pid,
+            activePid,
+            user: { username }
+        } = this.props;
+        if (activePid === pid) {
+            cancelQuote();
+        } else {
+            quotePost(pid, username);
+        }
     };
     renderDialog = () => {
         const { deleteDialog } = this.state;
@@ -75,7 +97,9 @@ class PostListItem extends React.PureComponent<Props> {
             user: { username, uid, signature },
             isAdmin,
             uid: readerUid,
-            attachList
+            attachList,
+            activePid,
+            quote
         } = this.props;
         const userAvatar = FETCH_AVATAR(uid);
 
@@ -93,6 +117,17 @@ class PostListItem extends React.PureComponent<Props> {
                         </Link>
                         <span>{new Date(createDate).toLocaleString()}</span>
                     </div>
+                    {quote && (
+                        <ExpansionPanel className={classes["quote-container"]}>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography className={classes.heading}>引用 {quote.user.username} 的回复</Typography>
+                                <Typography className={classes.secondaryHeading}>{new Date(quote.createDate).toLocaleString()}</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                <div className={clsx("content-container", "braft-output-content")} dangerouslySetInnerHTML={{ __html: quote.message }}></div>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                    )}
                     <div className={clsx("content-container", "braft-output-content")} dangerouslySetInnerHTML={{ __html: message }}></div>
                     {attachList.length > 0 && <AttachList attachList={attachList} authorUid={uid} />}
                     <div className={classes["post-list-item-info"]}>
@@ -104,6 +139,9 @@ class PostListItem extends React.PureComponent<Props> {
                                 </Link>
                                 <span className={classes["action-btn"]} onClick={this.handleDialogOpen}>
                                     删除
+                                </span>
+                                <span className={classes["action-btn"]} onClick={this.handleQuote}>
+                                    {activePid !== pid ? "引用" : "取消引用"}
                                 </span>
                                 {this.renderDialog()}
                             </>

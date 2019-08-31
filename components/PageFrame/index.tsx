@@ -239,12 +239,12 @@ class Bar extends React.PureComponent<Props> {
                               通知中心
                           </MenuItem>,
                           <MenuItem onClick={this.handleLogout} key="user-logout">
-                              注销账号
+                              账号注销
                           </MenuItem>
                       ]
                     : [
                           <MenuItem onClick={this.handleLogin} key="user-login">
-                              登录账号
+                              账号登录
                           </MenuItem>,
                           <MenuItem onClick={this.handleOAuthLogin("QQ")} key="user-login-qq">
                               QQ登录
@@ -253,7 +253,7 @@ class Bar extends React.PureComponent<Props> {
                               Github登录
                           </MenuItem>,
                           <MenuItem onClick={this.handleRegister} key="user-logout">
-                              注册账号
+                              账号注册
                           </MenuItem>
                       ]}
             </Menu>

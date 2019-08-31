@@ -1,15 +1,19 @@
 import React from "react";
 import styles from "./style";
 import { Dispatch } from "redux";
+import clsx from "clsx";
 
 import { OptionsObject } from "notistack";
 import BraftEditor from "braft-editor";
 
-import { WithStyles, withStyles, Fab } from "@material-ui/core";
+import { WithStyles, withStyles } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
+import Fab from "@material-ui/core/Fab";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import SnackbarContent from "@material-ui/core/SnackbarContent";
+import Button from "@material-ui/core/Button";
 import MessageIcon from "@material-ui/icons/Message";
 
 import Head from "next/head";
@@ -126,8 +130,15 @@ class Post extends React.PureComponent<Props> {
             [subject, fid, message] = [currentSubject, currentFid, currentMessage];
         } else if (pathname === THREAD_REPLY_RAW) {
             const urlMessage = query["message"] as string;
+            const quotepid = (query["quotepid"] as string) || "0";
             if (urlMessage && typeof urlMessage === "string" && urlMessage.length >= 1) {
                 message = urlMessage;
+            }
+
+            if (quotepid) {
+                this.setState({
+                    quotepid
+                });
             }
             const attach = await this.fetchUnusedAttach();
             this.setState({
@@ -153,7 +164,6 @@ class Post extends React.PureComponent<Props> {
                 this.fetchUnusedAttach()
             ]);
 
-            console.log(attach, attachList);
             const newAttachList = this.processAttachForRender([...attach, ...(attachList as Array<IThreadAttach>)]);
             this.setState({
                 attach: newAttachList
@@ -212,7 +222,8 @@ class Post extends React.PureComponent<Props> {
 
         timestamp: new Date().getTime(),
         activeButton: true,
-        token: ""
+        token: "",
+        quotepid: "0"
     };
 
     handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -281,10 +292,11 @@ class Post extends React.PureComponent<Props> {
     createReply = async () => {
         const { router, dispatch } = this.props;
         const tid = router.query["tid"] as string;
-        const quotepid = router.query["quotepid"] as string;
-        const { message, token, attach } = this.state;
+
+        const { message, token, attach, quotepid } = this.state;
         try {
-            const res = await requestReply(tid, message, this.processAttachForServer(attach), quotepid, token, dispatch);
+            const requestQuotepid = quotepid || "0";
+            const res = await requestReply(tid, message, this.processAttachForServer(attach), requestQuotepid, token, dispatch);
             const { code } = res;
 
             this.showSnackbar(res);
@@ -408,11 +420,25 @@ class Post extends React.PureComponent<Props> {
             </div>
         );
     };
+    handleCancelQuote = () => {
+        this.setState({
+            quotepid: "0"
+        });
+    };
+    renderUndoQuote = () => {
+        return (
+            <Button color="secondary" size="small" onClick={this.handleCancelQuote}>
+                撤销
+            </Button>
+        );
+    };
 
     render() {
         const { classes, router, forum, isAdmin } = this.props;
-        const { fid, subject: title, isPost, timestamp, activeButton } = this.state;
+        const { fid, subject: title, isPost, timestamp, activeButton, quotepid } = this.state;
         const showTitle = mapPageTypeToTitle[mapRouteToPageType[router.pathname]];
+
+        const quoteNoticeMessage = `您正在引用回帖。`;
 
         const renderForum = forum.filter(item => (!isAdmin && !item.adminPost) || isAdmin);
         return (
@@ -425,6 +451,15 @@ class Post extends React.PureComponent<Props> {
                     <link rel="stylesheet" href="/static/css/editor.css" />
                 </Head>
                 <Paper className={classes.root}>
+                    {quotepid !== "0" && (
+                        <div>
+                            <SnackbarContent
+                                className={clsx(classes.snackbar, classes["snackbar-success"])}
+                                message={quoteNoticeMessage}
+                                action={this.renderUndoQuote()}
+                            />
+                        </div>
+                    )}
                     <Typography variant="h5" component="h3" className={classes["title"]}>
                         {showTitle}
                     </Typography>
@@ -471,11 +506,11 @@ class Post extends React.PureComponent<Props> {
                             size="medium"
                             color="primary"
                             aria-label="add"
-                            className={classes.button}
+                            className={clsx(classes.button, classes.submit)}
                             onClick={this.handleSubmitClick}
                             disabled={!activeButton}
                         >
-                            <MessageIcon className={classes["btn-icon"]} />
+                            <MessageIcon className={clsx(classes["btn-icon"], classes["submit-icon"])} />
                             {showTitle}
                         </Fab>
                     </div>

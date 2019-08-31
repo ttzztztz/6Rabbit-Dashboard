@@ -1,4 +1,5 @@
 import { createStyles } from "@material-ui/core/styles";
+import blue from "@material-ui/core/colors/blue";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
 const styles = (theme: Theme) =>
@@ -52,6 +53,22 @@ const styles = (theme: Theme) =>
         },
         "attach-container": {
             margin: theme.spacing(3, 0)
+        },
+        snackbar: {
+            margin: theme.spacing(0, 0, 2, 0)
+        },
+        "snackbar-success": {
+            backgroundColor: blue[600]
+        },
+        submit: {
+            [theme.breakpoints.down("sm")]: {
+                padding: "0 8px !important"
+            }
+        },
+        "submit-icon": {
+            [theme.breakpoints.down("sm")]: {
+                display: "none"
+            }
         }
     });
 

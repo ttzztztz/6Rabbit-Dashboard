@@ -16,7 +16,7 @@ const styles = (theme: Theme) =>
         },
         secondaryHeading: {
             color: theme.palette.text.secondary,
-            [theme.breakpoints.down("md")]: {
+            [theme.breakpoints.down("sm")]: {
                 display: "none"
             }
         },
@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
             marginRight: theme.spacing(0.5)
         },
         button: {
-            [theme.breakpoints.up("md")]: {
+            [theme.breakpoints.up("sm")]: {
                 margin: theme.spacing(1)
             }
         }

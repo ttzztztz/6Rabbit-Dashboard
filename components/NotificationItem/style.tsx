@@ -31,8 +31,6 @@ const styles = (_: Theme) =>
             margin: "0 3px"
         },
         "notification-clear": {
-            position: "absolute",
-            right: "2px",
             color: "rgba(134, 142, 150, 0.8)",
             fontSize: "12px",
             cursor: "pointer"
@@ -42,6 +40,13 @@ const styles = (_: Theme) =>
             height: "12px",
             color: "rgba(134, 142, 150, 0.8)",
             fontSize: "12px"
+        },
+        "notification-item-info-up": {
+            display: "flex",
+            justifyContent: "space-between"
+        },
+        "item-container": {
+            flexGrow: 1
         }
     });
 

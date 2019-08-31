@@ -1,4 +1,5 @@
 import { createStyles } from "@material-ui/core/styles";
+import blue from "@material-ui/core/colors/blue";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
 const styles = (theme: Theme) =>
@@ -65,6 +66,12 @@ const styles = (theme: Theme) =>
                 borderRight: "0 !important",
                 borderRadius: "4px !important"
             }
+        },
+        snackbar: {
+            margin: theme.spacing(1)
+        },
+        "snackbar-success": {
+            backgroundColor: blue[600]
         }
     });
 
