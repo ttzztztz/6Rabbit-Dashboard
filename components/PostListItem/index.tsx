@@ -25,6 +25,7 @@ import AttachList from "../../containers/AttachList";
 
 interface Props extends WithStyles, IPostListItem {
     isAdmin: boolean;
+    isLogin: boolean;
     uid: string;
 
     deletePost: (pid: string) => void;
@@ -99,7 +100,8 @@ class PostListItem extends React.PureComponent<Props> {
             uid: readerUid,
             attachList,
             activePid,
-            quote
+            quote,
+            isLogin
         } = this.props;
         const userAvatar = FETCH_AVATAR(uid);
 
@@ -132,6 +134,11 @@ class PostListItem extends React.PureComponent<Props> {
                     {attachList.length > 0 && <AttachList attachList={attachList} authorUid={uid} />}
                     <div className={classes["post-list-item-info"]}>
                         {signature && <div className={classes["post-list-user-signature"]}>{signature}</div>}
+                        {isLogin && (
+                            <span className={classes["action-btn"]} onClick={this.handleQuote}>
+                                {activePid !== pid ? "引用" : "取消引用"}
+                            </span>
+                        )}
                         {(isAdmin || readerUid === uid) && (
                             <>
                                 <Link href={POST_UPDATE_RAW} as={POST_UPDATE(pid)}>
@@ -139,9 +146,6 @@ class PostListItem extends React.PureComponent<Props> {
                                 </Link>
                                 <span className={classes["action-btn"]} onClick={this.handleDialogOpen}>
                                     删除
-                                </span>
-                                <span className={classes["action-btn"]} onClick={this.handleQuote}>
-                                    {activePid !== pid ? "引用" : "取消引用"}
                                 </span>
                                 {this.renderDialog()}
                             </>

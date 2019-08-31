@@ -10,8 +10,9 @@ const mapStateToProps = ({
     user: {
         uid,
         usergroup: { isAdmin }
-    }
-}: StoreState) => ({ uid, isAdmin });
+    },
+    basic: { isLogin }
+}: StoreState) => ({ uid, isAdmin, isLogin });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     deletePost: (pid: string) => dispatch(deletePostStart(pid))
