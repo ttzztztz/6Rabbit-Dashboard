@@ -16,6 +16,10 @@ const styles = (theme: Theme) =>
         },
         "no-border-cell": {
             border: "0"
+        },
+        "notification-container": {
+            wordBreak: "break-all",
+            wordWrap: "break-word"
         }
     });
 
