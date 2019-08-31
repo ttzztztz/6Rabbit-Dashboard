@@ -12,10 +12,12 @@ const styles = (theme: Theme) =>
         heading: {
             flexGrow: 2,
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
+            wordBreak: "break-all"
         },
         secondaryHeading: {
-            color: theme.palette.text.secondary
+            color: theme.palette.text.secondary,
+            wordBreak: "break-all"
         },
         "charge-container": {
             flexGrow: 1

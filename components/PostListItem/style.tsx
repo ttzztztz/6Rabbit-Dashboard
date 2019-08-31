@@ -29,12 +29,14 @@ const styles = (theme: Theme) =>
             color: theme.palette.text.secondary,
             [theme.breakpoints.down("sm")]: {
                 display: "none"
-            }
+            },
+            wordBreak: "break-all"
         },
         heading: {
             flexGrow: 2,
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
+            wordBreak: "break-all"
         }
     });
 
