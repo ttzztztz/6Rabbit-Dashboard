@@ -25,6 +25,7 @@ const styles = (_theme: Theme) =>
         },
         "message-container": {
             maxHeight: "200px",
+            minHeight: "64px",
             overflow: "hidden",
             position: "relative",
             "&:before": {

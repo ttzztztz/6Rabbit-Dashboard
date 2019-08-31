@@ -28,7 +28,7 @@ class UserPostList extends React.Component<Props> {
 
         return (
             <Paper className={clsx(classes.root, classes["not-show-outline"])}>
-                <Table>
+                <Table className={classes["table-container"]}>
                     <TableBody>
                         {postList.map(item => (
                             <TableRow key={item.pid}>

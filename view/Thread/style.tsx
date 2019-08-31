@@ -72,6 +72,10 @@ const styles = (theme: Theme) =>
         },
         "snackbar-success": {
             backgroundColor: blue[600]
+        },
+        "post-list-table": {
+            wordWrap: "break-word",
+            wordBreak: "break-all"
         }
     });
 

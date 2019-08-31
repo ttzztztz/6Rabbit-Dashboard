@@ -65,7 +65,10 @@ const styles = (theme: Theme) =>
             flexGrow: 1,
             padding: theme.spacing(3),
             maxWidth: "100%",
-            position: "relative"
+            position: "relative",
+            [theme.breakpoints.down("sm")]: {
+                minWidth: "99.5%"
+            }
         },
         "content-children-container": {
             minHeight: "600px"

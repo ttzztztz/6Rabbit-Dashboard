@@ -299,7 +299,7 @@ class Thread extends React.Component<Props> {
                             回复列表
                         </Typography>
                         <div className={classes["post-list-container"]}>
-                            <Table>
+                            <Table className={classes["post-list-table"]}>
                                 <TableBody>
                                     {postList.map(item => (
                                         <TableRow key={item.pid}>
