@@ -152,7 +152,7 @@ class UserPostList extends React.Component<Props> {
                                 uploadingList: oldList.filter(item => item.tempId !== tempId)
                             });
                             const { onChange, fileList } = this.props;
-                            const attachObj = { ...message };
+                            const attachObj = { ...message, creditsType: 0, credits: 0 };
                             onChange([...fileList, attachObj], attachObj);
                         } else {
                             enqueueSnackbar(message, { variant: "error" });
@@ -192,12 +192,13 @@ class UserPostList extends React.Component<Props> {
                 return;
             }
 
+            const [currentObj] = this.props.fileList.filter(item => item.aid === aid);
             const addedItem = {
                 tempId,
                 file,
                 progress: 0,
-                creditsType: 1,
-                credits: 1
+                creditsType: currentObj.creditsType,
+                credits: currentObj.credits
             };
 
             this.setState({
