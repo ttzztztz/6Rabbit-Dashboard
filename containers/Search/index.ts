@@ -9,7 +9,9 @@ import { enqueueSnackbar } from "../../actions";
 const mapStateToProps = (_: StoreState) => ({});
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options))
+    enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),
+
+    dispatch
 });
 
 export default connect(

@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./style";
+import { Dispatch } from "redux";
 
 import { WithStyles, withStyles } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
@@ -11,17 +12,18 @@ import { OptionsObject } from "notistack";
 import { withRouter, NextRouter } from "next/dist/client/router";
 import Head from "next/head";
 
-import FrontendRequestObservable from "../../model/FrontendRequestObservable";
 import { POST_THREAD_SEARCH } from "../../consts/backend";
 import UserPostList from "../../components/UserPostList";
 import { ISearchItem, ISearchResponse } from "../../typings";
 import { TITLE_PREFIX } from "../../consts";
 import { SEARCH_RAW, SEARCH } from "../../consts/routers";
+import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 
 interface Props extends WithStyles {
     router: NextRouter;
 
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
+    dispatch: Dispatch;
 }
 
 class Search extends React.PureComponent<Props> {
@@ -30,19 +32,28 @@ class Search extends React.PureComponent<Props> {
         page: 1,
         total: 0,
         keywords: "",
-        searchBoxInput: ""
+        searchBoxInput: "",
+
+        isLoading: false
     };
 
     fetchData = async (keywords: string, page: string) => {
+        this.setState({
+            isLoading: true
+        });
+        const { dispatch } = this.props;
         const {
             data: { code, message }
-        } = await FrontendRequestObservable({
-            url: POST_THREAD_SEARCH(page),
-            method: "POST",
-            data: {
-                keywords
-            }
-        }).toPromise();
+        } = await FrontendRequestPromise(
+            {
+                url: POST_THREAD_SEARCH(page),
+                method: "POST",
+                data: {
+                    keywords
+                }
+            },
+            dispatch
+        );
 
         if (code === 200) {
             const { list, count } = message as ISearchResponse;
@@ -55,6 +66,10 @@ class Search extends React.PureComponent<Props> {
             const { enqueueSnackbar } = this.props;
             enqueueSnackbar(message, { variant: "error" });
         }
+
+        this.setState({
+            isLoading: false
+        });
     };
 
     componentDidMount() {
@@ -97,8 +112,8 @@ class Search extends React.PureComponent<Props> {
         this.fetchData(searchBoxInput, "1");
     };
     handleSearchInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { searchBoxInput } = this.state;
-        if (event.keyCode === 13 && searchBoxInput.length >= 3) {
+        const { searchBoxInput, isLoading } = this.state;
+        if (!isLoading && event.keyCode === 13 && searchBoxInput.length >= 3) {
             this.handleSearch();
         }
     };
@@ -110,7 +125,7 @@ class Search extends React.PureComponent<Props> {
 
     render() {
         const { classes } = this.props;
-        const { resultList, page, total, searchBoxInput } = this.state;
+        const { resultList, page, total, searchBoxInput, isLoading } = this.state;
         const postList: Array<ISearchItem> = resultList.map(item => ({
             ...item,
             thread: {
@@ -127,18 +142,20 @@ class Search extends React.PureComponent<Props> {
                 <Head>
                     <title>{TITLE_PREFIX}搜索</title>
                 </Head>
-                <Paper className={classes["search-input-container"]}>
-                    <InputBase
-                        className={classes.input}
-                        placeholder="搜索..."
-                        onChange={this.handleSearchInputChange}
-                        onKeyDown={this.handleSearchInputKeyDown}
-                        value={searchBoxInput}
-                    />
-                    <IconButton className={classes.iconButton} aria-label="search" onClick={this.handleSearch}>
-                        <SearchIcon />
-                    </IconButton>
-                </Paper>
+                {!isLoading && (
+                    <Paper className={classes["search-input-container"]}>
+                        <InputBase
+                            className={classes.input}
+                            placeholder="搜索..."
+                            onChange={this.handleSearchInputChange}
+                            onKeyDown={this.handleSearchInputKeyDown}
+                            value={searchBoxInput}
+                        />
+                        <IconButton className={classes.iconButton} aria-label="search" onClick={this.handleSearch}>
+                            <SearchIcon />
+                        </IconButton>
+                    </Paper>
+                )}
                 <Paper className={classes.root}>
                     <UserPostList page={page} total={total} onPageChange={this.handlePageChange} postList={postList} />
                 </Paper>
