@@ -12,10 +12,15 @@ const styles = (theme: Theme) =>
         },
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
-            transition: theme.transitions.create(["width", "margin"], {
+            transition: theme.transitions.create("all", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen
-            })
+            }),
+            backdropFilter: "saturate(180%) blur(20px)",
+            backgroundColor: theme.palette.primary.main + "cc",
+            "&:hover": {
+                backgroundColor: theme.palette.primary.main
+            }
         },
         appBarShift: {
             marginLeft: drawerWidth,
@@ -86,23 +91,21 @@ const styles = (theme: Theme) =>
         },
         "post-btn": {
             transition:
-                "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
+                "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+            backgroundColor: theme.palette.primary.main + "BB",
+            backdropFilter: "saturate(180%) blur(20px)"
         },
         "post-btn-container": {
-            opacity: 0.65,
             transition: "all 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
             position: "fixed",
             right: "40px",
             bottom: "40px",
-            zIndex: 1200,
-            "&:hover": {
-                opacity: 1
-            }
+            zIndex: 1200
         },
-        success: { backgroundColor: successColor },
-        error: { backgroundColor: dangerColor },
-        warning: { backgroundColor: warningColor },
-        info: { backgroundColor: infoColor },
+        success: { backgroundColor: successColor + "CC" },
+        error: { backgroundColor: dangerColor + "CC" },
+        warning: { backgroundColor: warningColor + "CC" },
+        info: { backgroundColor: infoColor + "CC" },
         grow: {
             flexGrow: 1
         },

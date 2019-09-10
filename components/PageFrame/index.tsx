@@ -293,6 +293,7 @@ class Bar extends React.PureComponent<Props> {
             router: { pathname }
         } = this.props;
         const { openSidebar } = this.state;
+
         return (
             <SnackbarProvider
                 maxSnack={5}
