@@ -76,7 +76,11 @@ class Deposit extends React.Component<Props> {
 
         if (code === 200) {
             this.removeOneFromList(cid);
-            enqueueSnackbar("操作成功！", { variant: "success" });
+            if (status === 1) {
+                enqueueSnackbar("审核通过！", { variant: "success" });
+            } else if (status === -1) {
+                enqueueSnackbar("审核未通过！", { variant: "warning" });
+            }
         } else {
             enqueueSnackbar(message, { variant: "error" });
         }
