@@ -22,15 +22,18 @@ const styles = (theme: Theme) =>
             display: "flex"
         },
         "post-title": {
-            flexGrow: 1,
+            flexGrow: 3,
+            flexBasis: 3,
             marginLeft: theme.spacing(0.5)
         },
         "post-forum": {
             [theme.breakpoints.up("sm")]: {
-                width: "30%"
+                flexGrow: 1,
+                flexBasis: 1
             },
             [theme.breakpoints.down("sm")]: {
-                width: "98%"
+                flexGrow: 2,
+                flexBasis: 2
             }
         },
         "post-content": {

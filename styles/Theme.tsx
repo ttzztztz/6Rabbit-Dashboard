@@ -3,7 +3,8 @@ import purple from "@material-ui/core/colors/purple";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 const blurObj = {
-    backdropFilter: "saturate(180%) blur(20px)"
+    backdropFilter: "saturate(180%) blur(20px)",
+    '-webkit-backdrop-filter': "saturate(180%) blur(20px)"
 };
 
 const theme = createMuiTheme({
@@ -12,14 +13,14 @@ const theme = createMuiTheme({
         secondary: purple
     },
     overrides: {
-        MuiMenu: {
-            paper: { backgroundColor: "#FFFFFFCC", ...blurObj }
-        },
+        // MuiMenu: {
+        //     paper: {
+        //         backgroundColor: "#FFFFFFCC", ...blurObj,
+        //         display: "fixed",
+        //     }
+        // },
         MuiDialog: {
             root: blurObj,
-            paper: {
-                opacity: 0.85
-            }
         },
         MuiSnackbar: {
             root: blurObj
