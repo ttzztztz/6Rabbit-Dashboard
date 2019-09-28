@@ -65,6 +65,7 @@ interface Props extends WithStyles {
     uid: string;
     avatar: string;
     unread: number;
+    children?: React.ReactNode;
 
     init: () => void;
     logout: () => void;
@@ -232,30 +233,30 @@ class Bar extends React.PureComponent<Props> {
             >
                 {isLogin
                     ? [
-                          <MenuItem onClick={this.handleUserCenter} key="user-center">
-                              用户中心
+                        <MenuItem onClick={this.handleUserCenter} key="user-center">
+                            用户中心
                           </MenuItem>,
-                          <MenuItem onClick={this.handleNotificationCenter} key="notification-center">
-                              通知中心
+                        <MenuItem onClick={this.handleNotificationCenter} key="notification-center">
+                            通知中心
                           </MenuItem>,
-                          <MenuItem onClick={this.handleLogout} key="user-logout">
-                              账号注销
+                        <MenuItem onClick={this.handleLogout} key="user-logout">
+                            账号注销
                           </MenuItem>
-                      ]
+                    ]
                     : [
-                          <MenuItem onClick={this.handleLogin} key="user-login">
-                              账号登录
+                        <MenuItem onClick={this.handleLogin} key="user-login">
+                            账号登录
                           </MenuItem>,
-                          <MenuItem onClick={this.handleOAuthLogin("QQ")} key="user-login-qq">
-                              QQ登录
+                        <MenuItem onClick={this.handleOAuthLogin("QQ")} key="user-login-qq">
+                            QQ登录
                           </MenuItem>,
-                          <MenuItem onClick={this.handleOAuthLogin("Github")} key="user-login-github">
-                              Github登录
+                        <MenuItem onClick={this.handleOAuthLogin("Github")} key="user-login-github">
+                            Github登录
                           </MenuItem>,
-                          <MenuItem onClick={this.handleRegister} key="user-logout">
-                              账号注册
+                        <MenuItem onClick={this.handleRegister} key="user-logout">
+                            账号注册
                           </MenuItem>
-                      ]}
+                    ]}
             </Menu>
         );
     };
@@ -290,7 +291,8 @@ class Bar extends React.PureComponent<Props> {
             isLogin,
             unread,
             avatar,
-            router: { pathname }
+            router: { pathname },
+            children
         } = this.props;
         const { openSidebar } = this.state;
 
@@ -364,7 +366,7 @@ class Bar extends React.PureComponent<Props> {
                     <main className={classes.content}>
                         <div className={classes["content-container"]}>
                             <div className={classes.toolbar} />
-                            <div className={classes["content-children-container"]}>{this.props.children}</div>
+                            <div className={classes["content-children-container"]}>{children}</div>
                             <Footer />
                         </div>
                     </main>
