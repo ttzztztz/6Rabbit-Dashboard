@@ -34,7 +34,7 @@ const deleteThread: Epic<IDeleteThreadStart> = action$ =>
             const requestOptions: AxiosRequestConfig = {
                 url: payload.length >= 2 ? DELETE_MANY_THREADS : OPTIONS_THREAD(payload[0]),
                 method: "DELETE",
-                data: payload
+                data: { tid: payload }
             };
             return FrontendRequestObservable(requestOptions).pipe(
                 mergeMap(({ data: { code, message } }) => {
