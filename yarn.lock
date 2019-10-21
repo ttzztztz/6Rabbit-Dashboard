@@ -924,10 +924,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-redux@^7.1.4":
-  version "7.1.4"
-  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.4.tgz#e0d02a073e730b8b58a6341bddca2ea692ff0bce"
-  integrity sha512-SUV/7d+4L7C1Db/D4pqASgN1V1U2HnDEhEol9lYpPSguS76xFboZzf5ha2hTz6v31cUewyC7WksMh1q8JxhebQ==
+"@types/react-redux@^7.1.5":
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.5.tgz#c7a528d538969250347aa53c52241051cf886bd3"
+  integrity sha512-ZoNGQMDxh5ENY7PzU7MVonxDzS1l/EWiy8nUhDqxFqUZn4ovboCyvk4Djf68x6COb7vhGTKjyjxHxtFdAA5sUA==
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.0"
     "@types/react" "*"
@@ -949,10 +949,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@^16.9.7":
-  version "16.9.7"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.7.tgz#3b50cb38285a79fd325cf185e0d623e3e0dd2893"
-  integrity sha512-cF/zwVSOa/NQ5ZSLwUmAdeARgJkmu94shnqDO0dUOsp5roeS8SXtYv06uKeQMYgMjnP6dXH5CecxL+GibvqEFg==
+"@types/react@^16.9.9":
+  version "16.9.9"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.9.tgz#a62c6f40f04bc7681be5e20975503a64fe783c3a"
+  integrity sha512-L+AudFJkDukk+ukInYvpoAPyJK5q1GanFOINOJnM0w6tUgITuWvJ4jyoBPFL7z4/L8hGLd+K/6xR5uUjXu0vVg==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -4002,10 +4002,10 @@ normalize-url@1.9.1:
     query-string "^4.1.0"
     sort-keys "^1.0.0"
 
-notistack@^0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.9.4.tgz#20226ccc9ef7ee5aa16f6693c4e4ddff92e0de24"
-  integrity sha512-rtGZqznIlIbZH+wfHMhIGMFMqeJX4N/7CQikJ+XrCsGnZNL9gZyhifxLYrts0tUl+dKNpy7npswfRfiM7Soixg==
+notistack@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.9.5.tgz#3294e8438055ea5a39a8a4428240b05c548bb5b2"
+  integrity sha512-nemhQYIofQXoRTZ58TMaTfvsKIJLZygP0CI4XXgwSDEgXfQ414H/oHj+PtEiJbQQxJiWEm8hPey1bmw7brxL2g==
   dependencies:
     classnames "^2.2.6"
     hoist-non-react-statics "^3.3.0"
