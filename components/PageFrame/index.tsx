@@ -206,13 +206,15 @@ class Bar extends React.PureComponent<Props> {
     };
     handleSearchBoxKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { searchBoxInput } = this.state;
-        if (event.keyCode === 13 && searchBoxInput.length >= 2) {
-            this.handleSearch();
-        } else {
-            const { enqueueSnackbar } = this.props;
-            enqueueSnackbar("Content length must be greater than 2.", {
-                variant: "warning"
-            });
+        if (event.keyCode === 13) {
+            if (searchBoxInput.length >= 2) {
+                this.handleSearch();
+            } else {
+                const { enqueueSnackbar } = this.props;
+                enqueueSnackbar("Content length must be greater than 2.", {
+                    variant: "warning"
+                });
+            }
         }
     };
     handleSearchBoxChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
