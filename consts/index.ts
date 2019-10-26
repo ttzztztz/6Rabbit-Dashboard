@@ -1,5 +1,5 @@
-export const VERSION = "1.0.1";
-export const BUILD_DATE = "20190912";
+export const VERSION = "1.0.2";
+export const BUILD_DATE = "20191026";
 
 export const ICP_BEIAN = "冀ICP备18020890号";
 export const GONGAN_BEIAN = "冀公网安备13030402000133号";

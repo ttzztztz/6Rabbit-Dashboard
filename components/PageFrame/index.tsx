@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style";
-import { SnackbarProvider } from "notistack";
+import { SnackbarProvider, OptionsObject } from "notistack";
 import clsx from "clsx";
 
 import Drawer from "@material-ui/core/Drawer";
@@ -69,6 +69,7 @@ interface Props extends WithStyles {
 
     init: () => void;
     logout: () => void;
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
 }
 
 class Bar extends React.PureComponent<Props> {
@@ -205,8 +206,13 @@ class Bar extends React.PureComponent<Props> {
     };
     handleSearchBoxKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { searchBoxInput } = this.state;
-        if (event.keyCode === 13 && searchBoxInput.length >= 3) {
+        if (event.keyCode === 13 && searchBoxInput.length >= 2) {
             this.handleSearch();
+        } else {
+            const { enqueueSnackbar } = this.props;
+            enqueueSnackbar("Content length must be greater than 2.", {
+                variant: "warning"
+            });
         }
     };
     handleSearchBoxChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -233,30 +239,30 @@ class Bar extends React.PureComponent<Props> {
             >
                 {isLogin
                     ? [
-                        <MenuItem onClick={this.handleUserCenter} key="user-center">
-                            用户中心
+                          <MenuItem onClick={this.handleUserCenter} key="user-center">
+                              用户中心
                           </MenuItem>,
-                        <MenuItem onClick={this.handleNotificationCenter} key="notification-center">
-                            通知中心
+                          <MenuItem onClick={this.handleNotificationCenter} key="notification-center">
+                              通知中心
                           </MenuItem>,
-                        <MenuItem onClick={this.handleLogout} key="user-logout">
-                            账号注销
+                          <MenuItem onClick={this.handleLogout} key="user-logout">
+                              账号注销
                           </MenuItem>
-                    ]
+                      ]
                     : [
-                        <MenuItem onClick={this.handleLogin} key="user-login">
-                            账号登录
+                          <MenuItem onClick={this.handleLogin} key="user-login">
+                              账号登录
                           </MenuItem>,
-                        <MenuItem onClick={this.handleOAuthLogin("QQ")} key="user-login-qq">
-                            QQ登录
+                          <MenuItem onClick={this.handleOAuthLogin("QQ")} key="user-login-qq">
+                              QQ登录
                           </MenuItem>,
-                        <MenuItem onClick={this.handleOAuthLogin("Github")} key="user-login-github">
-                            Github登录
+                          <MenuItem onClick={this.handleOAuthLogin("Github")} key="user-login-github">
+                              Github登录
                           </MenuItem>,
-                        <MenuItem onClick={this.handleRegister} key="user-logout">
-                            账号注册
+                          <MenuItem onClick={this.handleRegister} key="user-logout">
+                              账号注册
                           </MenuItem>
-                    ]}
+                      ]}
             </Menu>
         );
     };

@@ -4,6 +4,8 @@ import { Dispatch } from "redux";
 import PageFrame from "../../components/PageFrame";
 import { StoreState } from "../../reducers";
 import { initStart, userLogoutStart } from "../../actions/async";
+import { OptionsObject } from "notistack";
+import { enqueueSnackbar } from "../../actions";
 
 const mapStateToProps = ({
     basic: { title, loading, isLogin },
@@ -27,7 +29,8 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     init: () => dispatch(initStart()),
-    logout: () => dispatch(userLogoutStart())
+    logout: () => dispatch(userLogoutStart()),
+    enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options))
 });
 
 export default connect(
