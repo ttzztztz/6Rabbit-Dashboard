@@ -1,7 +1,8 @@
 export const DEV_BACKEND = "http://localhost:8000";
 export const CLIENT_BACKEND = process.env.BUILD === "prod" ? "https://www.6rabbit.com/api" : DEV_BACKEND;
 export const SERVER_BACKEND = process.env.BUILD === "prod" ? "http://backend:8000" : DEV_BACKEND;
-export const SUFFIX_BACKEND = process.env.BUILD === "prod" ? "/api" : DEV_BACKEND;
+export const PREFIX_BACKEND_API = "/api";
+export const SUFFIX_BACKEND = process.env.BUILD === "prod" ? PREFIX_BACKEND_API : DEV_BACKEND;
 
 export const BACKEND_ROOT = () => (process.browser ? CLIENT_BACKEND : SERVER_BACKEND);
 
@@ -23,6 +24,7 @@ export const FETCH_OAUTH_BIND = (platform: string, code: string) => `${BACKEND_R
 export const FETCH_OAUTH_LOGIN = (platform: string, code: string) => `${BACKEND_ROOT()}/oauth/login/${platform}/${code}`;
 export const FETCH_UNUSED_ATTACH = `${BACKEND_ROOT()}/attach/unused`;
 export const FETCH_PICTURE_ATTACH = (aid: string) => `${SUFFIX_BACKEND}/file/picture/${aid}`;
+export const FETCH_PICTURE_ATTACH_REG = `${PREFIX_BACKEND_API}/file/picture/`;
 export const FETCH_ATTACH_PAY = (aid: string) => `${BACKEND_ROOT()}/attach/pay/${aid}`;
 export const FETCH_ATTACH_INFO = (aid: string) => `${BACKEND_ROOT()}/attach/info/${aid}`;
 export const FETCH_CREDITS_LOG = (page: string) => `${BACKEND_ROOT()}/user/credits/log/${page}`;
@@ -57,3 +59,5 @@ export const DELETE_MANY_THREADS = `${BACKEND_ROOT()}/thread/batch`;
 export const DELETE_OAUTH_TOKEN = (platform: string, code: string) => `${BACKEND_ROOT()}/oauth/${platform}/${code}`;
 export const DELETE_OAUTH_BIND = (platform: string) => `${BACKEND_ROOT()}/oauth/${platform}`;
 export const DELETE_ATTACH = (aid: string) => `${BACKEND_ROOT()}/attach/${aid}`;
+
+export const MATCH_PICTURE_ATTACH_REGEXP = new RegExp("^" + FETCH_PICTURE_ATTACH_REG + "(\\d+)$");

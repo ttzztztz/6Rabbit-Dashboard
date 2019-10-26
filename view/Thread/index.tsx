@@ -37,7 +37,7 @@ import { TITLE_SUFFIX } from "../../consts";
 import { IPostListItem, IExtendedNextPageContext, IThreadAttach, IForumItem, IThreadItem } from "../../typings";
 import { IGetThreadInfoStart, getThreadInfoStart } from "../../actions/async";
 import { Epics } from "../../epics";
-import { FETCH_THREAD, FETCH_AVATAR } from "../../consts/backend";
+import { FETCH_THREAD, FETCH_AVATAR, MATCH_PICTURE_ATTACH_REGEXP } from "../../consts/backend";
 import { requestReply } from "../../model/Post";
 import FrontendRequestPromise from "../../model/FrontendRequestPromise";
 import Vaptcha from "../../components/Vaptcha";
@@ -51,13 +51,13 @@ interface Props extends WithStyles {
 
     thread: IThreadItem;
     firstPost: IPostListItem;
-    attachList: Array<IThreadAttach>;
+    defaultAttachList: Array<IThreadAttach>;
 
     uid: string;
     isLogin: boolean;
 
     defaultPage: number;
-    defaultRes: Array<IPostListItem>;
+    defaultPostList: Array<IPostListItem>;
 
     forum: Array<IForumItem>;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
@@ -72,12 +72,22 @@ class Thread extends React.Component<Props> {
         const state$ = new StateObservable(new Subject(), store.getState());
         const { payload } = await Epics(of(getThreadInfoStart(tid, page)) as ActionsObservable<IGetThreadInfoStart>, state$, {}).toPromise();
 
-        return { defaultPage: Number.parseInt(page), tid, ...payload, defaultRes: payload.postList };
+        return { defaultPage: Number.parseInt(page), tid, ...payload, defaultAttachList: payload.attachList, defaultPostList: payload.postList };
     }
 
     componentDidMount() {
-        const { defaultRes } = this.props;
-        this.patchPostList(defaultRes);
+        const { defaultPostList, defaultAttachList } = this.props;
+        this.patchPostList(defaultPostList);
+
+        const imgListAid = Array.from(document.querySelectorAll("#content-container img"))
+            .map(item => (item.getAttribute("src") || "").match(MATCH_PICTURE_ATTACH_REGEXP))
+            .filter(item => !!item)
+            .map(item => item![1]);
+
+        const realAttachList = defaultAttachList.filter(item => !imgListAid.includes(item.aid));
+        this.setState({
+            attachList: realAttachList
+        });
     }
 
     state = {
@@ -86,6 +96,7 @@ class Thread extends React.Component<Props> {
         quoteAuthorName: "",
 
         postList: [] as Array<IPostListItem>,
+        attachList: [] as Array<IThreadAttach>,
         page: this.props.defaultPage,
 
         activePostBtn: true,
@@ -255,8 +266,8 @@ class Thread extends React.Component<Props> {
     };
 
     render() {
-        const { classes, isAdmin, uid, thread, firstPost, attachList } = this.props;
-        const { postList, page, quotepid } = this.state;
+        const { classes, isAdmin, uid, thread, firstPost } = this.props;
+        const { postList, page, quotepid, attachList } = this.state;
 
         return (
             <>
