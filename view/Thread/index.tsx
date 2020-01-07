@@ -209,7 +209,7 @@ class Thread extends React.Component<Props> {
             });
         };
 
-        if (!isLogin || (isLogin && isClosed && !isAdmin)) {
+        if (!isLogin || !isAdmin || (isLogin && isClosed && !isAdmin)) {
             return <></>;
         } else {
             return (

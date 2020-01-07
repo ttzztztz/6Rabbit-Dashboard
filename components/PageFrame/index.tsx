@@ -300,7 +300,8 @@ class Bar extends React.PureComponent<Props> {
             unread,
             avatar,
             router: { pathname },
-            children
+            children,
+            isAdmin
         } = this.props;
         const { openSidebar } = this.state;
 
@@ -379,7 +380,7 @@ class Bar extends React.PureComponent<Props> {
                         </div>
                     </main>
                     {loading && <LinearProgress className={classes.progess} color="primary" />}
-                    {isLogin && (
+                    {isLogin && isAdmin && (
                         <Link href="/thread/create">
                             <div className={classes["post-btn-container"]}>
                                 <Fab size="large" color="primary" className={classes["post-btn"]}>
