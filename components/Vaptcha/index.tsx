@@ -24,6 +24,7 @@ interface IExtendedWindow extends Window {
         type: string;
         container: string;
         scene: number;
+        offline_server: string;
     }) => {
         then: (callback: (vaptchaObj: IVaptchaObj) => void) => void;
     };
@@ -67,7 +68,8 @@ class Vaptcha extends React.PureComponent<Props> {
                 vid: VERIFY_CODE_VID,
                 type: "click",
                 container: "#vaptcha-container",
-                scene: 0
+                scene: 0,
+                offline_server: ""
             })
             .then((vaptchaObj: IVaptchaObj) => {
                 this.vaptchaObj = vaptchaObj;
