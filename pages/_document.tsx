@@ -44,7 +44,7 @@ class MyDocument extends Document {
                     <Main />
                     <NextScript />
                 </body>
-                <script src="https://cdn.vaptcha.com/v2.js"></script>
+                <script src="https://v.vaptcha.com/v3.js"></script>
             </html>
         );
     }
