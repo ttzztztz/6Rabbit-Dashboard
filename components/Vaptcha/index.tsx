@@ -69,7 +69,7 @@ class Vaptcha extends React.PureComponent<Props> {
                 type: "click",
                 container: "#vaptcha-container",
                 scene: 0,
-                offline_server: ""
+                offline_server: "https://www.6rabbit.com/"
             })
             .then((vaptchaObj: IVaptchaObj) => {
                 this.vaptchaObj = vaptchaObj;
