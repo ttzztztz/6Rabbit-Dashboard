@@ -3,7 +3,7 @@ export const BUILD_DATE = "20191026";
 
 export const ICP_BEIAN = "冀ICP备18020890号";
 export const GONGAN_BEIAN = "冀公网安备13030402000133号";
-export const VERIFY_CODE_VID = process.env.BUILD === "prod" ? "5b62d661fc6523ac2c210dbc" : "5d6478fffc650e437c1e46c0";
+export const VERIFY_CODE_VID = process.env.BUILD === "prod" ? "5edb6f34b8c19be33e280e3a" : "5d6478fffc650e437c1e46c0";
 
 export const TITLE_PREFIX = "酷兔网 - ";
 export const TITLE_SUFFIX = " - 酷兔网";
